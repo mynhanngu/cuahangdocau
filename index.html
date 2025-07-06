@@ -119,11 +119,11 @@
     </div>
 
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
-    
+   
     <div id="confirm-order-modal" class="modal">
         <div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div>
     </div>
-    
+   
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
 
@@ -135,7 +135,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5W8Mj5i448ycDlfhhoiTlCnrncdUIG8fIa7NsKQS7Jnj10Ylpi_S0TqEQRsqwJHuS/exec';
-            
+           
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
                 categories: [], activeCategory: 'Tất cả', currentPage: 1, orderContext: {} 
@@ -169,7 +169,7 @@
                 document.getElementById('footer-warning').textContent = info.canhBaoFooter || '';
                 document.getElementById('footer-copyright').textContent = info.banQuyen || '';
             }
-            
+           
             async function apiCall(payload) {
                 try {
                     const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
@@ -181,7 +181,7 @@
                     return { success: false, message: error.message };
                 }
             }
-            
+           
             function renderProductsGrid() {
                 const grid = document.getElementById('products-grid'); 
                 grid.innerHTML = '';
@@ -332,16 +332,18 @@
                     else { showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); }
                 };
             };
-            
-            // HÀM RENDER DANH MỤC "ĐẪY ĐÀ" VÀ CÂN ĐỐI
+           
+            // HÀM RENDER DANH MỤC ĐÃ SỬA
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
                 const numCategories = state.categories.length;
-                nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0';
+                // SỬA ĐỔI: Thêm 'gap-3' để tạo khoảng cách giữa các nút
+                nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0 gap-3';
                 nav.innerHTML = state.categories.map(cat => {
                     const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
                     const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
-                    let buttonClasses = 'mx-1.5 px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
+                    // SỬA ĐỔI: Xóa 'mx-1.5' vì đã dùng 'gap' ở trên
+                    let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
                     if (numCategories > 0 && numCategories <= 4) {
                         buttonClasses += ' flex-grow text-center';
                     }
@@ -350,13 +352,13 @@
                 }).join('');
             }
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
-            
+           
             async function loadAddressData() {
                 const result = await apiCall({ action: 'getAddressData' });
                 if (result.success) { addressData.provinces = result.data; } 
                 else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); }
             }
-            
+           
             window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
             window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
             window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
@@ -375,13 +377,13 @@
             window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); }
             window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
             window.checkout = () => { if (state.cart.length === 0) { showNotification('Giỏ hàng trống!', 'error'); return; } closeModal('cart-modal'); showConfirmOrderModal(state.cart, true); }
-            
+           
             function showConfirmOrderModal(items, isCheckout = false) { 
                 state.orderContext = { items, isCheckout };
                 const content = document.getElementById('confirm-order-modal-content'); 
                 const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0); 
                 const itemsHTML = items.map(item => { const optionsText = item.selectedOptions ? ` <span class="text-xs bg-slate-100 p-1 rounded">(${item.selectedOptions})</span>` : ''; return `<div class="text-sm"><strong>${item.quantity}x</strong> ${item.product.tenSP}${optionsText}</div>` }).join('');
-                
+               
                 const luuYDatHangHTML = state.shopInfo.luuYDatHang 
                     ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` 
                     : '';
@@ -414,7 +416,7 @@
                             <button type="submit" class="btn btn-primary flex-1">Đặt hàng</button>
                         </div>
                     </form>`; 
-                
+               
                 openModal('confirm-order-modal');
                 setTimeout(() => { loadProvinces('order-province'); }, 0);
                 const phoneInput = document.getElementById('order-phone');
@@ -429,12 +431,12 @@
                     } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
                 });
             }
-            
+           
             window.updateModalQuantity = (change) => { const input = document.getElementById('product-quantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; };
             const showLoading = () => loadingSpinner.classList.add('active'); 
             const hideLoading = () => loadingSpinner.classList.remove('active');
             function showNotification(msg, type = 'success') { const el = document.getElementById('notification'); el.textContent = msg; el.className = `notification ${type} show`; setTimeout(() => el.classList.remove('show'), 3000); }
-            
+           
             init();
         });
     </script>
