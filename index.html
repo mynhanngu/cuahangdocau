@@ -80,6 +80,42 @@
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
+
+        /* === CSS MỚI CHO TÌM KIẾM VÀ PHÂN TRANG === */
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem; /* Tăng padding trái để chứa icon */
+            border-radius: 9999px; /* bo tròn */
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-color-light);
+        }
+        .pagination-btn {
+            min-width: 36px; height: 36px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0 0.5rem; border-radius: 0.375rem;
+            font-weight: 600; font-size: 0.875rem;
+            background-color: white; border: 1px solid #e2e8f0;
+            color: #475569;
+            transition: all 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background-color: #f1f5f9;
+        }
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            cursor: default;
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -90,10 +126,8 @@
     <div id="notification" class="notification"></div>
 
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <!-- Container mới bao bọc toàn bộ header và có padding-bottom -->
         <div class="container mx-auto pb-3">
-            <!-- Khối logo/slogan có lề dưới để tạo khoảng cách -->
-            <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
+            <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2">
                 <div class="w-10"></div>
                 <div class="text-center cursor-pointer" onclick="window.location.reload()">
                     <h1 id="shop-name" class="text-2xl md:text-3xl text-[var(--primary-color)]">Đang tải...</h1>
@@ -106,14 +140,23 @@
                     <span id="cart-badge" class="cart-badge hidden">0</span>
                 </button>
             </div>
-            <!-- Thanh danh mục sẽ được điền bởi JS -->
+            
+            <!-- Ô TÌM KIẾM MỚI -->
+            <div id="search-container" class="px-4 py-2 relative">
+                <input type="text" id="search-input" oninput="handleSearch()" class="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <div class="absolute left-7 top-0 h-full flex items-center pointer-events-none">
+                     <svg class="w-5 h-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+                </div>
+            </div>
+
             <div id="category-nav"></div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-6 pb-28">
         <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        <div id="pagination-controls" class="flex justify-center items-center mt-8"></div>
+        <!-- KHUNG CHỨA CÁC NÚT PHÂN TRANG -->
+        <div id="pagination-controls" class="flex justify-center items-center mt-8 space-x-2"></div>
     </main>
 
     <div class="contact-fab-group"> 
@@ -122,11 +165,7 @@
     </div>
 
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
-    
-    <div id="confirm-order-modal" class="modal">
-        <div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div>
-    </div>
-    
+    <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
 
@@ -139,9 +178,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5W8Mj5i448ycDlfhhoiTlCnrncdUIG8fIa7NsKQS7Jnj10Ylpi_S0TqEQRsqwJHuS/exec';
             
+            // THÊM BIẾN STATE MỚI CHO TÌM KIẾM VÀ PHÂN TRANG
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
-                categories: [], activeCategory: 'Tất cả', currentPage: 1, orderContext: {} 
+                categories: [], activeCategory: 'Tất cả', 
+                currentPage: 1, 
+                searchTerm: ''
             };
             let addressData = { provinces: [], districts: [], wards: [] };
             const loadingSpinner = document.getElementById('loading-spinner');
@@ -185,30 +227,94 @@
                 }
             }
             
+            // HÀM RENDER SẢN PHẨM ĐƯỢC NÂNG CẤP TOÀN DIỆN
             function renderProductsGrid() {
-                const grid = document.getElementById('products-grid'); 
+                const grid = document.getElementById('products-grid');
                 grid.innerHTML = '';
-                const filtered = state.activeCategory === 'Tất cả' ? state.products : state.products.filter(p => p.danhMuc === state.activeCategory);
-                if (filtered.length === 0) {
-                    grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
-                    return;
+                
+                // 1. Lọc theo danh mục
+                let filteredProducts = state.activeCategory === 'Tất cả' 
+                    ? state.products 
+                    : state.products.filter(p => p.danhMuc === state.activeCategory);
+
+                // 2. Lọc theo từ khóa tìm kiếm
+                if (state.searchTerm) {
+                    const lowerCaseSearchTerm = state.searchTerm.toLowerCase();
+                    filteredProducts = filteredProducts.filter(p => 
+                        p.tenSP.toLowerCase().includes(lowerCaseSearchTerm)
+                    );
                 }
-                filtered.forEach(p => {
-                    const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
-                    const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
-                    const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
-                    grid.innerHTML += `
-                        <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
-                            <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
-                            <div class="product-card-info">
-                                <p class="product-card-name line-clamp-2">${p.tenSP}</p>
-                                <div class="product-card-footer">
-                                    <p class="product-card-price">${p.giaBan}</p>
-                                    ${statusHTML}
+
+                // 3. Logic phân trang
+                const itemsPerPage = window.innerWidth < 768 ? 8 : 16;
+                const totalItems = filteredProducts.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                const startIndex = (state.currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+                // Render lưới sản phẩm
+                if (paginatedProducts.length === 0) {
+                    grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không tìm thấy sản phẩm nào phù hợp.</p>`;
+                } else {
+                    paginatedProducts.forEach(p => {
+                        const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
+                        const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
+                        const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
+                        grid.innerHTML += `
+                            <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
+                                <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
+                                <div class="product-card-info">
+                                    <p class="product-card-name line-clamp-2">${p.tenSP}</p>
+                                    <div class="product-card-footer">
+                                        <p class="product-card-price">${p.giaBan}</p>
+                                        ${statusHTML}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`;
-                });
+                            </div>`;
+                    });
+                }
+                
+                // Render lại các nút phân trang
+                renderPaginationControls(totalItems, itemsPerPage, totalPages);
+            }
+
+            // HÀM MỚI ĐỂ RENDER CÁC NÚT PHÂN TRANG
+            function renderPaginationControls(totalItems, itemsPerPage, totalPages) {
+                const container = document.getElementById('pagination-controls');
+                container.innerHTML = '';
+                if (totalPages <= 1) return;
+
+                // Nút "Trang trước"
+                container.innerHTML += `<button onclick="changePage(${state.currentPage - 1})" class="pagination-btn" ${state.currentPage === 1 ? 'disabled' : ''}>Trước</button>`;
+
+                // Nút trang số
+                for (let i = 1; i <= totalPages; i++) {
+                    container.innerHTML += `<button onclick="changePage(${i})" class="pagination-btn ${i === state.currentPage ? 'active' : ''}">${i}</button>`;
+                }
+
+                // Nút "Trang sau"
+                container.innerHTML += `<button onclick="changePage(${state.currentPage + 1})" class="pagination-btn" ${state.currentPage === totalPages ? 'disabled' : ''}>Sau</button>`;
+            }
+
+            // HÀM MỚI ĐỂ CHUYỂN TRANG
+            window.changePage = (newPage) => {
+                if (newPage < 1) return;
+                const itemsPerPage = window.innerWidth < 768 ? 8 : 16;
+                const totalPages = Math.ceil(state.products.filter(p => (state.activeCategory === 'Tất cả' || p.danhMuc === state.activeCategory) && (p.tenSP.toLowerCase().includes(state.searchTerm.toLowerCase()))).length / itemsPerPage);
+                if(newPage > totalPages) return;
+                
+                state.currentPage = newPage;
+                renderProductsGrid();
+                window.scrollTo(0, 0); // Cuộn lên đầu trang
+            }
+            
+            // HÀM MỚI ĐỂ XỬ LÝ TÌM KIẾM
+            window.handleSearch = () => {
+                const searchInput = document.getElementById('search-input');
+                state.searchTerm = searchInput.value.trim();
+                state.currentPage = 1; // Reset về trang 1 mỗi khi tìm kiếm
+                renderProductsGrid();
             }
 
             function openModal(id) {
@@ -218,7 +324,6 @@
                     document.body.classList.add('modal-open');
                 }
             }
-
             window.closeModal = (id) => {
                 const modal = document.getElementById(id);
                 if (modal) {
@@ -228,14 +333,12 @@
                     }
                 }
             };
-
             window.openProductModal = (maSP) => {
                 state.currentProduct = state.products.find(p => p.maSP === maSP);
                 if (!state.currentProduct) return;
                 openModal('product-modal');
                 renderProductModalContent();
             };
-
             function renderProductModalContent() {
                 const p = state.currentProduct;
                 const content = document.getElementById('product-modal-content');
@@ -254,7 +357,6 @@
                 toggleDescription(true);
                 updateVariantUI();
             }
-
             window.toggleDescription = (isInitial = false) => {
                 const p = state.currentProduct;
                 const container = document.getElementById('product-description');
@@ -335,32 +437,31 @@
                     else { showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); }
                 };
             };
-            
-            // HÀM RENDER DANH MỤC HOÀN HẢO
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
                 const numCategories = state.categories.length;
-                nav.className = 'flex items-center overflow-x-auto whitespace-nowrap px-4 md:px-0 space-x-2';
+                nav.className = 'flex items-center overflow-x-auto whitespace-nowrap pt-2 pb-4 px-4 md:px-0 space-x-2';
                 const shouldStretch = numCategories > 0 && numCategories <= 4;
                 nav.innerHTML = state.categories.map(cat => {
                     const activeClasses = 'bg-[var(--primary-color)] text-white shadow-md';
                     const inactiveClasses = 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
                     let buttonClasses = 'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ease-in-out';
-                    if (shouldStretch) {
-                        buttonClasses += ' flex-grow text-center';
-                    }
+                    if (shouldStretch) { buttonClasses += ' flex-grow text-center'; }
                     buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
                     return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`;
                 }).join('');
             }
-            window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
-            
+            window.filterByCategory = (category) => {
+                state.activeCategory = category;
+                state.currentPage = 1; // Reset về trang 1 khi đổi danh mục
+                renderCategories();
+                renderProductsGrid();
+            };
             async function loadAddressData() {
                 const result = await apiCall({ action: 'getAddressData' });
                 if (result.success) { addressData.provinces = result.data; } 
                 else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); }
             }
-            
             window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
             window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
             window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
