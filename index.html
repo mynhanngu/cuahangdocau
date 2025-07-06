@@ -69,69 +69,17 @@
         input[type=number] { -moz-appearance: textfield; }
         #alert-modal-content { z-index: 1100; }
         body.modal-open { overflow: hidden; }
-
-        /* === PHẦN THIẾT KẾ LẠI GIAO DIỆN NÂNG CAO === */
-
-        main.container {
-            padding: 1rem 0.5rem 7rem 0.5rem; /* top-16px, left/right-8px, bottom-112px */
-        }
-        #products-grid {
-            gap: 0.5rem; /* Giảm khoảng cách giữa các sản phẩm xuống 8px */
-        }
-        /* Trên desktop, trả lại khoảng cách lớn hơn */
-        @media (min-width: 768px) {
-            #products-grid {
-                gap: 1rem; /* 16px */
-            }
-        }
-
-        /* Thiết kế lại Thẻ Sản Phẩm để kiểm soát chiều cao */
-        .product-card {
-            background-color: white;
-            border: 1px solid #f0f0f0;
-            border-radius: 0.25rem; /* 4px */
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-        }
-        .product-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: translateY(-3px);
-        }
-        .product-card-image {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-        }
-        .product-card-info {
-            padding: 0.5rem; /* 8px */
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1; /* Quan trọng: để thẻ co giãn theo chiều cao */
-        }
-        .product-card-name {
-            font-size: 0.8rem; /* ~13px */
-            font-weight: 500;
-            line-height: 1.4;
-            color: #1f2937;
-            /* Giữ chiều cao cố định cho tên SP để các thẻ bằng nhau */
-            height: 40px;
-        }
-        .product-card-footer {
-            margin-top: auto; /* Quan trọng: Đẩy giá và trạng thái xuống dưới cùng */
-            padding-top: 0.25rem; /* 4px */
-        }
-        .product-card-price {
-            font-size: 0.95rem; /* ~15px */
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .product-status-unavailable {
-            font-size: 0.75rem; /* 12px */
-            font-weight: 600; 
-            color: var(--danger-color);
-        }
+        main.container { padding: 1rem 0.5rem 7rem 0.5rem; }
+        #products-grid { gap: 0.5rem; }
+        @media (min-width: 768px) { #products-grid { gap: 1rem; } }
+        .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
+        .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-3px); }
+        .product-card-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+        .product-card-info { padding: 0.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-card-name { font-size: 0.8rem; font-weight: 500; line-height: 1.4; color: #1f2937; height: 40px; }
+        .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
+        .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
+        .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
     </style>
 </head>
 
@@ -141,14 +89,11 @@
     </div>
     <div id="notification" class="notification"></div>
 
-    <!-- HEADER ĐÃ ĐƯỢC TỐI ƯU GIAO DIỆN -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="container mx-auto px-4">
-            <!-- Chiều cao header: nhỏ hơn trên di động (h-16), lớn hơn trên desktop (md:h-20) -->
             <div class="h-16 md:h-20 flex items-center justify-between">
                 <div class="w-10"></div>
                 <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                    <!-- Kích thước chữ: nhỏ hơn trên di động (text-2xl), lớn hơn trên desktop (md:text-3xl) -->
                     <h1 id="shop-name" class="text-2xl md:text-3xl text-[var(--primary-color)]">Đang tải...</h1>
                     <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                 </div>
@@ -159,7 +104,7 @@
                     <span id="cart-badge" class="cart-badge hidden">0</span>
                 </button>
             </div>
-            <div id="category-nav" class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pb-3"></div>
+            <div id="category-nav"></div>
         </div>
     </header>
 
@@ -189,8 +134,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Thay URL này bằng URL mới nhất sau khi bạn triển khai lại Apps Script
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4S4HLaYXli-5b-pbQw8AxMd_Pxp2C579i9ak_UQge8PEh1PMAtk5yKA2HsFovMOXH/exec';
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5W8Mj5i448ycDlfhhoiTlCnrncdUIG8fIa7NsKQS7Jnj10Ylpi_S0TqEQRsqwJHuS/exec';
             
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
@@ -206,7 +150,7 @@
                     apiCall({ action: 'getShopInfo' }),
                     apiCall({ action: 'getProducts' }),
                     apiCall({ action: 'getCategories' }),
-                    loadAddressData() // Hàm này đã được sửa ở dưới
+                    loadAddressData()
                 ]).then(([shopInfoRes, productsRes, categoriesRes]) => {
                     if (shopInfoRes.success) { state.shopInfo = shopInfoRes.data; renderShopInfo(state.shopInfo); }
                     if (productsRes.success) { state.products = productsRes.data; renderProductsGrid(); }
@@ -238,23 +182,18 @@
                 }
             }
             
-            // HÀM RENDER SẢN PHẨM ĐÃ ĐƯỢC CẬP NHẬT
             function renderProductsGrid() {
                 const grid = document.getElementById('products-grid'); 
                 grid.innerHTML = '';
                 const filtered = state.activeCategory === 'Tất cả' ? state.products : state.products.filter(p => p.danhMuc === state.activeCategory);
-                
                 if (filtered.length === 0) {
                     grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
                     return;
                 }
-                
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
                     const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
-                    
-                    // Cấu trúc HTML mới cho thẻ sản phẩm gọn gàng, chuyên nghiệp
                     grid.innerHTML += `
                         <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
                             <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
@@ -307,11 +246,7 @@
                         return `<div class="mb-4"><p class="font-semibold text-sm mb-2">${dimName}:</p><div class="flex flex-wrap gap-2" data-dimension-index="${dimIndex}">${options.map(opt => `<label class="cursor-pointer"><input type="radio" onchange="updateVariantUI()" name="dim_${dimIndex}" value="${opt}" class="sr-only peer"><div class="px-3 py-1.5 border rounded-lg text-sm transition-colors bg-white peer-checked:bg-[var(--primary-color)] peer-checked:text-white peer-checked:border-[var(--primary-color)]">${opt}</div></label>`).join('')}</div></div>`;
                     }).join('');
                 }
-                
-                const ghiChuHTML = p.ghiChu 
-                    ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` 
-                    : '';
-
+                const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : '';
                 content.innerHTML = `<button onclick="closeModal('product-modal')" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
                 toggleDescription(true);
                 updateVariantUI();
@@ -325,15 +260,8 @@
                 if (isInitial) { container.dataset.expanded = 'false'; } 
                 else { container.dataset.expanded = isExpanded ? 'false' : 'true'; }
                 const shouldExpand = container.dataset.expanded === 'true';
-                if (p.moTa.length <= 50) {
-                    container.innerHTML = p.moTa.replace(/\n/g, '<br>');
-                } else {
-                    if (shouldExpand) {
-                        container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`;
-                    } else {
-                        container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`;
-                    }
-                }
+                if (p.moTa.length <= 50) { container.innerHTML = p.moTa.replace(/\n/g, '<br>'); }
+                else { if (shouldExpand) { container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; } else { container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } }
             };
             window.changeMainImage = (src, thumb) => { document.getElementById('main-product-image').src = src; document.querySelectorAll('.thumbnail-image').forEach(t => t.classList.remove('active')); thumb.classList.add('active'); };
             function getSelectedVariant() {
@@ -405,30 +333,34 @@
                 };
             };
             
-            // HÀM RENDER DANH MỤC ĐÃ ĐƯỢC CẬP NHẬT
+            // HÀM RENDER DANH MỤC "THÔNG MINH" ĐÃ ĐƯỢC CẬP NHẬT
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
-                nav.innerHTML = state.categories.map(cat => 
-                    `<button 
-                        onclick="filterByCategory('${cat}')" 
-                        class="px-3 py-1 rounded-full text-xs font-semibold transition-colors whitespace-nowrap ${state.activeCategory === cat ? 'bg-[var(--primary-color)] text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}"
-                    >${cat}</button>`
-                ).join('');
+                const numCategories = state.categories.length;
+                nav.className = 'flex items-center overflow-x-auto whitespace-nowrap pb-4 pt-1 px-2 md:px-0 space-x-2';
+                const shouldStretch = numCategories > 0 && numCategories <= 4;
+                nav.innerHTML = state.categories.map(cat => {
+                    const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg transform -translate-y-1';
+                    const inactiveClasses = 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
+                    let buttonClasses = 'px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out';
+                    if (shouldStretch) {
+                        buttonClasses += ' flex-grow text-center';
+                    }
+                    buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
+                    return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`;
+                }).join('');
             }
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
             
             async function loadAddressData() {
                 const result = await apiCall({ action: 'getAddressData' });
-                if (result.success) {
-                    addressData.provinces = result.data;
-                } else {
-                    showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error");
-                }
+                if (result.success) { addressData.provinces = result.data; } 
+                else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); }
             }
             
-            window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
-            window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
-            window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
+            window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
+            window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
+            window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
             function loadCart() { state.cart = JSON.parse(localStorage.getItem('myShopCart') || '[]'); }
             function saveCart() { localStorage.setItem('myShopCart', JSON.stringify(state.cart)); }
             function addToCart(cartItem) { const existingItem = state.cart.find(item => item.cartItemId === cartItem.cartItemId); if (existingItem) existingItem.quantity += cartItem.quantity; else state.cart.push(cartItem); saveCart(); updateCartBadge(); showNotification('Đã thêm vào giỏ hàng!'); };
@@ -485,35 +417,17 @@
                     </form>`; 
                 
                 openModal('confirm-order-modal');
-
-                // Dùng setTimeout để đảm bảo modal đã hiển thị đầy đủ trên DOM trước khi chạy.
-                setTimeout(() => {
-                    loadProvinces('order-province');
-                }, 0);
-
+                setTimeout(() => { loadProvinces('order-province'); }, 0);
                 const phoneInput = document.getElementById('order-phone');
                 const errorMessageDiv = document.getElementById('phone-error-message');
                 const submitButton = content.querySelector('button[type="submit"]');
-
                 phoneInput.addEventListener('input', () => {
                     const phoneValue = phoneInput.value;
                     const isValid = /^0[0-9]{9}$/.test(phoneValue);
-
                     if (phoneValue.length > 0) {
-                        if (isValid) {
-                            errorMessageDiv.textContent = '';
-                            phoneInput.classList.remove('border-red-500');
-                            submitButton.disabled = false;
-                        } else {
-                            errorMessageDiv.textContent = 'SĐT phải có 10 số, bắt đầu bằng 0.';
-                            phoneInput.classList.add('border-red-500');
-                            submitButton.disabled = true;
-                        }
-                    } else {
-                        errorMessageDiv.textContent = '';
-                        phoneInput.classList.remove('border-red-500');
-                        submitButton.disabled = false;
-                    }
+                        if (isValid) { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; } 
+                        else { errorMessageDiv.textContent = 'SĐT phải có 10 số, bắt đầu bằng 0.'; phoneInput.classList.add('border-red-500'); submitButton.disabled = true; }
+                    } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
                 });
             }
             
