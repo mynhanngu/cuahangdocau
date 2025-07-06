@@ -18,7 +18,12 @@
             --font-family: 'Be Vietnam Pro', sans-serif;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: var(--font-family); background-color: #f8fafc; color: #334155; }
+        body { 
+            font-family: var(--font-family); 
+            background-color: #f8fafc; 
+            color: #334155; 
+            font-size: 14px;
+        }
         #shop-name {
             font-family: 'Lexend', cursive;
             font-weight: 800;
@@ -63,14 +68,69 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         #alert-modal-content { z-index: 1100; }
-        .product-status-unavailable {
-            font-size: 1rem; 
-            font-weight: 700; 
-            color: var(--danger-color); 
-            margin-top: 0.25rem;
+        body.modal-open { overflow: hidden; }
+
+        /* === PHẦN THIẾT KẾ LẠI GIAO DIỆN NÂNG CAO === */
+
+        main.container {
+            padding: 1rem 0.5rem 7rem 0.5rem; /* top-16px, left/right-8px, bottom-112px */
         }
-        body.modal-open {
+        #products-grid {
+            gap: 0.5rem; /* Giảm khoảng cách giữa các sản phẩm xuống 8px */
+        }
+        /* Trên desktop, trả lại khoảng cách lớn hơn */
+        @media (min-width: 768px) {
+            #products-grid {
+                gap: 1rem; /* 16px */
+            }
+        }
+
+        /* Thiết kế lại Thẻ Sản Phẩm để kiểm soát chiều cao */
+        .product-card {
+            background-color: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 0.25rem; /* 4px */
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        .product-card-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+        .product-card-info {
+            padding: 0.5rem; /* 8px */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Quan trọng: để thẻ co giãn theo chiều cao */
+        }
+        .product-card-name {
+            font-size: 0.8rem; /* ~13px */
+            font-weight: 500;
+            line-height: 1.4;
+            color: #1f2937;
+            /* Giữ chiều cao cố định cho tên SP để các thẻ bằng nhau */
+            height: 40px;
+        }
+        .product-card-footer {
+            margin-top: auto; /* Quan trọng: Đẩy giá và trạng thái xuống dưới cùng */
+            padding-top: 0.25rem; /* 4px */
+        }
+        .product-card-price {
+            font-size: 0.95rem; /* ~15px */
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .product-status-unavailable {
+            font-size: 0.75rem; /* 12px */
+            font-weight: 600; 
+            color: var(--danger-color);
         }
     </style>
 </head>
@@ -80,12 +140,16 @@
         <div class="spinner"></div>
     </div>
     <div id="notification" class="notification"></div>
+
+    <!-- HEADER ĐÃ ĐƯỢC TỐI ƯU GIAO DIỆN -->
     <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="container mx-auto px-4">
-            <div class="h-20 flex items-center justify-between">
+            <!-- Chiều cao header: nhỏ hơn trên di động (h-16), lớn hơn trên desktop (md:h-20) -->
+            <div class="h-16 md:h-20 flex items-center justify-between">
                 <div class="w-10"></div>
                 <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                    <h1 id="shop-name" class="text-3xl text-[var(--primary-color)]">Đang tải...</h1>
+                    <!-- Kích thước chữ: nhỏ hơn trên di động (text-2xl), lớn hơn trên desktop (md:text-3xl) -->
+                    <h1 id="shop-name" class="text-2xl md:text-3xl text-[var(--primary-color)]">Đang tải...</h1>
                     <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                 </div>
                 <button id="cart-button" onclick="showCartModal()" class="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
@@ -98,14 +162,17 @@
             <div id="category-nav" class="flex items-center space-x-2 overflow-x-auto whitespace-nowrap pb-3"></div>
         </div>
     </header>
+
     <main class="container mx-auto px-4 py-6 pb-28">
         <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         <div id="pagination-controls" class="flex justify-center items-center mt-8"></div>
     </main>
+
     <div class="contact-fab-group"> 
         <a id="fab-phone-link" href="#" title="Gọi CSKH" class="contact-fab fab-phone"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21 l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502 l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1 C9.716 21 3 14.284 3 6V5z" /></svg></a> 
         <a id="fab-zalo-link" href="#" target="_blank" title="Liên hệ Zalo CSKH" class="contact-fab fab-zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo CSKH" style="width: 40px; height: 40px; object-fit: contain;" /></a>
     </div>
+
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
     
     <div id="confirm-order-modal" class="modal">
@@ -114,6 +181,7 @@
     
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
+
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
         <p id="footer-warning" class="text-xs text-red-600 font-semibold mb-1"></p>
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
@@ -121,6 +189,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Thay URL này bằng URL mới nhất sau khi bạn triển khai lại Apps Script
             const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4S4HLaYXli-5b-pbQw8AxMd_Pxp2C579i9ak_UQge8PEh1PMAtk5yKA2HsFovMOXH/exec';
             
             let state = {
@@ -169,18 +238,34 @@
                 }
             }
             
+            // HÀM RENDER SẢN PHẨM ĐÃ ĐƯỢC CẬP NHẬT
             function renderProductsGrid() {
-                const grid = document.getElementById('products-grid'); grid.innerHTML = '';
+                const grid = document.getElementById('products-grid'); 
+                grid.innerHTML = '';
                 const filtered = state.activeCategory === 'Tất cả' ? state.products : state.products.filter(p => p.danhMuc === state.activeCategory);
+                
                 if (filtered.length === 0) {
-                    grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào.</p>`;
+                    grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
                     return;
                 }
+                
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
                     const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
-                    grid.innerHTML += `<div class="product-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer" onclick="openProductModal('${p.maSP}')"><div class="relative overflow-hidden"><img src="${mainImage}" alt="${p.tenSP}" class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"></div><div class="p-4 flex flex-col flex-grow"><p class="text-sm font-semibold text-slate-800 line-clamp-2 h-10">${p.tenSP}</p><div class="mt-auto pt-2"><p class="text-base font-bold text-[var(--primary-color)]">${p.giaBan}</p>${statusHTML}</div></div></div>`;
+                    
+                    // Cấu trúc HTML mới cho thẻ sản phẩm gọn gàng, chuyên nghiệp
+                    grid.innerHTML += `
+                        <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
+                            <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
+                            <div class="product-card-info">
+                                <p class="product-card-name line-clamp-2">${p.tenSP}</p>
+                                <div class="product-card-footer">
+                                    <p class="product-card-price">${p.giaBan}</p>
+                                    ${statusHTML}
+                                </div>
+                            </div>
+                        </div>`;
                 });
             }
 
@@ -319,12 +404,20 @@
                     else { showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); }
                 };
             };
-            function renderCategories() { const nav = document.getElementById('category-nav'); nav.innerHTML = state.categories.map(cat => `<button onclick="filterByCategory('${cat}')" class="px-4 py-1.5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${state.activeCategory === cat ? 'bg-[var(--primary-color)] text-white' : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-100'}">${cat}</button>`).join(''); }
+            
+            // HÀM RENDER DANH MỤC ĐÃ ĐƯỢC CẬP NHẬT
+            function renderCategories() {
+                const nav = document.getElementById('category-nav');
+                nav.innerHTML = state.categories.map(cat => 
+                    `<button 
+                        onclick="filterByCategory('${cat}')" 
+                        class="px-3 py-1 rounded-full text-xs font-semibold transition-colors whitespace-nowrap ${state.activeCategory === cat ? 'bg-[var(--primary-color)] text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}"
+                    >${cat}</button>`
+                ).join('');
+            }
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
             
-            // === ĐÃ SỬA LỖI TẢI ĐỊA CHỈ TRÊN MỌI TRÌNH DUYỆT ===
             async function loadAddressData() {
-                // Gọi đến Apps Script thay vì gọi API trực tiếp
                 const result = await apiCall({ action: 'getAddressData' });
                 if (result.success) {
                     addressData.provinces = result.data;
