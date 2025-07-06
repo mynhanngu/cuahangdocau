@@ -333,17 +333,16 @@
                 };
             };
             
-            // HÀM RENDER DANH MỤC "ĐẪY ĐÀ"
+            // HÀM RENDER DANH MỤC "ĐẪY ĐÀ" VÀ CÂN ĐỐI
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
                 const numCategories = state.categories.length;
-                nav.className = 'flex items-center overflow-x-auto whitespace-nowrap pt-2 pb-4 px-4 md:px-0 space-x-3';
-                const shouldStretch = numCategories > 0 && numCategories <= 4;
+                nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0';
                 nav.innerHTML = state.categories.map(cat => {
                     const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
                     const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
-                    let buttonClasses = 'px-6 py-3 rounded-full text-base font-bold transition-all duration-200 ease-in-out transform hover:-translate-y-px';
-                    if (shouldStretch) {
+                    let buttonClasses = 'mx-1.5 px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
+                    if (numCategories > 0 && numCategories <= 4) {
                         buttonClasses += ' flex-grow text-center';
                     }
                     buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
