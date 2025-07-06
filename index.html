@@ -137,7 +137,7 @@
                     apiCall({ action: 'getShopInfo' }),
                     apiCall({ action: 'getProducts' }),
                     apiCall({ action: 'getCategories' }),
-                    loadAddressData()
+                    loadAddressData() // Hàm này đã được sửa ở dưới
                 ]).then(([shopInfoRes, productsRes, categoriesRes]) => {
                     if (shopInfoRes.success) { state.shopInfo = shopInfoRes.data; renderShopInfo(state.shopInfo); }
                     if (productsRes.success) { state.products = productsRes.data; renderProductsGrid(); }
@@ -321,7 +321,18 @@
             };
             function renderCategories() { const nav = document.getElementById('category-nav'); nav.innerHTML = state.categories.map(cat => `<button onclick="filterByCategory('${cat}')" class="px-4 py-1.5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${state.activeCategory === cat ? 'bg-[var(--primary-color)] text-white' : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-100'}">${cat}</button>`).join(''); }
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
-            async function loadAddressData() { try { const res = await fetch('https://provinces.open-api.vn/api/?depth=3'); if(!res.ok) throw new Error("API địa chỉ lỗi"); addressData.provinces = await res.json(); } catch (e) { showNotification("Lỗi tải dữ liệu địa chỉ.", "error"); } }
+            
+            // === ĐÃ SỬA LỖI TẢI ĐỊA CHỈ TRÊN MỌI TRÌNH DUYỆT ===
+            async function loadAddressData() {
+                // Gọi đến Apps Script thay vì gọi API trực tiếp
+                const result = await apiCall({ action: 'getAddressData' });
+                if (result.success) {
+                    addressData.provinces = result.data;
+                } else {
+                    showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error");
+                }
+            }
+            
             window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
             window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
             window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
@@ -382,9 +393,7 @@
                 
                 openModal('confirm-order-modal');
 
-                // === THAY ĐỔI QUAN TRỌNG NHẤT LÀ Ở ĐÂY ===
-                // Chúng ta dùng setTimeout để trì hoãn việc thực thi một chút,
-                // đảm bảo modal đã hiển thị đầy đủ trên DOM trước khi chạy.
+                // Dùng setTimeout để đảm bảo modal đã hiển thị đầy đủ trên DOM trước khi chạy.
                 setTimeout(() => {
                     loadProvinces('order-province');
                 }, 0);
