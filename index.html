@@ -69,17 +69,69 @@
         input[type=number] { -moz-appearance: textfield; }
         #alert-modal-content { z-index: 1100; }
         body.modal-open { overflow: hidden; }
-        main.container { padding: 1rem 0.5rem 7rem 0.5rem; }
-        #products-grid { gap: 0.5rem; }
-        @media (min-width: 768px) { #products-grid { gap: 1rem; } }
-        .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
-        .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-3px); }
-        .product-card-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
-        .product-card-info { padding: 0.5rem; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-card-name { font-size: 0.8rem; font-weight: 500; line-height: 1.4; color: #1f2937; height: 40px; }
-        .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
-        .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
-        .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
+
+        /* === PHẦN THIẾT KẾ LẠI GIAO DIỆN NÂNG CAO === */
+
+        main.container {
+            padding: 1rem 0.5rem 7rem 0.5rem; /* top-16px, left/right-8px, bottom-112px */
+        }
+        #products-grid {
+            gap: 0.5rem; /* Giảm khoảng cách giữa các sản phẩm xuống 8px */
+        }
+        /* Trên desktop, trả lại khoảng cách lớn hơn */
+        @media (min-width: 768px) {
+            #products-grid {
+                gap: 1rem; /* 16px */
+            }
+        }
+
+        /* Thiết kế lại Thẻ Sản Phẩm để kiểm soát chiều cao */
+        .product-card {
+            background-color: white;
+            border: 1px solid #f0f0f0;
+            border-radius: 0.25rem; /* 4px */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        .product-card-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+        .product-card-info {
+            padding: 0.5rem; /* 8px */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Quan trọng: để thẻ co giãn theo chiều cao */
+        }
+        .product-card-name {
+            font-size: 0.8rem; /* ~13px */
+            font-weight: 500;
+            line-height: 1.4;
+            color: #1f2937;
+            /* Giữ chiều cao cố định cho tên SP để các thẻ bằng nhau */
+            height: 40px;
+        }
+        .product-card-footer {
+            margin-top: auto; /* Quan trọng: Đẩy giá và trạng thái xuống dưới cùng */
+            padding-top: 0.25rem; /* 4px */
+        }
+        .product-card-price {
+            font-size: 0.95rem; /* ~15px */
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .product-status-unavailable {
+            font-size: 0.75rem; /* 12px */
+            font-weight: 600; 
+            color: var(--danger-color);
+        }
     </style>
 </head>
 
@@ -186,14 +238,17 @@
                 const grid = document.getElementById('products-grid'); 
                 grid.innerHTML = '';
                 const filtered = state.activeCategory === 'Tất cả' ? state.products : state.products.filter(p => p.danhMuc === state.activeCategory);
+                
                 if (filtered.length === 0) {
                     grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
                     return;
                 }
+                
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
                     const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
+                    
                     grid.innerHTML += `
                         <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
                             <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
@@ -333,16 +388,16 @@
                 };
             };
             
-            // HÀM RENDER DANH MỤC "THÔNG MINH" ĐÃ ĐƯỢC CẬP NHẬT
+            // HÀM RENDER DANH MỤC "THÔNG MINH" VÀ "BO TRÒN" ĐÃ ĐƯỢC CẬP NHẬT
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
                 const numCategories = state.categories.length;
                 nav.className = 'flex items-center overflow-x-auto whitespace-nowrap pb-4 pt-1 px-2 md:px-0 space-x-2';
                 const shouldStretch = numCategories > 0 && numCategories <= 4;
                 nav.innerHTML = state.categories.map(cat => {
-                    const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg transform -translate-y-1';
+                    const activeClasses = 'bg-[var(--primary-color)] text-white shadow-md';
                     const inactiveClasses = 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200';
-                    let buttonClasses = 'px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ease-in-out';
+                    let buttonClasses = 'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ease-in-out';
                     if (shouldStretch) {
                         buttonClasses += ' flex-grow text-center';
                     }
