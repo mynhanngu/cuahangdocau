@@ -258,7 +258,6 @@
             let activeModals = [];
             let modalHistoryLock = false;
             let isClosingModal = false;
-            let intentToOpenAfterClose = null;
 
             window.addEventListener('popstate', (event) => {
                 if (modalHistoryLock || isClosingModal) {
@@ -267,11 +266,6 @@
                 if (activeModals.length > 0) {
                     const lastModalId = activeModals.pop();
                     closeModalUI(lastModalId);
-
-                    if (intentToOpenAfterClose) {
-                        intentToOpenAfterClose.openFunction(...intentToOpenAfterClose.args);
-                        intentToOpenAfterClose = null;
-                    }
                 }
             });
 
@@ -658,11 +652,7 @@
             window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
             
             window.checkout = () => {
-                intentToOpenAfterClose = {
-                    openFunction: showConfirmOrderModal,
-                    args: [state.cart, true]
-                };
-                closeTopMostModal();
+                showConfirmOrderModal(state.cart, true);
             }
 
             function showConfirmOrderModal(items, isCheckout = false) { 
