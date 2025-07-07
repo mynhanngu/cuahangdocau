@@ -24,27 +24,50 @@
             color: #334155; 
             font-size: 14px;
         }
+        body.modal-open { overflow: hidden; }
+
         #shop-name {
             font-family: 'Lexend', cursive;
             font-weight: 800;
         }
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+        
+        /* NÂNG CẤP: CSS cho Modal và các thành phần liên quan */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        /* NÂNG CẤP: Tăng kích thước nút X và giữ độ mảnh */
+        .modal-close-btn { 
+            position: absolute; 
+            top: 1rem; 
+            right: 1rem; 
+            color: #9ca3af; 
+            font-size: 2rem; /* Tăng kích thước */
+            font-weight: normal; /* Giữ độ mảnh */
+            line-height: 1; 
+            cursor: pointer; 
+            transition: color 0.2s; 
+            z-index: 10; 
+        }
+        .modal-close-btn:hover { color: #1f2937; }
+        
         .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.8); z-index: 2000; justify-content: center; align-items: center; }
         .loading.active { display: flex; }
         .spinner { border: 4px solid #e5e7eb; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .notification { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; z-index: 1500; opacity: 0; transition: all 0.4s ease-in-out; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
         .notification.show { transform: translate(-50%, 10px); opacity: 1; }
         .notification.success { background-color: #10b981; }
         .notification.error { background-color: var(--danger-color); }
+        
         .cart-badge { position: absolute; top: -4px; right: -8px; background-color: var(--danger-color); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
-        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; color: #9ca3af; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: color 0.2s; z-index: 10; }
-        .modal-close-btn:hover { color: #1f2937; }
+        
         #category-nav::-webkit-scrollbar { display: none; }
         #product-modal-content { max-width: 800px !important; width: 95%; max-height: 90vh; overflow-y: auto; }
+        #alert-modal-content { z-index: 1100; }
+        
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-color-dark); }
@@ -52,26 +75,31 @@
         .btn-secondary:hover { background-color: #a7f3d0; }
         .btn-danger { background-color: var(--danger-color); color: white; }
         .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        
         .input-field { width: 100%; padding: 0.6rem 1rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; transition: border-color 0.2s, box-shadow 0.2s; }
         .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-color-light); }
         .input-field.border-red-500 { border-color: #ef4444; }
         .input-field.border-red-500:focus { box-shadow: 0 0 0 2px #fecaca; }
+        
         .contact-fab-group { position: fixed; bottom: 5rem; right: 1rem; z-index: 999; display: flex; flex-direction: column; gap: 0.75rem; }
         .contact-fab { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease; }
         .contact-fab:hover { transform: scale(1.1); }
         .fab-phone { background-color: #25D366; }
         .fab-zalo { background-color: #E0F0FF; }
+        
         .peer:disabled + div { cursor: not-allowed; opacity: 0.5; }
+        
         .thumbnail-image { cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-image.active { border-color: var(--primary-color); }
+        
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        #alert-modal-content { z-index: 1100; }
-        body.modal-open { overflow: hidden; }
+        
         main.container { padding: 1rem 0.5rem 7rem 0.5rem; }
         #products-grid { gap: 0.5rem; }
         @media (min-width: 768px) { #products-grid { gap: 1rem; } }
+        
         .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
         .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-3px); }
         .product-card-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
@@ -83,36 +111,22 @@
 
         /* NÂNG CẤP: CSS cho các nút điều hướng và bộ đếm ảnh */
         .gallery-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #eee;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7); border-radius: 50%;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee;
         }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
         .gallery-nav-btn.prev { left: 0.5rem; }
         .gallery-nav-btn.next { right: 0.5rem; }
         .gallery-nav-btn svg { width: 20px; height: 20px; color: #333; }
         .gallery-counter {
-            position: absolute;
-            bottom: 0.75rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
+            position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5); color: white;
+            padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
         }
+        /* NÂNG CẤP: Thêm con trỏ zoom-in cho ảnh có thể phóng to */
+        .cursor-zoom-in { cursor: zoom-in; }
     </style>
 </head>
 
@@ -152,14 +166,17 @@
     </div>
 
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
-    
-    <div id="confirm-order-modal" class="modal">
-        <div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div>
-    </div>
-    
+    <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
 
+    <div id="image-viewer-modal" class="modal">
+        <div class="relative w-full h-full flex items-center justify-center p-4">
+            <button onclick="closeModal('image-viewer-modal')" class="modal-close-btn" aria-label="Đóng trình xem ảnh">×</button>
+            <img id="fullscreen-image" src="" alt="Full-size product image" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+        </div>
+    </div>
+    
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
         <p id="footer-warning" class="text-xs text-red-600 font-semibold mb-1"></p>
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
@@ -175,6 +192,46 @@
             };
             let addressData = { provinces: [], districts: [], wards: [] };
             const loadingSpinner = document.getElementById('loading-spinner');
+            
+            // NÂNG CẤP: Hệ thống quản lý popup thông minh
+            let activeModals = [];
+
+            window.addEventListener('popstate', (event) => {
+                // Xử lý khi người dùng nhấn nút "Back" của trình duyệt
+                if (activeModals.length > 0) {
+                    const lastModalId = activeModals[activeModals.length - 1];
+                    closeModal(lastModalId, true); // Đóng modal mà không ảnh hưởng history
+                }
+            });
+
+            function openModal(id) {
+                const modal = document.getElementById(id);
+                if (modal && !activeModals.includes(id)) {
+                    activeModals.push(id);
+                    modal.classList.add('active');
+                    document.body.classList.add('modal-open');
+                    // Đẩy một state vào history để "bắt" sự kiện back
+                    history.pushState({ modalId: id }, `Modal ${id}`);
+                }
+            }
+
+            window.closeModal = (id, fromPopState = false) => {
+                const modal = document.getElementById(id);
+                if (modal) {
+                    modal.classList.remove('active');
+                    activeModals = activeModals.filter(modalId => modalId !== id);
+
+                    if (activeModals.length === 0) {
+                        document.body.classList.remove('modal-open');
+                    }
+
+                    // Nếu việc đóng không phải do sự kiện popstate, ta cần tự lùi history
+                    if (!fromPopState && history.state && history.state.modalId === id) {
+                        history.back();
+                    }
+                }
+            };
+            // --- Kết thúc hệ thống quản lý popup ---
 
             async function init() {
                 showLoading();
@@ -241,60 +298,40 @@
                 });
             }
 
-            function openModal(id) {
-                const modal = document.getElementById(id);
-                if (modal) {
-                    modal.classList.add('active');
-                    document.body.classList.add('modal-open');
-                }
-            }
-
-            window.closeModal = (id) => {
-                const modal = document.getElementById(id);
-                if (modal) {
-                    modal.classList.remove('active');
-                    if (document.querySelectorAll('.modal.active').length === 0) {
-                        document.body.classList.remove('modal-open');
-                    }
-                }
-            };
-
             window.openProductModal = (maSP) => {
                 state.currentProduct = state.products.find(p => p.maSP === maSP);
                 if (!state.currentProduct) return;
-                openModal('product-modal');
                 renderProductModalContent();
+                openModal('product-modal');
             };
 
-            // NÂNG CẤP: renderProductModalContent được làm lại hoàn toàn
             function renderProductModalContent() {
                 const p = state.currentProduct;
                 const content = document.getElementById('product-modal-content');
                 const validImages = p.hinhAnh.filter(img => img);
 
-                // NÂNG CẤP: HTML cho khu vực gallery ảnh, bao gồm các nút và bộ đếm
+                // NÂNG CẤP: Thêm onclick vào ảnh chính để mở trình xem ảnh
                 const imageSliderHTML = `
                     <div>
                         <div id="image-swipe-container" class="relative overflow-hidden rounded-lg bg-slate-100">
-                            <img id="main-product-image" src="${validImages[0] || 'https://via.placeholder.com/400'}" class="w-full h-auto aspect-square object-cover transition-transform duration-300 ease-in-out">
-                           
+                            <img id="main-product-image" src="${validImages[0] || 'https://via.placeholder.com/400'}" 
+                                 class="w-full h-auto aspect-square object-cover transition-transform duration-300 ease-in-out cursor-zoom-in"
+                                 onclick="openImageViewer(this.src)" title="Nhấn để xem ảnh lớn">
+                            
                             <div id="gallery-nav-buttons" style="display: none;">
-                                <button onclick="navigateGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                                </button>
-                                <button onclick="navigateGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                                </button>
+                                <button onclick="navigateGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
+                                <button onclick="navigateGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
                             </div>
-                           
+                            
                             <div id="gallery-counter" class="gallery-counter" style="display: none;"></div>
                         </div>
-                       
+                        
                         <div id="thumbnail-container" class="flex gap-2 overflow-x-auto mt-2" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
                             ${validImages.map((img, index) => `<img src="${img}" data-index="${index}" class="thumbnail-image w-16 h-16 object-cover rounded-md ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', this)">`).join('')}
                         </div>
                     </div>`;
-               
+                
+                // Khôi phục: Chức năng xem thêm/thu gọn mô tả đã có sẵn
                 const descriptionHTML = p.moTa ? `<div id="product-description" class="text-sm text-slate-600"></div>` : '';
                 let variantsHTML = '';
                 if (p.bienThe && p.bienThe.length > 0) {
@@ -306,14 +343,21 @@
                 const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : '';
                 
                 content.innerHTML = `<button onclick="closeModal('product-modal')" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
-               
+                
                 toggleDescription(true);
                 updateVariantUI();
                 if (validImages.length > 0) {
                     initSwipe(validImages);
                 }
             }
+            
+            // NÂNG CẤP: Thêm hàm mở trình xem ảnh
+            window.openImageViewer = (src) => {
+                document.getElementById('fullscreen-image').src = src;
+                openModal('image-viewer-modal');
+            }
 
+            // Khôi phục: Chức năng toggle description đã có sẵn
             window.toggleDescription = (isInitial = false) => {
                 const p = state.currentProduct;
                 const container = document.getElementById('product-description');
@@ -326,25 +370,18 @@
                 else { if (shouldExpand) { container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; } else { container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } }
             };
 
-            // NÂNG CẤP: Các hàm quản lý Gallery
             let touchstartX = 0, touchendX = 0, currentImageIndex = 0, isDragging = false;
-
             function initSwipe(images) {
                 const swipeContainer = document.getElementById('image-swipe-container');
                 currentImageIndex = 0;
-                updateGalleryUI(images); // Cập nhật UI ban đầu
-
+                updateGalleryUI(images);
                 const handleGestureEnd = () => {
                     const swipeThreshold = 50;
-                    if (touchendX < touchstartX - swipeThreshold) navigateGallery(1); // Vuốt trái
-                    if (touchendX > touchstartX + swipeThreshold) navigateGallery(-1); // Vuốt phải
+                    if (touchendX < touchstartX - swipeThreshold) navigateGallery(1);
+                    if (touchendX > touchstartX + swipeThreshold) navigateGallery(-1);
                 };
-
-                // Sự kiện chạm
                 swipeContainer.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, { passive: true });
                 swipeContainer.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX; handleGestureEnd(); });
-
-                // Sự kiện chuột
                 swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); isDragging = true; touchstartX = e.screenX; swipeContainer.style.cursor = 'grabbing'; });
                 swipeContainer.addEventListener('mouseup', e => { if (!isDragging) return; isDragging = false; touchendX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
                 swipeContainer.addEventListener('mouseleave', e => { if (!isDragging) return; isDragging = false; touchendX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
@@ -363,9 +400,7 @@
                 const thumbnails = document.querySelectorAll('.thumbnail-image');
                 const counter = document.getElementById('gallery-counter');
                 const navButtons = document.getElementById('gallery-nav-buttons');
-               
                 mainImage.src = images[currentImageIndex];
-               
                 if (images.length > 1) {
                     counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
                     counter.style.display = 'block';
@@ -387,6 +422,7 @@
                 updateGalleryUI(validImages);
             };
 
+            // Phần còn lại của Javascript không thay đổi nhiều
             function getSelectedVariant() {
                 const p = state.currentProduct;
                 if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parseFloat(p.giaBan.replace(/[^0-9]/g, '')) || 0, trangThai: p.trangThai }, options: [] };
@@ -455,7 +491,6 @@
                     else { showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); }
                 };
             };
-            
             function renderCategories() {
                 const nav = document.getElementById('category-nav');
                 const numCategories = state.categories.length;
@@ -464,21 +499,17 @@
                     const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
                     const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
                     let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
-                    if (numCategories > 0 && numCategories <= 4) {
-                        buttonClasses += ' flex-grow text-center';
-                    }
+                    if (numCategories > 0 && numCategories <= 4) { buttonClasses += ' flex-grow text-center'; }
                     buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
                     return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`;
                 }).join('');
             }
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
-            
             async function loadAddressData() {
                 const result = await apiCall({ action: 'getAddressData' });
                 if (result.success) { addressData.provinces = result.data; } 
                 else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); }
             }
-            
             window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
             window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
             window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
@@ -497,16 +528,12 @@
             window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); }
             window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
             window.checkout = () => { if (state.cart.length === 0) { showNotification('Giỏ hàng trống!', 'error'); return; } closeModal('cart-modal'); showConfirmOrderModal(state.cart, true); }
-            
             function showConfirmOrderModal(items, isCheckout = false) { 
                 state.orderContext = { items, isCheckout };
                 const content = document.getElementById('confirm-order-modal-content'); 
                 const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0); 
                 const itemsHTML = items.map(item => { const optionsText = item.selectedOptions ? ` <span class="text-xs bg-slate-100 p-1 rounded">(${item.selectedOptions})</span>` : ''; return `<div class="text-sm"><strong>${item.quantity}x</strong> ${item.product.tenSP}${optionsText}</div>` }).join('');
-                
-                const luuYDatHangHTML = state.shopInfo.luuYDatHang 
-                    ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` 
-                    : '';
+                const luuYDatHangHTML = state.shopInfo.luuYDatHang ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` : '';
 
                 content.innerHTML = `
                     <button onclick="closeModal('confirm-order-modal')" class="modal-close-btn">×</button>
@@ -551,7 +578,6 @@
                     } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
                 });
             }
-            
             window.updateModalQuantity = (change) => { const input = document.getElementById('product-quantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; };
             const showLoading = () => loadingSpinner.classList.add('active'); 
             const hideLoading = () => loadingSpinner.classList.remove('active');
