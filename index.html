@@ -211,7 +211,6 @@
         <a id="fab-zalo-link" href="#" target="_blank" title="Liên hệ Zalo CSKH" class="contact-fab fab-zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo CSKH" style="width: 40px; height: 40px; object-fit: contain;" /></a>
     </div>
 
-    <!-- Sửa lại: Các nút X sẽ gọi closeTopMostModal() -->
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
     <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
@@ -254,7 +253,6 @@
             // === LOGIC MODAL ĐÃ SỬA LỖI TRIỆT ĐỂ ===
             let activeModals = [];
             
-            // popstate chỉ chịu trách nhiệm cập nhật giao diện
             window.addEventListener('popstate', (event) => {
                 const lastModalId = activeModals.pop();
                 if (lastModalId) {
@@ -270,31 +268,26 @@
                        document.body.classList.add('modal-open');
                     }
                     activeModals.push(id);
-                    // Chỉ push state khi mở, không push khi đóng
                     history.pushState({ modalId: id }, `Modal ${id}`);
                 }
             }
 
-            // Hàm này chỉ đóng giao diện
             function closeModalUI(id) {
                 const modal = document.getElementById(id);
                 if (modal) {
                     modal.classList.remove('active');
                 }
-                // Chỉ gỡ khóa scroll khi không còn modal nào
                 if (activeModals.length === 0) {
                     document.body.classList.remove('modal-open');
                 }
             }
-
-            // Hàm mới, duy nhất để đóng modal từ các nút bấm hoặc cử chỉ
+            
             window.closeTopMostModal = () => {
                 if (activeModals.length > 0) {
                     history.back();
                 }
             }
             // === KẾT THÚC LOGIC MODAL ===
-
 
             async function init() {
                 showLoading();
@@ -426,6 +419,7 @@
             let currentImageIndex = 0;
             let isGalleryAnimating = false;
             
+            // === CÁC HÀM CHO GALLERY NHỎ (ĐÃ KHÔI PHỤC) ===
             function initSwipe() {
                 const swipeContainer = document.getElementById('image-swipe-container');
                 let startX = 0;
@@ -569,14 +563,21 @@
                     const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
                     
                     const result = await apiCall({ action: 'submitOrder', order: orderData });
+                    
+                    // Logic đóng modal sau khi có kết quả
+                    const modalsToCloseCount = activeModals.length;
+                    
                     hideLoading(); 
 
-                    // Đóng tất cả các modal đang mở bằng cách gọi history.back()
-                    while(activeModals.length > 0) {
-                        history.back();
-                    }
-
                     if (result.success) { 
+                        if (history.length > modalsToCloseCount) {
+                            history.go(-modalsToCloseCount);
+                        } else {
+                            // Nếu không đủ history, đóng thủ công
+                            activeModals.forEach(id => closeModalUI(id));
+                            activeModals = [];
+                        }
+
                         if (isCheckout) { 
                             state.cart = []; 
                             saveCart(); 
@@ -585,6 +586,7 @@
                         showNotification(result.message); 
                     } 
                     else { 
+                        closeTopMostModal(); // Chỉ đóng alert modal nếu thất bại
                         showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); 
                     }
                 };
