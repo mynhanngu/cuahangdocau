@@ -164,8 +164,13 @@
             cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee;
         }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
-        .gallery-nav-btn.prev { left: 0.5rem; }
-        .gallery-nav-btn.next { right: 0.5rem; }
+        .gallery-nav-btn.prev { left: 1rem; }
+        .gallery-nav-btn.next { right: 1rem; }
+
+        @media (min-width: 768px) {
+            .gallery-nav-btn.prev { left: 1.5rem; }
+            .gallery-nav-btn.next { right: 1.5rem; }
+        }
         .gallery-nav-btn svg { width: 20px; height: 20px; color: #333; }
         .gallery-counter {
             position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
@@ -218,18 +223,20 @@
     
     <div id="image-viewer-modal" class="modal">
         <div id="fullscreen-swipe-container" class="relative w-full h-full flex items-center justify-center p-0 md:p-4">
-            <button onclick="closeTopMostModal()" class="modal-close-btn" aria-label="Đóng trình xem ảnh">×</button>
+            <button onclick="closeImageViewer()" class="modal-close-btn" aria-label="Đóng trình xem ảnh">×</button>
+            
             <div id="image-aspect-frame"> 
                 <img id="fullscreen-image" src="" alt="Full-size product image">
-                <div id="fullscreen-gallery-nav" style="display: none;">
-                    <button id="fullscreen-prev-btn" onclick="navigateFullscreenGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
-                    </button>
-                    <button id="fullscreen-next-btn" onclick="navigateFullscreenGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg>
-                    </button>
-                </div>
                 <div id="fullscreen-gallery-counter" class="gallery-counter" style="display: none;"></div>
+            </div>
+
+            <div id="fullscreen-gallery-nav" style="display: none;">
+                <button id="fullscreen-prev-btn" onclick="navigateFullscreenGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
+                </button>
+                <button id="fullscreen-next-btn" onclick="navigateFullscreenGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg>
+                </button>
             </div>
         </div>
     </div>
@@ -250,19 +257,13 @@
             let addressData = { provinces: [], districts: [], wards: [] };
             const loadingSpinner = document.getElementById('loading-spinner');
             
-            // === LOGIC MODAL TỐI ƯU ===
             let activeModals = [];
             let modalHistoryLock = false;
 
-            // Lắng nghe nút back của trình duyệt
-            // ✅ SỬA LỖI 1: THAY THẾ HÀM DƯỚI ĐÂY
             window.addEventListener('popstate', (event) => {
-                // Nếu đang bị khóa, không làm gì cả.
                 if (modalHistoryLock) {
                     return;
                 }
-
-                // Xử lý đóng modal khi người dùng bấm back.
                 if (activeModals.length > 0) {
                     const lastModalId = activeModals.pop();
                     closeModalUI(lastModalId);
@@ -277,12 +278,10 @@
                        document.body.classList.add('modal-open');
                     }
                     activeModals.push(id);
-                    // Đẩy một trạng thái mới vào history để nút back có tác dụng
                     history.pushState({ isModal: true, modalId: id }, null);
                 }
             }
             
-            // Hàm này chỉ đóng giao diện
             function closeModalUI(id) {
                 const modal = document.getElementById(id);
                 if (modal) {
@@ -293,13 +292,17 @@
                 }
             }
 
-            // Hàm mới, duy nhất để đóng modal từ các nút bấm hoặc cử chỉ
             window.closeTopMostModal = () => {
                 if (activeModals.length > 0) {
                     history.back();
                 }
             }
-            // === KẾT THÚC LOGIC MODAL ===
+
+            window.closeImageViewer = () => {
+                if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'image-viewer-modal') {
+                    history.back();
+                }
+            }
 
             async function init() {
                 showLoading();
@@ -563,7 +566,6 @@
                 alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
                 openModal('alert-modal');
                 
-                // ✅ SỬA LỖI 2: THAY THẾ TOÀN BỘ HÀM ONCLICK DƯỚI ĐÂY
                 document.getElementById('confirm-alert-btn').onclick = async () => {
                     showLoading();
                     const { items, isCheckout } = state.orderContext;
@@ -580,37 +582,23 @@
 
                     if (result.success) {
                         const modalsToCloseCount = activeModals.length;
-
-                        // 1. Đóng giao diện của tất cả các modal đang mở
                         [...activeModals].reverse().forEach(id => closeModalUI(id));
-
-                        // 2. Khóa listener `popstate` lại để nó không chạy
                         modalHistoryLock = true;
-
-                        // 3. Tua lại lịch sử trình duyệt để xóa các state của modal
                         if (history.length > modalsToCloseCount) {
                             history.go(-modalsToCloseCount);
                         }
-
-                        // 4. Dọn dẹp trạng thái trong ứng dụng
                         activeModals = [];
                         document.body.classList.remove('modal-open');
-
-                        // 5. Mở khóa sau một khoảng trễ ngắn
                         setTimeout(() => {
                             modalHistoryLock = false;
                         }, 100);
-
-                        // 6. Xóa giỏ hàng (nếu cần) và hiển thị thông báo
                         if (isCheckout) {
                             state.cart = [];
                             saveCart();
                             updateCartBadge();
                         }
                         showNotification(result.message);
-
                     } else {
-                        // Nếu thất bại, chỉ đóng modal thông báo
                         closeTopMostModal();
                         showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
                     }
@@ -708,7 +696,6 @@
             const hideLoading = () => loadingSpinner.classList.remove('active');
             function showNotification(msg, type = 'success') { const el = document.getElementById('notification'); el.textContent = msg; el.className = `notification ${type} show`; setTimeout(() => el.classList.remove('show'), 3000); }
             
-            // === CÁC HÀM CHO POPUP XEM ẢNH TO ===
             let fullscreenImages = [];
             let currentFullscreenIndex = 0;
             let fullscreenAnimating = false;
@@ -740,11 +727,12 @@
                     const deltaY = touchEndY - touchStartY;
                     const swipeThreshold = 50;
 
-                    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    if (Math.abs(deltaY) > Math.abs(deltaX)) { // Vuốt dọc
                         if (Math.abs(deltaY) > swipeThreshold) {
-                            closeTopMostModal();
+                            e.preventDefault(); 
+                            closeImageViewer();
                         }
-                    } else {
+                    } else { // Vuốt ngang
                         if (deltaX < -swipeThreshold) {
                             navigateFullscreenGallery(1); 
                         } else if (deltaX > swipeThreshold) {
