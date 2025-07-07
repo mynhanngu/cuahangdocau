@@ -90,6 +90,10 @@
             #fullscreen-image {
                 border-radius: 0.5rem;
             }
+            /* Giới hạn chiều rộng popup đặt hàng trên desktop */
+            #confirm-order-modal-content {
+                max-width: 480px !important; 
+            }
         }
         
         @media (max-width: 767px) {
@@ -211,7 +215,7 @@
     </div>
 
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
-    <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-lg md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
+    <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
     
@@ -255,7 +259,7 @@
             window.addEventListener('popstate', (event) => {
                 const lastModalId = activeModals.pop();
                 if (lastModalId) {
-                    closeModal(lastModalId);
+                    closeModalUI(lastModalId);
                 }
             });
 
@@ -271,8 +275,7 @@
                 }
             }
 
-            // Hàm này chỉ đóng giao diện, không can thiệp history
-            function closeModal(id) {
+            function closeModalUI(id) {
                 const modal = document.getElementById(id);
                 if (modal) {
                     modal.classList.remove('active');
@@ -359,17 +362,17 @@
                 const p = state.currentProduct;
                 const content = document.getElementById('product-modal-content');
                 const validImages = p.hinhAnh.filter(img => img);
-                currentImageIndex = 0; // Reset index khi mở modal
+                currentImageIndex = 0;
 
                 const imageSliderHTML = `
                     <div>
-                        <div id="image-swipe-container" class="relative overflow-hidden rounded-lg bg-slate-100">
+                        <div id="image-swipe-container" class="relative overflow-hidden rounded-lg bg-slate-100 cursor-pointer">
                             <img id="main-product-image" src="${validImages[0] || 'https://via.placeholder.com/400'}" 
                                  class="w-full h-auto aspect-square object-cover" style="transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;"
                                  onclick="window.openImageViewer()" title="Nhấn để xem ảnh lớn">
-                            <div id="gallery-nav-buttons" style="display: ${validImages.length > 1 ? 'block' : 'none'};">
-                                <button onclick="navigateGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
-                                <button onclick="navigateGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
+                            <div id="gallery-nav-buttons" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
+                                <button onclick="navigateGallery(-1, event)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
+                                <button onclick="navigateGallery(1, event)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
                             </div>
                             <div id="gallery-counter" class="gallery-counter" style="display: ${validImages.length > 1 ? 'block' : 'none'};"></div>
                         </div>
@@ -393,8 +396,8 @@
                 toggleDescription(true);
                 updateVariantUI();
                 if (validImages.length > 0) {
-                    updateGalleryUI(validImages); // Cập nhật UI lần đầu
-                    initSwipe(); // Gọi hàm vuốt cho gallery nhỏ
+                    updateGalleryUI(validImages);
+                    initSwipe(); 
                 }
             }
             
@@ -413,7 +416,7 @@
             let currentImageIndex = 0;
             let isGalleryAnimating = false;
             
-            // === CÁC HÀM CHO GALLERY NHỎ (ĐÃ SỬA LỖI) ===
+            // === CÁC HÀM CHO GALLERY NHỎ (ĐÃ KHÔI PHỤC) ===
             function initSwipe() {
                 const swipeContainer = document.getElementById('image-swipe-container');
                 let startX = 0;
@@ -422,8 +425,8 @@
 
                 const handleGestureEnd = () => {
                     const swipeThreshold = 50;
-                    if (endX < startX - swipeThreshold) navigateGallery(1); // Vuốt trái -> ảnh tiếp
-                    if (endX > startX + swipeThreshold) navigateGallery(-1); // Vuốt phải -> ảnh trước
+                    if (endX < startX - swipeThreshold) navigateGallery(1); 
+                    if (endX > startX + swipeThreshold) navigateGallery(-1); 
                 };
 
                 swipeContainer.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
@@ -433,7 +436,8 @@
                 swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; endX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
             }
 
-            window.navigateGallery = (direction) => {
+            window.navigateGallery = (direction, event) => {
+                if(event) event.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
                 if (isGalleryAnimating) return;
                 isGalleryAnimating = true;
 
@@ -461,15 +465,17 @@
                 const mainImage = document.getElementById('main-product-image');
                 const thumbnails = document.querySelectorAll('.thumbnail-image');
                 const counter = document.getElementById('gallery-counter');
-                mainImage.src = images[currentImageIndex];
+                if (mainImage) mainImage.src = images[currentImageIndex];
                 if (counter) counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
-                thumbnails.forEach(thumb => {
-                    thumb.classList.remove('active');
-                    if (parseInt(thumb.dataset.index) === currentImageIndex) {
-                        thumb.classList.add('active');
-                        thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                });
+                if (thumbnails) {
+                    thumbnails.forEach(thumb => {
+                        thumb.classList.remove('active');
+                        if (parseInt(thumb.dataset.index) === currentImageIndex) {
+                            thumb.classList.add('active');
+                            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    });
+                }
             }
 
             window.changeMainImage = (thumb) => {
@@ -489,8 +495,6 @@
                     isGalleryAnimating = false;
                 }, 250);
             };
-            // === KẾT THÚC CÁC HÀM CHO GALLERY NHỎ ===
-
 
             function getSelectedVariant() {
                 const p = state.currentProduct;
@@ -545,7 +549,6 @@
                 alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="history.back()" class="flex-1 btn btn-secondary">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
                 openModal('alert-modal');
                 document.getElementById('confirm-alert-btn').onclick = async () => {
-                    history.back();
                     showLoading(); 
                     const { items, isCheckout } = state.orderContext;
                     const name = document.getElementById('order-name').value, phone = document.getElementById('order-phone').value, address = document.getElementById('order-address').value;
@@ -555,11 +558,18 @@
                     const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${i.price.toLocaleString('vi-VN')}đ`; }).join('\n');
                     const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
                     const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
+                    
+                    const initialModalCount = activeModals.length;
+                    
                     const result = await apiCall({ action: 'submitOrder', order: orderData });
                     hideLoading(); 
+
                     if (result.success) { 
-                        while(activeModals.length > 0) {
-                            history.back();
+                        // Đóng tất cả các modal đang mở
+                        for (let i = 0; i < initialModalCount; i++) {
+                            if (history.state) {
+                                history.back();
+                            }
                         }
                         if (isCheckout) { 
                             state.cart = []; 
@@ -568,7 +578,10 @@
                         } 
                         showNotification(result.message); 
                     } 
-                    else { showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); }
+                    else { 
+                        history.back(); // Chỉ đóng alert modal nếu thất bại
+                        showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); 
+                    }
                 };
             };
             function renderCategories() {
@@ -673,7 +686,8 @@
                 }
             };
 
-            // === CÁC HÀM CHO POPUP XEM ẢNH TO ===
+            // === CÁC HÀM CHO POPUP XEM ẢNH TO (ĐÃ SỬA LỖI) ===
+            let fullscreenAnimating = false;
             function initFullscreenSwipe() {
                 const swipeContainer = document.getElementById('fullscreen-swipe-container');
                 let touchStartX = 0, touchStartY = 0;
@@ -697,9 +711,9 @@
                         }
                     } else {
                         if (deltaX < -swipeThreshold) {
-                            navigateFullscreenGallery(1); // Vuốt trái
+                            navigateFullscreenGallery(1); 
                         } else if (deltaX > swipeThreshold) {
-                            navigateFullscreenGallery(-1); // Vuốt phải
+                            navigateFullscreenGallery(-1); 
                         }
                     }
                 });
@@ -715,7 +729,6 @@
                 swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); });
             }
 
-            let fullscreenAnimating = false;
             window.navigateFullscreenGallery = (direction) => {
                 if (fullscreenAnimating) return;
                 fullscreenAnimating = true;
