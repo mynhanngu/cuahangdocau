@@ -36,50 +36,65 @@
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
-        /* === CSS ĐÃ CHỈNH SỬA THEO YÊU CẦU MỚI === */
-        /* Nút X to 1.5 lần, ôm sát và luôn hiển thị */
+        /* === CSS ĐÃ CHỈNH SỬA THEO YÊU CẦU MỚI NHẤT === */
+        /* Nút X: Bỏ nền, chữ màu đen, có đổ bóng để dễ nhìn trên mọi nền */
         .modal-close-btn { 
             position: absolute; 
-            top: 0.5rem;
-            right: 0.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
+            top: 0.75rem;
+            right: 1rem;
+            width: auto; /* Bỏ width, height cố định */
+            height: auto;
             font-size: 2.5rem;
-            z-index: 1050; /* Giữ z-index cao để đảm bảo luôn hiển thị */
-            border-radius: 50%;
+            z-index: 1050; 
+            border-radius: 0; /* Bỏ border-radius */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white; 
-            font-weight: normal; 
+            color: black; 
+            font-weight: 300; /* Dùng font mỏng hơn */
             line-height: 1;
             cursor: pointer; 
             transition: all 0.2s;
-            background-color: rgba(0, 0, 0, 0.2);
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            background-color: transparent; /* Bỏ nền */
+            padding: 0.5rem; /* Thêm padding để dễ bấm */
+            text-shadow: 0 0 4px white, 0 0 6px white; /* Thêm đổ bóng trắng để nổi bật */
         }
         .modal-close-btn:hover { 
-            background-color: rgba(0, 0, 0, 0.5);
-            transform: scale(1.1);
+            transform: scale(1.2);
+            background-color: transparent; /* Đảm bảo không có nền khi hover */
         }
         
-        /* CSS cho khung ảnh 4:3 */
+        /* Popup ảnh: Mặc định là full màn hình cho mobile */
         #image-aspect-frame {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            height: 100%;
-            max-width: 90vw;
-            max-height: 90vh;
-            aspect-ratio: 4 / 3;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw; /* Ghi đè các giới hạn cũ */
+            max-height: 100vh;
+            aspect-ratio: unset; /* Bỏ aspect-ratio trên mobile */
         }
         #fullscreen-image {
             width: 100%;
             height: 100%;
             object-fit: contain; 
-            border-radius: 0.5rem;
+            border-radius: 0; /* Bỏ bo góc trên mobile */
+        }
+        
+        /* Áp dụng tỷ lệ 4:3 chỉ cho màn hình máy tính (768px trở lên) */
+        @media (min-width: 768px) {
+            #image-aspect-frame {
+                max-width: 90vw;
+                max-height: 90vh;
+                width: auto; /* Để trình duyệt tự tính toán dựa trên aspect-ratio */
+                height: auto;
+                aspect-ratio: 4 / 3;
+            }
+            #fullscreen-image {
+                border-radius: 0.5rem;
+            }
         }
         /* === KẾT THÚC CSS CHỈNH SỬA === */
         
@@ -199,11 +214,13 @@
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
     
-    <!-- Cấu trúc HTML cho popup ảnh, sử dụng #image-aspect-frame -->
+    <!-- Cấu trúc HTML cho popup ảnh không thay đổi, chỉ CSS thay đổi -->
     <div id="image-viewer-modal" class="modal">
-        <div id="fullscreen-swipe-container" class="relative w-full h-full flex items-center justify-center p-4">
+        <div id="fullscreen-swipe-container" class="relative w-full h-full flex items-center justify-center p-0 md:p-4">
+            <!-- Nút X vẫn nằm ở đây để được định vị theo góc màn hình -->
             <button onclick="closeModal('image-viewer-modal')" class="modal-close-btn" aria-label="Đóng trình xem ảnh">×</button>
             
+            <!-- Khung này sẽ thay đổi thuộc tính dựa trên Media Query -->
             <div id="image-aspect-frame"> 
                 <img id="fullscreen-image" src="" alt="Full-size product image">
                 
@@ -372,7 +389,7 @@
                 }
                 const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : '';
                 
-                content.innerHTML = `<button onclick="closeModal('product-modal')" class="modal-close-btn z-20" style="color: #9ca3af; background-color: rgba(255, 255, 255, 0.5);">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
+                content.innerHTML = `<button onclick="closeModal('product-modal')" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
                 
                 toggleDescription(true);
                 updateVariantUI();
@@ -544,8 +561,7 @@
             function updateCartBadge() { const badge = document.getElementById('cart-badge'); const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0); badge.textContent = totalItems; badge.classList.toggle('hidden', totalItems === 0); }
             window.showCartModal = () => { 
                 const content = document.getElementById('cart-modal-content'); 
-                // Sử dụng style inline để ghi đè CSS của nút X cho các modal khác
-                let cartHTML = `<button onclick="closeModal('cart-modal')" class="modal-close-btn" style="color: #9ca3af; background-color: rgba(255, 255, 255, 0.5);">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`; 
+                let cartHTML = `<button onclick="closeModal('cart-modal')" class="modal-close-btn">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`; 
                 if (state.cart.length === 0) { cartHTML += '<p class="text-center text-slate-500">Giỏ hàng trống.</p>'; } 
                 else { let total = 0; cartHTML += '<div class="space-y-4">'; state.cart.forEach(item => { const itemTotal = item.price * item.quantity; total += itemTotal; const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100'; const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : ''; cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`; }); cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; } 
                 content.innerHTML = cartHTML; 
@@ -562,7 +578,7 @@
                 const luuYDatHangHTML = state.shopInfo.luuYDatHang ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` : '';
 
                 content.innerHTML = `
-                    <button onclick="closeModal('confirm-order-modal')" class="modal-close-btn" style="color: #9ca3af; background-color: rgba(255, 255, 255, 0.5);">×</button>
+                    <button onclick="closeModal('confirm-order-modal')" class="modal-close-btn">×</button>
                     <h2 class="text-xl font-bold mb-4">Thông tin giao hàng</h2>
                     <form onsubmit="handleOrderSubmit(event)">
                         <div class="space-y-4 text-sm">
