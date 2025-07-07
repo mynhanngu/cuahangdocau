@@ -116,6 +116,11 @@
         #product-modal-content { max-width: 800px !important; width: 95%; max-height: 90vh; overflow-y: auto; }
         #alert-modal-content { z-index: 1100; }
         
+        #footer-warning {
+            white-space: pre-wrap; /* Giữ lại các ký tự xuống dòng từ Google Sheet */
+            text-align: center;      /* Luôn đảm bảo văn bản được căn giữa */
+        }
+        
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-color-dark); }
@@ -272,7 +277,6 @@
             function openModal(id) {
                 const modal = document.getElementById(id);
                 if (modal && !modal.classList.contains('active')) {
-                    // Tự động tăng z-index để pop-up mới luôn nằm trên
                     modal.style.zIndex = 1000 + activeModals.length + 1;
                     
                     modal.classList.add('active');
