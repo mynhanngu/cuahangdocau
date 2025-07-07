@@ -272,6 +272,9 @@
             function openModal(id) {
                 const modal = document.getElementById(id);
                 if (modal && !modal.classList.contains('active')) {
+                    // Tự động tăng z-index để pop-up mới luôn nằm trên
+                    modal.style.zIndex = 1000 + activeModals.length + 1;
+                    
                     modal.classList.add('active');
                     if (activeModals.length === 0) {
                        document.body.classList.add('modal-open');
@@ -569,7 +572,6 @@
                 const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia };
                 if (action === 'cart') {
                     addToCart(itemToAdd);
-                    // Đã xóa hàm closeTopMostModal() ở đây theo yêu cầu
                 } 
                 else if (action === 'buy') {
                     showConfirmOrderModal([itemToAdd]);
@@ -647,14 +649,34 @@
             function saveCart() { localStorage.setItem('myShopCart', JSON.stringify(state.cart)); }
             function addToCart(cartItem) { const existingItem = state.cart.find(item => item.cartItemId === cartItem.cartItemId); if (existingItem) existingItem.quantity += cartItem.quantity; else state.cart.push(cartItem); saveCart(); updateCartBadge(); showNotification('Đã thêm vào giỏ hàng!'); };
             function updateCartBadge() { const badge = document.getElementById('cart-badge'); const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0); badge.textContent = totalItems; badge.classList.toggle('hidden', totalItems === 0); }
-            window.showCartModal = () => { 
-                const content = document.getElementById('cart-modal-content'); 
-                let cartHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`; 
-                if (state.cart.length === 0) { cartHTML += '<p class="text-center text-slate-500">Giỏ hàng trống.</p>'; } 
-                else { let total = 0; cartHTML += '<div class="space-y-4">'; state.cart.forEach(item => { const itemTotal = item.price * item.quantity; total += itemTotal; const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100'; const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : ''; cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`; }); cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; } 
-                content.innerHTML = cartHTML; 
-                openModal('cart-modal');
+            
+            window.showCartModal = () => {
+                if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'confirm-order-modal') {
+                    closeTopMostModal();
+                    return; 
+                }
+                const content = document.getElementById('cart-modal-content');
+                let cartHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`;
+                if (state.cart.length === 0) {
+                    cartHTML += '<p class="text-center text-slate-500">Giỏ hàng trống.</p>';
+                } else {
+                    let total = 0;
+                    cartHTML += '<div class="space-y-4">';
+                    state.cart.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        total += itemTotal;
+                        const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100';
+                        const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : '';
+                        cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`;
+                    });
+                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`;
+                }
+                content.innerHTML = cartHTML;
+                if (!activeModals.includes('cart-modal')) {
+                    openModal('cart-modal');
+                }
             }
+
             window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); }
             window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
             
