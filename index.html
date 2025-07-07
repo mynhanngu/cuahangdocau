@@ -250,14 +250,19 @@
             let addressData = { provinces: [], districts: [], wards: [] };
             const loadingSpinner = document.getElementById('loading-spinner');
             
-            // === LOGIC MODAL ĐÃ SỬA LỖI TRIỆT ĐỂ ===
+            // === LOGIC MODAL TỐI ƯU ===
             let activeModals = [];
-            
+            let modalHistoryLock = false;
+
+            // Lắng nghe nút back của trình duyệt
             window.addEventListener('popstate', (event) => {
-                const lastModalId = activeModals.pop();
-                if (lastModalId) {
+                // Chỉ xử lý nếu không có khóa và có modal đang mở
+                if (!modalHistoryLock && activeModals.length > 0) {
+                    const lastModalId = activeModals.pop();
                     closeModalUI(lastModalId);
                 }
+                // Mở khóa sau khi xử lý xong
+                modalHistoryLock = false;
             });
 
             function openModal(id) {
@@ -268,10 +273,12 @@
                        document.body.classList.add('modal-open');
                     }
                     activeModals.push(id);
-                    history.pushState({ modalId: id }, `Modal ${id}`);
+                    // Đẩy một trạng thái mới vào history để nút back có tác dụng
+                    history.pushState({ isModal: true, modalId: id }, null);
                 }
             }
-
+            
+            // Hàm này chỉ đóng giao diện
             function closeModalUI(id) {
                 const modal = document.getElementById(id);
                 if (modal) {
@@ -281,7 +288,8 @@
                     document.body.classList.remove('modal-open');
                 }
             }
-            
+
+            // Hàm mới, duy nhất để đóng modal từ các nút bấm hoặc cử chỉ
             window.closeTopMostModal = () => {
                 if (activeModals.length > 0) {
                     history.back();
@@ -419,7 +427,6 @@
             let currentImageIndex = 0;
             let isGalleryAnimating = false;
             
-            // === CÁC HÀM CHO GALLERY NHỎ (ĐÃ KHÔI PHỤC) ===
             function initSwipe() {
                 const swipeContainer = document.getElementById('image-swipe-container');
                 let startX = 0;
@@ -564,17 +571,16 @@
                     
                     const result = await apiCall({ action: 'submitOrder', order: orderData });
                     
-                    // Logic đóng modal sau khi có kết quả
                     const modalsToCloseCount = activeModals.length;
-                    
-                    hideLoading(); 
+                    hideLoading();
 
                     if (result.success) { 
-                        if (history.length > modalsToCloseCount) {
+                        modalHistoryLock = true;
+                        if(history.length > modalsToCloseCount) {
                             history.go(-modalsToCloseCount);
                         } else {
-                            // Nếu không đủ history, đóng thủ công
-                            activeModals.forEach(id => closeModalUI(id));
+                            // Fallback nếu history không đủ, đóng thủ công
+                            [...activeModals].reverse().forEach(id => closeModalUI(id));
                             activeModals = [];
                         }
 
@@ -586,7 +592,7 @@
                         showNotification(result.message); 
                     } 
                     else { 
-                        closeTopMostModal(); // Chỉ đóng alert modal nếu thất bại
+                        closeTopMostModal(); 
                         showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); 
                     }
                 };
