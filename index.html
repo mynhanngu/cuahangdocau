@@ -560,15 +560,22 @@
                 else if (!p.bienThe || p.bienThe.length === 0) { renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); } 
                 else { priceEl.textContent = p.giaBan; stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; cartBtn.disabled = true; buyBtn.disabled = true; }
             };
+
             window.handleProductAction = (action) => {
                 const selection = getSelectedVariant(); if (!selection) { showNotification('Vui lòng chọn đủ các tùy chọn sản phẩm.', 'error'); return; }
                 const { variant, options } = selection; if (variant.trangThai !== '') { showNotification(`Sản phẩm này đang ${variant.trangThai.toLowerCase()}, không thể đặt hàng.`, 'error'); return; }
                 const quantity = parseInt(document.getElementById('product-quantity').value);
                 const optionsText = options.length > 0 ? options.join(' - ') : '';
                 const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia };
-                if (action === 'cart') { addToCart(itemToAdd); closeTopMostModal(); } 
-                else if (action === 'buy') { showConfirmOrderModal([itemToAdd]); }
+                if (action === 'cart') {
+                    addToCart(itemToAdd);
+                    // Đã xóa hàm closeTopMostModal() ở đây theo yêu cầu
+                } 
+                else if (action === 'buy') {
+                    showConfirmOrderModal([itemToAdd]);
+                }
             };
+
             window.handleOrderSubmit = (event) => {
                 event.preventDefault();
                 const warningMsg = state.shopInfo.canhBaoDatHang || 'Bạn có chắc chắn muốn đặt hàng không?';
