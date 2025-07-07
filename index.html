@@ -255,14 +255,18 @@
             let modalHistoryLock = false;
 
             // Lắng nghe nút back của trình duyệt
+            // ✅ SỬA LỖI 1: THAY THẾ HÀM DƯỚI ĐÂY
             window.addEventListener('popstate', (event) => {
-                // Chỉ xử lý nếu không có khóa và có modal đang mở
-                if (!modalHistoryLock && activeModals.length > 0) {
+                // Nếu đang bị khóa, không làm gì cả.
+                if (modalHistoryLock) {
+                    return;
+                }
+
+                // Xử lý đóng modal khi người dùng bấm back.
+                if (activeModals.length > 0) {
                     const lastModalId = activeModals.pop();
                     closeModalUI(lastModalId);
                 }
-                // Mở khóa sau khi xử lý xong
-                modalHistoryLock = false;
             });
 
             function openModal(id) {
@@ -556,10 +560,12 @@
                 event.preventDefault();
                 const warningMsg = state.shopInfo.canhBaoDatHang || 'Bạn có chắc chắn muốn đặt hàng không?';
                 const alertContent = document.getElementById('alert-modal-content');
-                alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="closeTopMostModal()" class="flex-1 btn btn-secondary">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
+                alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
                 openModal('alert-modal');
+                
+                // ✅ SỬA LỖI 2: THAY THẾ TOÀN BỘ HÀM ONCLICK DƯỚI ĐÂY
                 document.getElementById('confirm-alert-btn').onclick = async () => {
-                    showLoading(); 
+                    showLoading();
                     const { items, isCheckout } = state.orderContext;
                     const name = document.getElementById('order-name').value, phone = document.getElementById('order-phone').value, address = document.getElementById('order-address').value;
                     const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
@@ -568,32 +574,45 @@
                     const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${i.price.toLocaleString('vi-VN')}đ`; }).join('\n');
                     const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
                     const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
-                    
+
                     const result = await apiCall({ action: 'submitOrder', order: orderData });
-                    
-                    const modalsToCloseCount = activeModals.length;
                     hideLoading();
 
-                    if (result.success) { 
+                    if (result.success) {
+                        const modalsToCloseCount = activeModals.length;
+
+                        // 1. Đóng giao diện của tất cả các modal đang mở
+                        [...activeModals].reverse().forEach(id => closeModalUI(id));
+
+                        // 2. Khóa listener `popstate` lại để nó không chạy
                         modalHistoryLock = true;
-                        if(history.length > modalsToCloseCount) {
+
+                        // 3. Tua lại lịch sử trình duyệt để xóa các state của modal
+                        if (history.length > modalsToCloseCount) {
                             history.go(-modalsToCloseCount);
-                        } else {
-                            // Fallback nếu history không đủ, đóng thủ công
-                            [...activeModals].reverse().forEach(id => closeModalUI(id));
-                            activeModals = [];
                         }
 
-                        if (isCheckout) { 
-                            state.cart = []; 
-                            saveCart(); 
-                            updateCartBadge(); 
-                        } 
-                        showNotification(result.message); 
-                    } 
-                    else { 
-                        closeTopMostModal(); 
-                        showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error'); 
+                        // 4. Dọn dẹp trạng thái trong ứng dụng
+                        activeModals = [];
+                        document.body.classList.remove('modal-open');
+
+                        // 5. Mở khóa sau một khoảng trễ ngắn
+                        setTimeout(() => {
+                            modalHistoryLock = false;
+                        }, 100);
+
+                        // 6. Xóa giỏ hàng (nếu cần) và hiển thị thông báo
+                        if (isCheckout) {
+                            state.cart = [];
+                            saveCart();
+                            updateCartBadge();
+                        }
+                        showNotification(result.message);
+
+                    } else {
+                        // Nếu thất bại, chỉ đóng modal thông báo
+                        closeTopMostModal();
+                        showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
                     }
                 };
             };
