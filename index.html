@@ -36,8 +36,8 @@
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
-        /* === CSS ĐÃ CHỈNH SỬA THEO YÊU CẦU MỚI NHẤT === */
-        /* Nút X: Bỏ nền, chữ màu đen, chỉ hiển thị trên desktop */
+        /* === CSS ĐÃ CHỈNH SỬA === */
+        /* Nút X ẩn trên mobile, chỉ hiển thị trên desktop */
         .modal-close-btn { 
             position: absolute; 
             top: 0.75rem;
@@ -46,7 +46,7 @@
             height: auto;
             font-size: 2.5rem;
             z-index: 1050; 
-            display: flex; /* Mặc định là flex để hiển thị trên desktop */
+            display: flex;
             align-items: center;
             justify-content: center;
             color: black; 
@@ -63,7 +63,6 @@
             background-color: transparent;
         }
         
-        /* Popup ảnh: Mặc định là full màn hình cho mobile */
         #image-aspect-frame {
             position: relative;
             display: flex;
@@ -78,9 +77,10 @@
             height: 100%;
             object-fit: contain; 
             border-radius: 0;
+            /* Cải tiến: Thêm CSS Transition để tạo hiệu ứng mượt mà */
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
         }
         
-        /* Media Query cho màn hình desktop (768px trở lên) */
         @media (min-width: 768px) {
             #image-aspect-frame {
                 max-width: 90vw;
@@ -94,7 +94,6 @@
             }
         }
         
-        /* Media Query để ẩn nút X trên mobile (767px trở xuống) */
         @media (max-width: 767px) {
             #image-viewer-modal .modal-close-btn {
                 display: none;
@@ -412,6 +411,8 @@
             let touchstartX = 0, touchendX = 0, currentImageIndex = 0, isDragging = false;
             let fullscreenImages = [];
             let currentFullscreenIndex = 0;
+            // Cải tiến: Thêm biến cờ để ngăn spam-swipe
+            let isAnimating = false;
 
             function initSwipe(images) {
                 const swipeContainer = document.getElementById('image-swipe-container');
@@ -430,11 +431,36 @@
                 swipeContainer.addEventListener('mouseenter', () => { swipeContainer.style.cursor = 'grab'; });
             }
 
+            // Hàm này được viết lại để mượt hơn
             window.navigateGallery = (direction) => {
+                // Ngăn thực hiện nếu đang có animation
+                if (isAnimating) return;
+                isAnimating = true;
+
+                const imageEl = document.getElementById('main-product-image');
                 const p = state.currentProduct;
                 const validImages = p.hinhAnh.filter(img => img);
-                currentImageIndex = (currentImageIndex + direction + validImages.length) % validImages.length;
-                updateGalleryUI(validImages);
+
+                // Hiệu ứng trượt ra
+                imageEl.style.opacity = 0;
+                imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
+
+                setTimeout(() => {
+                    // Cập nhật index và đổi ảnh
+                    currentImageIndex = (currentImageIndex + direction + validImages.length) % validImages.length;
+                    updateGalleryUI(validImages);
+
+                    // Chuẩn bị cho hiệu ứng trượt vào
+                    imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
+                    
+                    // Thực hiện hiệu ứng trượt vào
+                    setTimeout(() => {
+                        imageEl.style.opacity = 1;
+                        imageEl.style.transform = 'translateX(0)';
+                        isAnimating = false; // Cho phép vuốt lại
+                    }, 20); // Một khoảng trễ nhỏ để trình duyệt áp dụng transform
+
+                }, 250); // Thời gian chờ bằng với transition trong CSS
             };
 
             function updateGalleryUI(images) {
@@ -442,7 +468,9 @@
                 const thumbnails = document.querySelectorAll('.thumbnail-image');
                 const counter = document.getElementById('gallery-counter');
                 const navButtons = document.getElementById('gallery-nav-buttons');
+                
                 mainImage.src = images[currentImageIndex];
+                
                 if (images.length > 1) {
                     counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
                     counter.style.display = 'block';
@@ -460,8 +488,24 @@
             window.changeMainImage = (src, thumb) => {
                 const p = state.currentProduct;
                 const validImages = p.hinhAnh.filter(img => img);
-                currentImageIndex = parseInt(thumb.dataset.index);
-                updateGalleryUI(validImages);
+                const newIndex = parseInt(thumb.dataset.index);
+                if(newIndex === currentImageIndex) return;
+
+                const direction = newIndex > currentImageIndex ? 1 : -1;
+
+                if (isAnimating) return;
+                isAnimating = true;
+
+                const imageEl = document.getElementById('main-product-image');
+                
+                imageEl.style.opacity = 0;
+                
+                setTimeout(() => {
+                    currentImageIndex = newIndex;
+                    updateGalleryUI(validImages);
+                    imageEl.style.opacity = 1;
+                    isAnimating = false;
+                }, 250);
             };
 
             function getSelectedVariant() {
@@ -634,15 +678,12 @@
                 }
             };
 
-            // === JAVASCRIPT ĐÃ CẬP NHẬT ĐỂ VUỐT LÊN/XUỐNG ĐÓNG POPUP ===
+            // JAVASCRIPT ĐÃ CẬP NHẬT
             function initFullscreenSwipe() {
                 const swipeContainer = document.getElementById('fullscreen-swipe-container');
-                // Biến cho cảm ứng
                 let touchStartX = 0, touchStartY = 0;
-                // Biến cho chuột
                 let mouseStartX = 0, isDragging = false;
 
-                // --- Xử lý sự kiện cảm ứng (Mobile) ---
                 swipeContainer.addEventListener('touchstart', e => {
                     touchStartX = e.changedTouches[0].screenX;
                     touchStartY = e.changedTouches[0].screenY;
@@ -653,25 +694,21 @@
                     const touchEndY = e.changedTouches[0].screenY;
                     const deltaX = touchEndX - touchStartX;
                     const deltaY = touchEndY - touchStartY;
-                    const swipeThreshold = 50; // Ngưỡng vuốt
+                    const swipeThreshold = 50;
 
-                    // Ưu tiên vuốt dọc
                     if (Math.abs(deltaY) > Math.abs(deltaX)) {
                         if (Math.abs(deltaY) > swipeThreshold) {
                             closeModal('image-viewer-modal');
                         }
-                    } 
-                    // Nếu không phải vuốt dọc, xét vuốt ngang
-                    else {
-                        if (deltaX < -swipeThreshold) { // Vuốt sang trái
+                    } else {
+                        if (deltaX < -swipeThreshold) {
                             navigateFullscreenGallery(1);
-                        } else if (deltaX > swipeThreshold) { // Vuốt sang phải
+                        } else if (deltaX > swipeThreshold) {
                             navigateFullscreenGallery(-1);
                         }
                     }
                 });
 
-                // --- Xử lý sự kiện chuột (Desktop) - chỉ vuốt ngang ---
                 const handleMouseGestureEnd = (mouseEndX) => {
                     const swipeThreshold = 50;
                     if (mouseEndX < mouseStartX - swipeThreshold) navigateFullscreenGallery(1);
@@ -701,20 +738,52 @@
                     handleMouseGestureEnd(mouseEndX);
                 });
 
-                swipeContainer.addEventListener('mouseenter', e => {
+                 swipeContainer.addEventListener('mouseenter', e => {
                     if (!isDragging) {
                        swipeContainer.style.cursor = 'grab';
                     }
                 });
             }
-            // === KẾT THÚC JAVASCRIPT CẬP NHẬT ===
 
-            function updateFullscreenGalleryUI() {
+            window.navigateFullscreenGallery = (direction) => {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                const imageEl = document.getElementById('fullscreen-image');
+
+                imageEl.style.opacity = '0';
+                imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
+
+                setTimeout(() => {
+                    currentFullscreenIndex = (currentFullscreenIndex + direction + fullscreenImages.length) % fullscreenImages.length;
+                    updateFullscreenGalleryUI(true); // true để bỏ qua animation vì đã xử lý ở đây
+
+                    // Cần một frame để trình duyệt cập nhật src trước khi bắt đầu transition
+                    requestAnimationFrame(() => {
+                        imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
+                        setTimeout(() => {
+                             imageEl.style.opacity = '1';
+                             imageEl.style.transform = 'translateX(0)';
+                             isAnimating = false;
+                        }, 20);
+                    });
+                }, 250);
+            };
+            
+            function updateFullscreenGalleryUI(skipAnimation = false) {
                 const imageEl = document.getElementById('fullscreen-image');
                 const counterEl = document.getElementById('fullscreen-gallery-counter');
                 const navEl = document.getElementById('fullscreen-gallery-nav');
+
                 if (fullscreenImages.length > 0) {
+                    if (!skipAnimation) {
+                        imageEl.style.opacity = '0';
+                    }
                     imageEl.src = fullscreenImages[currentFullscreenIndex];
+                    if (!skipAnimation) {
+                        setTimeout(() => { imageEl.style.opacity = '1'; }, 50);
+                    }
+
                     if (fullscreenImages.length > 1) {
                         navEl.style.display = 'block';
                         counterEl.style.display = 'block';
@@ -725,11 +794,6 @@
                     }
                 }
             }
-
-            window.navigateFullscreenGallery = (direction) => {
-                currentFullscreenIndex = (currentFullscreenIndex + direction + fullscreenImages.length) % fullscreenImages.length;
-                updateFullscreenGalleryUI();
-            };
 
             init();
         });
