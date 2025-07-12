@@ -117,8 +117,8 @@
         #alert-modal-content { z-index: 1100; }
         
         #footer-warning {
-            white-space: pre-wrap; /* Giữ lại các ký tự xuống dòng từ Google Sheet */
-            text-align: center;      /* Luôn đảm bảo văn bản được căn giữa */
+            white-space: pre-wrap;
+            text-align: center;
         }
         
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
@@ -183,6 +183,31 @@
             padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
         }
         .cursor-zoom-in { cursor: zoom-in; }
+
+        #welcome-modal-content {
+            width: 90%;
+            max-width: 420px;
+            margin: auto;
+            padding: 1.5rem;
+        }
+        
+        @media (max-width: 480px) {
+            #welcome-modal-content {
+                padding: 1.25rem;
+            }
+        }
+
+        /* START: CSS ĐỊNH DẠNG ICON TRONG VĂN BẢN */
+        #footer-warning img,
+        #welcome-title img,
+        #welcome-message img {
+            height: 1.2em; /* Chiều cao tương đương 1.2 lần cỡ chữ */
+            width: auto;   /* Chiều rộng tự động theo tỷ lệ */
+            display: inline-block; /* Hiển thị trên cùng một dòng với chữ */
+            vertical-align: middle; /* Căn giữa icon với dòng chữ */
+            margin: 0 0.15em; /* Tạo khoảng cách nhỏ hai bên icon */
+        }
+        /* END: CSS ĐỊNH DẠNG ICON TRONG VĂN BẢN */
     </style>
 </head>
 
@@ -221,10 +246,24 @@
         <a id="fab-zalo-link" href="#" target="_blank" title="Liên hệ Zalo CSKH" class="contact-fab fab-zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo CSKH" style="width: 40px; height: 40px; object-fit: contain;" /></a>
     </div>
 
+    <!-- START: CÁC MODAL CỦA TRANG WEB -->
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
     <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
+    
+    <div id="welcome-modal" class="modal">
+        <div id="welcome-modal-content" class="relative bg-white rounded-2xl">
+            <button onclick="closeAndMarkWelcomePopup()" class="modal-close-btn" aria-label="Đóng thông báo">×</button>
+            <div id="welcome-title" class="text-2xl font-bold text-gray-800 mb-4 text-center"></div>
+            <div id="welcome-message" class="text-slate-600 mb-6 text-sm"></div>
+            <div class="text-center mt-6">
+                <button onclick="closeAndMarkWelcomePopup()" class="btn btn-primary">
+                    Đã hiểu
+                </button>
+            </div>
+        </div>
+    </div>
     
     <div id="image-viewer-modal" class="modal">
         <button onclick="closeImageViewer()" class="modal-close-btn" aria-label="Đóng trình xem ảnh">×</button>
@@ -243,7 +282,8 @@
             </div>
         </div>
     </div>
-    
+    <!-- END: CÁC MODAL CỦA TRANG WEB -->
+
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
         <p id="footer-warning" class="text-xs text-red-600 font-semibold mb-1"></p>
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
@@ -251,7 +291,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzoI0jM0VqL04jo_pKWJ4QB9-zVECmjAOC8WQXehm6fSVBTk6oi1k8Oe_3RGFT43ZiS/exec';
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM3FMz_3g2hIs4-YeZCM9SNJiIeUmCx7tbNa7OvNrvsk1J90Zub6SF21QqUU92prqlPA/exec';
             
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
@@ -344,8 +384,24 @@
                 document.getElementById('shop-slogan').textContent = info.slogan;
                 document.getElementById('fab-phone-link').href = `tel:${info.sdt}`;
                 document.getElementById('fab-zalo-link').href = info.zalo;
-                document.getElementById('footer-warning').textContent = info.canhBaoFooter || '';
+                document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
                 document.getElementById('footer-copyright').textContent = info.banQuyen || '';
+
+                if (info.noiDungPopup && info.noiDungPopup.trim() !== '') {
+                    const titleEl = document.getElementById('welcome-title');
+                    const messageEl = document.getElementById('welcome-message');
+                    
+                    if (info.tieuDePopup && info.tieuDePopup.trim() !== '') {
+                        titleEl.innerHTML = info.tieuDePopup.replace(/\n/g, '<br>');
+                        titleEl.style.display = 'block';
+                    } else {
+                        titleEl.style.display = 'none';
+                    }
+
+                    messageEl.innerHTML = info.noiDungPopup.replace(/\n/g, '<br>');
+
+                    triggerWelcomePopup();
+                }
             }
             
             async function apiCall(payload) {
@@ -842,6 +898,37 @@
                         navEl.style.display = 'none';
                         counterEl.style.display = 'none';
                     }
+                }
+            }
+
+            window.closeAndMarkWelcomePopup = function() {
+                if (isClosingModal) return;
+                isClosingModal = true;
+
+                sessionStorage.setItem('welcomePopupShown', 'true');
+
+                const modalId = 'welcome-modal';
+                const modalIndex = activeModals.indexOf(modalId);
+                if (modalIndex > -1) {
+                    activeModals.splice(modalIndex, 1);
+                }
+
+                closeModalUI(modalId);
+                
+                if (history.state && history.state.isModal) {
+                    history.back();
+                }
+
+                setTimeout(() => {
+                    isClosingModal = false;
+                }, 350);
+            }
+
+            function triggerWelcomePopup() {
+                if (sessionStorage.getItem('welcomePopupShown') !== 'true') {
+                    setTimeout(() => {
+                        openModal('welcome-modal');
+                    }, 500);
                 }
             }
 
