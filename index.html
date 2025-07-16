@@ -285,7 +285,7 @@
     <!-- END: CÁC MODAL CỦA TRANG WEB -->
 
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
-        <p id="footer-warning" class="text-xs text-red-600 font-semibold mb-1"></p>
+        <p id="footer-warning" class="text-xs text-[var(--primary-color)] font-medium mb-1"></p>
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
     </footer>
 
@@ -387,7 +387,8 @@
                 document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
                 document.getElementById('footer-copyright').textContent = info.banQuyen || '';
 
-                if (info.noiDungPopup && info.noiDungPopup.trim() !== '') {
+                // START: LOGIC POPUP ĐÃ SỬA
+                if (info.noiDungPopup || info.canhBaoPopup) {
                     const titleEl = document.getElementById('welcome-title');
                     const messageEl = document.getElementById('welcome-message');
                     
@@ -397,11 +398,25 @@
                     } else {
                         titleEl.style.display = 'none';
                     }
+                    
+                    let finalMessageHTML = '';
+                    if (info.noiDungPopup && info.noiDungPopup.trim() !== '') {
+                        finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
+                    }
+                    
+                    // Thêm nội dung cảnh báo nếu có
+                    if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
+                        const warningHTML = `<div class="mt-3 pt-3 border-t border-slate-200 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
+                        finalMessageHTML += warningHTML;
+                    }
 
-                    messageEl.innerHTML = info.noiDungPopup.replace(/\n/g, '<br>');
-
-                    triggerWelcomePopup();
+                    messageEl.innerHTML = finalMessageHTML;
+                    
+                    if (finalMessageHTML.trim() !== '') {
+                       triggerWelcomePopup();
+                    }
                 }
+                // END: LOGIC POPUP ĐÃ SỬA
             }
             
             async function apiCall(payload) {
