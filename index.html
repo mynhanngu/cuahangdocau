@@ -285,7 +285,9 @@
     <!-- END: CÁC MODAL CỦA TRANG WEB -->
 
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
-        <p id="footer-warning" class="text-xs text-[var(--primary-color)] font-medium mb-1"></p>
+        <!-- START: SỬA ĐỔI -->
+        <p id="footer-warning" class="text-xs text-slate-500 font-medium mb-1"></p>
+        <!-- END: SỬA ĐỔI -->
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
     </footer>
 
@@ -403,13 +405,13 @@
                         finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
                     }
                     
-                    // START: LOGIC POPUP ĐÃ SỬA
+                    // START: SỬA ĐỔI
                     if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
-                        // Đã xóa đường line và đổi màu chữ thành text-slate-500
-                        const warningHTML = `<div class="mt-3 font-bold italic text-slate-500">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
+                        // Trả lại màu đỏ cho cảnh báo popup, vẫn không có đường line
+                        const warningHTML = `<div class="mt-3 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
                         finalMessageHTML += warningHTML;
                     }
-                    // END: LOGIC POPUP ĐÃ SỬA
+                    // END: SỬA ĐỔI
 
                     messageEl.innerHTML = finalMessageHTML;
                     
