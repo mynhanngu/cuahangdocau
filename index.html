@@ -291,7 +291,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyIkpNxGQbMIaHF088cBksNw-Edn0icna9B7aWWUtAjyM9XXQ7uunde4RowzVxIbnInQ/exec';
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM3FMz_3g2hIs4-YeZCM9SNJiIeUmCx7tbNa7OvNrvsk1J90Zub6SF21QqUU92prqlPA/exec';
             
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
@@ -387,7 +387,6 @@
                 document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
                 document.getElementById('footer-copyright').textContent = info.banQuyen || '';
 
-                // START: LOGIC POPUP ĐÃ SỬA
                 if (info.noiDungPopup || info.canhBaoPopup) {
                     const titleEl = document.getElementById('welcome-title');
                     const messageEl = document.getElementById('welcome-message');
@@ -404,11 +403,13 @@
                         finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
                     }
                     
-                    // Thêm nội dung cảnh báo nếu có
+                    // START: LOGIC POPUP ĐÃ SỬA
                     if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
-                        const warningHTML = `<div class="mt-3 pt-3 border-t border-slate-200 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
+                        // Đã xóa đường line và đổi màu chữ thành text-slate-500
+                        const warningHTML = `<div class="mt-3 font-bold italic text-slate-500">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
                         finalMessageHTML += warningHTML;
                     }
+                    // END: LOGIC POPUP ĐÃ SỬA
 
                     messageEl.innerHTML = finalMessageHTML;
                     
@@ -416,7 +417,6 @@
                        triggerWelcomePopup();
                     }
                 }
-                // END: LOGIC POPUP ĐÃ SỬA
             }
             
             async function apiCall(payload) {
