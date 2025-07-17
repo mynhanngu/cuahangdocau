@@ -38,67 +38,23 @@
         
         .modal-close-btn { 
             position: absolute; 
-            top: 0.75rem;
-            right: 1rem;
-            width: auto;
-            height: auto;
-            font-size: 2.5rem;
-            z-index: 1050; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: black; 
-            font-weight: 300;
-            line-height: 1;
-            cursor: pointer; 
-            transition: all 0.2s;
-            background-color: transparent;
-            padding: 0.5rem;
-            text-shadow: 0 0 4px white, 0 0 6px white;
+            top: 0.75rem; right: 1rem; width: auto; height: auto; font-size: 2.5rem; z-index: 1050; 
+            display: flex; align-items: center; justify-content: center; color: black; 
+            font-weight: 300; line-height: 1; cursor: pointer; transition: all 0.2s;
+            background-color: transparent; padding: 0.5rem; text-shadow: 0 0 4px white, 0 0 6px white;
         }
-        .modal-close-btn:hover { 
-            transform: scale(1.2);
-            background-color: transparent;
-        }
+        .modal-close-btn:hover { transform: scale(1.2); background-color: transparent; }
         
-        #image-aspect-frame {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100vw;
-            height: 100vh;
-            aspect-ratio: unset;
-        }
-        #fullscreen-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-            border-radius: 0;
-            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
-        }
+        #image-aspect-frame { position: relative; display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; aspect-ratio: unset; }
+        #fullscreen-image { width: 100%; height: 100%; object-fit: contain; border-radius: 0; transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out; }
         
         @media (min-width: 768px) {
-            #image-aspect-frame {
-                max-width: 90vw;
-                max-height: 90vh;
-                width: auto;
-                height: auto;
-                aspect-ratio: 4 / 3;
-            }
-            #fullscreen-image {
-                border-radius: 0.5rem;
-            }
-            #confirm-order-modal-content {
-                max-width: 480px !important; 
-            }
+            #image-aspect-frame { max-width: 90vw; max-height: 90vh; width: auto; height: auto; aspect-ratio: 4 / 3; }
+            #fullscreen-image { border-radius: 0.5rem; }
+            #confirm-order-modal-content { max-width: 480px !important; }
         }
         
-        @media (max-width: 767px) {
-            #image-viewer-modal .modal-close-btn {
-                display: none;
-            }
-        }
+        @media (max-width: 767px) { #image-viewer-modal .modal-close-btn { display: none; } }
         
         .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.8); z-index: 2000; justify-content: center; align-items: center; }
         .loading.active { display: flex; }
@@ -115,11 +71,7 @@
         #category-nav::-webkit-scrollbar { display: none; }
         #product-modal-content { max-width: 800px !important; width: 95%; max-height: 90vh; overflow-y: auto; }
         #alert-modal-content { z-index: 1100; }
-        
-        #footer-warning {
-            white-space: pre-wrap;
-            text-align: center;
-        }
+        #footer-warning { white-space: pre-wrap; text-align: center; }
         
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
@@ -141,12 +93,10 @@
         .fab-zalo { background-color: #E0F0FF; }
         
         .peer:disabled + div { cursor: not-allowed; opacity: 0.5; }
-        
         .thumbnail-image { cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-image.active { border-color: var(--primary-color); }
         
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
         main.container { padding: 1rem 0.5rem 7rem 0.5rem; }
@@ -155,59 +105,44 @@
         
         .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
         .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-3px); }
-        .product-card-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+        .product-card-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; opacity: 0; transition: opacity 0.4s ease-in-out; }
+        .product-card-image.lazyloaded { opacity: 1; }
+
         .product-card-info { padding: 0.5rem; display: flex; flex-direction: column; flex-grow: 1; }
         .product-card-name { font-size: 0.8rem; font-weight: 500; line-height: 1.4; color: #1f2937; height: 40px; }
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
 
-        .gallery-nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.7); border-radius: 50%;
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee;
-        }
+        .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
         .gallery-nav-btn.prev { left: 1rem; }
         .gallery-nav-btn.next { right: 1rem; }
-
-        @media (min-width: 768px) {
-            .gallery-nav-btn.prev { left: 1.5rem; }
-            .gallery-nav-btn.next { right: 1.5rem; }
-        }
+        @media (min-width: 768px) { .gallery-nav-btn.prev { left: 1.5rem; } .gallery-nav-btn.next { right: 1.5rem; } }
         .gallery-nav-btn svg { width: 20px; height: 20px; color: #333; }
-        .gallery-counter {
-            position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.5); color: white;
-            padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
-        }
-        .cursor-zoom-in { cursor: zoom-in; }
-
-        #welcome-modal-content {
-            width: 90%;
-            max-width: 420px;
-            margin: auto;
-            padding: 1.5rem;
-        }
+        .gallery-counter { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
         
-        @media (max-width: 480px) {
-            #welcome-modal-content {
-                padding: 1.25rem;
-            }
-        }
-
         /* START: CSS ĐỊNH DẠNG ICON TRONG VĂN BẢN */
-        #footer-warning img,
-        #welcome-title img,
-        #welcome-message img {
-            height: 1.2em; /* Chiều cao tương đương 1.2 lần cỡ chữ */
-            width: auto;   /* Chiều rộng tự động theo tỷ lệ */
-            display: inline-block; /* Hiển thị trên cùng một dòng với chữ */
-            vertical-align: middle; /* Căn giữa icon với dòng chữ */
-            margin: 0 0.15em; /* Tạo khoảng cách nhỏ hai bên icon */
+        #footer-warning img, #welcome-title img, #welcome-message img { height: 1.2em; width: auto; display: inline-block; vertical-align: middle; margin: 0 0.15em; }
+        
+        /* === START: CSS TỐI ƯU TỐC ĐỘ === */
+        .skeleton-card { background-color: #e2e8f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; }
+        .skeleton-image { width: 100%; padding-top: 100%; background-color: #cbd5e1; }
+        .skeleton-text { height: 1rem; margin: 0.75rem; border-radius: 0.25rem; background-color: #cbd5e1; }
+        .skeleton-price { height: 1.25rem; width: 50%; margin: 0 0.75rem 0.75rem 0.75rem; border-radius: 0.25rem; background-color: #cbd5e1; }
+        @keyframes pulse { 50% { opacity: 0.6; } }
+        .skeleton-card > div { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+        #scroll-indicator {
+            position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 30;
+            width: 44px; height: 44px; background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center;
+            animation: bounce 2s infinite; cursor: pointer;
         }
-        /* END: CSS ĐỊNH DẠNG ICON TRONG VĂN BẢN */
+        #scroll-indicator svg { width: 24px; height: 24px; color: #334155; }
+        /* === END: CSS TỐI ƯU TỐC ĐỘ === */
     </style>
 </head>
 
@@ -246,7 +181,6 @@
         <a id="fab-zalo-link" href="#" target="_blank" title="Liên hệ Zalo CSKH" class="contact-fab fab-zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo CSKH" style="width: 40px; height: 40px; object-fit: contain;" /></a>
     </div>
 
-    <!-- START: CÁC MODAL CỦA TRANG WEB -->
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
     <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
@@ -258,9 +192,7 @@
             <div id="welcome-title" class="text-2xl font-bold text-gray-800 mb-4 text-center"></div>
             <div id="welcome-message" class="text-slate-600 mb-6 text-sm"></div>
             <div class="text-center mt-6">
-                <button onclick="closeAndMarkWelcomePopup()" class="btn btn-primary">
-                    Đã hiểu
-                </button>
+                <button onclick="closeAndMarkWelcomePopup()" class="btn btn-primary">Đã hiểu</button>
             </div>
         </div>
     </div>
@@ -273,684 +205,748 @@
                 <div id="fullscreen-gallery-counter" class="gallery-counter" style="display: none;"></div>
             </div>
             <div id="fullscreen-gallery-nav" style="display: none;">
-                <button id="fullscreen-prev-btn" onclick="navigateFullscreenGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
-                </button>
-                <button id="fullscreen-next-btn" onclick="navigateFullscreenGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg>
-                </button>
+                <button id="fullscreen-prev-btn" onclick="navigateFullscreenGallery(-1)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg></button>
+                <button id="fullscreen-next-btn" onclick="navigateFullscreenGallery(1)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg></button>
             </div>
         </div>
     </div>
-    <!-- END: CÁC MODAL CỦA TRANG WEB -->
-
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm p-2 text-center border-t border-slate-200">
-        <!-- START: SỬA ĐỔI -->
         <p id="footer-warning" class="text-xs text-slate-500 font-medium mb-1"></p>
-        <!-- END: SỬA ĐỔI -->
         <p id="footer-copyright" class="text-xs text-slate-500"></p>
     </footer>
 
+    <div id="scroll-indicator" title="Cuộn xuống để xem thêm">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+        </svg>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeeCb4W2JOF4ITiHpqDPkOXRnYlpIubvet1_9hlykBlr3udS2IjCac9avMGrIFsByHhA/exec';
-            
-            let state = {
-                products: [], shopInfo: {}, cart: [], currentProduct: null, 
-                categories: [], activeCategory: 'Tất cả', currentPage: 1, orderContext: {} 
-            };
-            let addressData = { provinces: [], districts: [], wards: [] };
-            const loadingSpinner = document.getElementById('loading-spinner');
-            
-            let activeModals = [];
-            let modalHistoryLock = false;
-            let isClosingModal = false;
+    document.addEventListener('DOMContentLoaded', () => {
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx3en3Zh1nwslQkenZ3q803LgkuGQ-zAqU9S0XbsFKwfnRoTarG6dme0QRVnmz_Tuyiqw/exec';
+        
+        let state = {
+            products: [], shopInfo: {}, cart: [], currentProduct: null, 
+            categories: [], activeCategory: 'Tất cả', orderContext: {} 
+        };
+        let addressData = { provinces: [], districts: [], wards: [] };
+        
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const scrollIndicator = document.getElementById('scroll-indicator');
 
-            window.addEventListener('popstate', (event) => {
-                if (modalHistoryLock || isClosingModal) {
-                    return;
-                }
-                if (activeModals.length > 0) {
-                    const lastModalId = activeModals.pop();
-                    closeModalUI(lastModalId);
-                }
-            });
+        let activeModals = [];
+        let modalHistoryLock = false;
+        let isClosingModal = false;
 
-            function openModal(id) {
-                const modal = document.getElementById(id);
-                if (modal && !modal.classList.contains('active')) {
-                    modal.style.zIndex = 1000 + activeModals.length + 1;
-                    
-                    modal.classList.add('active');
-                    if (activeModals.length === 0) {
-                       document.body.classList.add('modal-open');
-                    }
-                    activeModals.push(id);
-                    history.pushState({ isModal: true, modalId: id }, null);
-                }
+        window.addEventListener('popstate', (event) => {
+            if (modalHistoryLock || isClosingModal) return;
+            if (activeModals.length > 0) {
+                const lastModalId = activeModals.pop();
+                closeModalUI(lastModalId);
             }
-            
-            function closeModalUI(id) {
-                const modal = document.getElementById(id);
-                if (modal) {
-                    modal.classList.remove('active');
-                }
+        });
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal && !modal.classList.contains('active')) {
+                modal.style.zIndex = 1000 + activeModals.length + 1;
+                modal.classList.add('active');
                 if (activeModals.length === 0) {
-                    document.body.classList.remove('modal-open');
+                    document.body.classList.add('modal-open');
                 }
+                activeModals.push(id);
+                history.pushState({ isModal: true, modalId: id }, null);
             }
-
-            window.closeTopMostModal = () => {
-                if (activeModals.length > 0) {
-                    history.back();
-                }
+        }
+        
+        function closeModalUI(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
             }
-
-            window.closeImageViewer = () => {
-                if (isClosingModal) return;
-                if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'image-viewer-modal') {
-                    isClosingModal = true;
-                    const modalId = activeModals.pop();
-                    closeModalUI(modalId);
-                    setTimeout(() => {
-                        if (history.state && history.state.isModal) {
-                            history.back();
-                        }
-                    }, 50);
-                    setTimeout(() => {
-                        isClosingModal = false;
-                    }, 350);
-                }
+            if (activeModals.length === 0) {
+                document.body.classList.remove('modal-open');
             }
+        }
 
-            async function init() {
-                showLoading();
-                loadCart();
-                await Promise.all([
-                    apiCall({ action: 'getShopInfo' }),
-                    apiCall({ action: 'getProducts' }),
-                    apiCall({ action: 'getCategories' }),
-                    loadAddressData()
-                ]).then(([shopInfoRes, productsRes, categoriesRes]) => {
-                    if (shopInfoRes.success) { state.shopInfo = shopInfoRes.data; renderShopInfo(state.shopInfo); }
-                    if (productsRes.success) { state.products = productsRes.data; renderProductsGrid(); }
-                    if (categoriesRes.success) { state.categories = ['Tất cả', ...categoriesRes.data]; renderCategories(); }
-                });
-                updateCartBadge();
-                hideLoading();
+        window.closeTopMostModal = () => {
+            if (activeModals.length > 0) {
+                history.back();
             }
+        };
 
-            function renderShopInfo(info) {
-                document.title = info.tenCuaHang || 'Cửa Hàng';
-                document.getElementById('shop-name').textContent = info.tenCuaHang;
-                document.getElementById('shop-slogan').textContent = info.slogan;
-                document.getElementById('fab-phone-link').href = `tel:${info.sdt}`;
-                document.getElementById('fab-zalo-link').href = info.zalo;
-                document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
-                document.getElementById('footer-copyright').textContent = info.banQuyen || '';
-
-                if (info.noiDungPopup || info.canhBaoPopup) {
-                    const titleEl = document.getElementById('welcome-title');
-                    const messageEl = document.getElementById('welcome-message');
-                    
-                    if (info.tieuDePopup && info.tieuDePopup.trim() !== '') {
-                        titleEl.innerHTML = info.tieuDePopup.replace(/\n/g, '<br>');
-                        titleEl.style.display = 'block';
-                    } else {
-                        titleEl.style.display = 'none';
-                    }
-                    
-                    let finalMessageHTML = '';
-                    if (info.noiDungPopup && info.noiDungPopup.trim() !== '') {
-                        finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
-                    }
-                    
-                    // START: SỬA ĐỔI
-                    if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
-                        // Trả lại màu đỏ cho cảnh báo popup, vẫn không có đường line
-                        const warningHTML = `<div class="mt-3 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
-                        finalMessageHTML += warningHTML;
-                    }
-                    // END: SỬA ĐỔI
-
-                    messageEl.innerHTML = finalMessageHTML;
-                    
-                    if (finalMessageHTML.trim() !== '') {
-                       triggerWelcomePopup();
-                    }
-                }
-            }
-            
-            async function apiCall(payload) {
-                try {
-                    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                    if (!response.ok) throw new Error(`Lỗi máy chủ: ${response.status}`);
-                    return await response.json();
-                } catch (error) {
-                    showNotification(error.message, "error");
-                    console.error("API Call Error:", error);
-                    return { success: false, message: error.message };
-                }
-            }
-            
-            function renderProductsGrid() {
-                const grid = document.getElementById('products-grid'); 
-                grid.innerHTML = '';
-                const filtered = state.activeCategory === 'Tất cả' ? state.products : state.products.filter(p => p.danhMuc === state.activeCategory);
-                if (filtered.length === 0) {
-                    grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
-                    return;
-                }
-                filtered.forEach(p => {
-                    const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
-                    const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
-                    const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
-                    grid.innerHTML += `
-                        <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
-                            <img src="${mainImage}" alt="${p.tenSP}" class="product-card-image">
-                            <div class="product-card-info">
-                                <p class="product-card-name line-clamp-2">${p.tenSP}</p>
-                                <div class="product-card-footer">
-                                    <p class="product-card-price">${p.giaBan}</p>
-                                    ${statusHTML}
-                                </div>
-                            </div>
-                        </div>`;
-                });
-            }
-
-            window.openProductModal = (maSP) => {
-                state.currentProduct = state.products.find(p => p.maSP === maSP);
-                if (!state.currentProduct) return;
-                renderProductModalContent();
-                openModal('product-modal');
-            };
-
-            function renderProductModalContent() {
-                const p = state.currentProduct;
-                const content = document.getElementById('product-modal-content');
-                const validImages = p.hinhAnh.filter(img => img);
-                currentImageIndex = 0;
-
-                const imageSliderHTML = `
-                    <div>
-                        <div id="image-swipe-container" class="relative overflow-hidden rounded-lg bg-slate-100 cursor-pointer">
-                            <img id="main-product-image" src="${validImages[0] || 'https://via.placeholder.com/400'}" 
-                                 class="w-full h-auto aspect-square object-cover" style="transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;"
-                                 onclick="window.openImageViewer()" title="Nhấn để xem ảnh lớn">
-                            <div id="gallery-nav-buttons" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
-                                <button onclick="navigateGallery(-1, event)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
-                                <button onclick="navigateGallery(1, event)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
-                            </div>
-                            <div id="gallery-counter" class="gallery-counter" style="display: ${validImages.length > 1 ? 'block' : 'none'};"></div>
-                        </div>
-                        <div id="thumbnail-container" class="flex gap-2 overflow-x-auto mt-2" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
-                            ${validImages.map((img, index) => `<img src="${img}" data-index="${index}" class="thumbnail-image w-16 h-16 object-cover rounded-md ${index === 0 ? 'active' : ''}" onclick="changeMainImage(this)">`).join('')}
-                        </div>
-                    </div>`;
-                
-                const descriptionHTML = p.moTa ? `<div id="product-description" class="text-sm text-slate-600"></div>` : '';
-                let variantsHTML = '';
-                if (p.bienThe && p.bienThe.length > 0) {
-                    variantsHTML = p.tenBienThe.map((dimName, dimIndex) => {
-                        const options = [...new Set(p.bienThe.map(v => v.tenTuyChon[dimIndex]).filter(Boolean))];
-                        return `<div class="mb-4"><p class="font-semibold text-sm mb-2">${dimName}:</p><div class="flex flex-wrap gap-2" data-dimension-index="${dimIndex}">${options.map(opt => `<label class="cursor-pointer"><input type="radio" onchange="updateVariantUI()" name="dim_${dimIndex}" value="${opt}" class="sr-only peer"><div class="px-3 py-1.5 border rounded-lg text-sm transition-colors bg-white peer-checked:bg-[var(--primary-color)] peer-checked:text-white peer-checked:border-[var(--primary-color)]">${opt}</div></label>`).join('')}</div></div>`;
-                    }).join('');
-                }
-                const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : '';
-                
-                content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
-                
-                toggleDescription(true);
-                updateVariantUI();
-                if (validImages.length > 0) {
-                    updateGalleryUI(validImages);
-                    initSwipe(); 
-                }
-            }
-            
-            window.toggleDescription = (isInitial = false) => {
-                const p = state.currentProduct;
-                const container = document.getElementById('product-description');
-                if (!container || !p.moTa) return;
-                const isExpanded = container.dataset.expanded === 'true';
-                if (isInitial) { container.dataset.expanded = 'false'; } 
-                else { container.dataset.expanded = isExpanded ? 'false' : 'true'; }
-                const shouldExpand = container.dataset.expanded === 'true';
-                if (p.moTa.length <= 50) { container.innerHTML = p.moTa.replace(/\n/g, '<br>'); } 
-                else { if (shouldExpand) { container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; } else { container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } }
-            };
-
-            let currentImageIndex = 0;
-            let isGalleryAnimating = false;
-            
-            function initSwipe() {
-                const swipeContainer = document.getElementById('image-swipe-container');
-                let startX = 0;
-                let endX = 0;
-                let dragging = false;
-
-                const handleGestureEnd = () => {
-                    const swipeThreshold = 50;
-                    if (endX < startX - swipeThreshold) navigateGallery(1); 
-                    if (endX > startX + swipeThreshold) navigateGallery(-1); 
-                };
-
-                swipeContainer.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
-                swipeContainer.addEventListener('touchend', e => { endX = e.changedTouches[0].screenX; handleGestureEnd(); });
-                swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; startX = e.screenX; swipeContainer.style.cursor = 'grabbing'; });
-                swipeContainer.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; endX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
-                swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; endX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
-            }
-
-            window.navigateGallery = (direction, event) => {
-                if(event) event.stopPropagation();
-                if (isGalleryAnimating) return;
-                isGalleryAnimating = true;
-
-                const imageEl = document.getElementById('main-product-image');
-                const p = state.currentProduct;
-                const validImages = p.hinhAnh.filter(img => img);
-                
-                imageEl.style.opacity = '0';
-                imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
-
-                setTimeout(() => {
-                    currentImageIndex = (currentImageIndex + direction + validImages.length) % validImages.length;
-                    updateGalleryUI(validImages);
-
-                    imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
-                    setTimeout(() => {
-                        imageEl.style.opacity = '1';
-                        imageEl.style.transform = 'translateX(0)';
-                        isGalleryAnimating = false;
-                    }, 20);
-                }, 250);
-            };
-            
-            function updateGalleryUI(images) {
-                const mainImage = document.getElementById('main-product-image');
-                const thumbnails = document.querySelectorAll('.thumbnail-image');
-                const counter = document.getElementById('gallery-counter');
-                if (mainImage) mainImage.src = images[currentImageIndex];
-                if (counter) counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
-                if (thumbnails) {
-                    thumbnails.forEach(thumb => {
-                        thumb.classList.remove('active');
-                        if (parseInt(thumb.dataset.index) === currentImageIndex) {
-                            thumb.classList.add('active');
-                            thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                        }
-                    });
-                }
-            }
-
-            window.changeMainImage = (thumb) => {
-                const newIndex = parseInt(thumb.dataset.index);
-                if (newIndex === currentImageIndex || isGalleryAnimating) return;
-
-                const imageEl = document.getElementById('main-product-image');
-                isGalleryAnimating = true;
-                imageEl.style.opacity = '0';
-                
-                setTimeout(() => {
-                    currentImageIndex = newIndex;
-                    const p = state.currentProduct;
-                    const validImages = p.hinhAnh.filter(img => img);
-                    updateGalleryUI(validImages);
-                    imageEl.style.opacity = '1';
-                    isGalleryAnimating = false;
-                }, 250);
-            };
-
-            function getSelectedVariant() {
-                const p = state.currentProduct;
-                if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parseFloat(p.giaBan.replace(/[^0-9]/g, '')) || 0, trangThai: p.trangThai }, options: [] };
-                const selectedOptions = p.tenBienThe.map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value);
-                if (selectedOptions.some(opt => !opt)) return null;
-                const variant = p.bienThe.find(v => v.tenTuyChon.every((opt, i) => opt === selectedOptions[i]));
-                return variant ? { variant, options: selectedOptions } : null;
-            }
-            window.updateVariantUI = () => {
-                const p = state.currentProduct; if (!p) return;
-                const priceEl = document.getElementById('dynamic-price-display');
-                const stockEl = document.getElementById('dynamic-stock-display');
-                const cartBtn = document.getElementById('modal-add-to-cart-btn');
-                const buyBtn = document.getElementById('modal-buy-now-btn');
-                const dimensionContainers = document.querySelectorAll('[data-dimension-index]');
-                if (dimensionContainers.length > 0) {
-                    const selections = Array.from(dimensionContainers).map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value);
-                    dimensionContainers.forEach((container, i) => {
-                        container.querySelectorAll('input[type="radio"]').forEach(radio => {
-                            let tempSelections = [...selections]; tempSelections[i] = radio.value;
-                            radio.disabled = !p.bienThe.some(variant => {
-                                let match = true;
-                                for(let j = 0; j <= i; j++) { if (tempSelections[j] && variant.tenTuyChon[j] !== tempSelections[j]) { match = false; break; } }
-                                return match && variant.trangThai === '';
-                            });
-                        });
-                    });
-                }
-                const currentSelection = getSelectedVariant();
-                const renderStatus = (el, trangThai) => {
-                    if (trangThai === '') { el.innerHTML = `<span class="text-green-600">Còn hàng</span>`; cartBtn.disabled = false; buyBtn.disabled = false; } 
-                    else { el.innerHTML = `<span class="text-red-600">${trangThai}</span>`; cartBtn.disabled = true; buyBtn.disabled = true; }
-                };
-                if (currentSelection && currentSelection.variant) { priceEl.textContent = currentSelection.variant.gia > 0 ? currentSelection.variant.gia.toLocaleString('vi-VN') + ' VNĐ' : 'Liên hệ'; renderStatus(stockEl, currentSelection.variant.trangThai); } 
-                else if (!p.bienThe || p.bienThe.length === 0) { renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); } 
-                else { priceEl.textContent = p.giaBan; stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; cartBtn.disabled = true; buyBtn.disabled = true; }
-            };
-
-            window.handleProductAction = (action) => {
-                const selection = getSelectedVariant(); if (!selection) { showNotification('Vui lòng chọn đủ các tùy chọn sản phẩm.', 'error'); return; }
-                const { variant, options } = selection; if (variant.trangThai !== '') { showNotification(`Sản phẩm này đang ${variant.trangThai.toLowerCase()}, không thể đặt hàng.`, 'error'); return; }
-                const quantity = parseInt(document.getElementById('product-quantity').value);
-                const optionsText = options.length > 0 ? options.join(' - ') : '';
-                const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia };
-                if (action === 'cart') {
-                    addToCart(itemToAdd);
-                } 
-                else if (action === 'buy') {
-                    showConfirmOrderModal([itemToAdd]);
-                }
-            };
-
-            window.handleOrderSubmit = (event) => {
-                event.preventDefault();
-                const warningMsg = state.shopInfo.canhBaoDatHang || 'Bạn có chắc chắn muốn đặt hàng không?';
-                const alertContent = document.getElementById('alert-modal-content');
-                alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
-                openModal('alert-modal');
-                
-                document.getElementById('confirm-alert-btn').onclick = async () => {
-                    showLoading();
-                    const { items, isCheckout } = state.orderContext;
-                    const name = document.getElementById('order-name').value, phone = document.getElementById('order-phone').value, address = document.getElementById('order-address').value;
-                    const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
-                    const customerNote = document.getElementById('order-note').value;
-                    const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
-                    const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${i.price.toLocaleString('vi-VN')}đ`; }).join('\n');
-                    const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-                    const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
-
-                    const result = await apiCall({ action: 'submitOrder', order: orderData });
-                    hideLoading();
-
-                    if (result.success) {
-                        const modalsToCloseCount = activeModals.length;
-                        [...activeModals].reverse().forEach(id => closeModalUI(id));
-                        modalHistoryLock = true;
-                        if (history.length > modalsToCloseCount) {
-                            history.go(-modalsToCloseCount);
-                        }
-                        activeModals = [];
-                        document.body.classList.remove('modal-open');
-                        setTimeout(() => {
-                            modalHistoryLock = false;
-                        }, 100);
-                        if (isCheckout) {
-                            state.cart = [];
-                            saveCart();
-                            updateCartBadge();
-                        }
-                        showNotification(result.message);
-                    } else {
-                        closeTopMostModal();
-                        showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
-                    }
-                };
-            };
-            function renderCategories() {
-                const nav = document.getElementById('category-nav');
-                const numCategories = state.categories.length;
-                nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0 gap-3';
-                nav.innerHTML = state.categories.map(cat => {
-                    const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
-                    const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
-                    let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
-                    if (numCategories > 0 && numCategories <= 4) { buttonClasses += ' flex-grow text-center'; }
-                    buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
-                    return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`;
-                }).join('');
-            }
-            window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); };
-            async function loadAddressData() {
-                const result = await apiCall({ action: 'getAddressData' });
-                if (result.success) { addressData.provinces = result.data; } 
-                else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); }
-            }
-            window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
-            window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
-            window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
-            function loadCart() { state.cart = JSON.parse(localStorage.getItem('myShopCart') || '[]'); }
-            function saveCart() { localStorage.setItem('myShopCart', JSON.stringify(state.cart)); }
-            function addToCart(cartItem) { const existingItem = state.cart.find(item => item.cartItemId === cartItem.cartItemId); if (existingItem) existingItem.quantity += cartItem.quantity; else state.cart.push(cartItem); saveCart(); updateCartBadge(); showNotification('Đã thêm vào giỏ hàng!'); };
-            function updateCartBadge() { const badge = document.getElementById('cart-badge'); const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0); badge.textContent = totalItems; badge.classList.toggle('hidden', totalItems === 0); }
-            
-            window.showCartModal = () => {
-                if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'confirm-order-modal') {
-                    closeTopMostModal();
-                    return; 
-                }
-                const content = document.getElementById('cart-modal-content');
-                let cartHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`;
-                if (state.cart.length === 0) {
-                    cartHTML += '<p class="text-center text-slate-500">Giỏ hàng trống.</p>';
-                } else {
-                    let total = 0;
-                    cartHTML += '<div class="space-y-4">';
-                    state.cart.forEach(item => {
-                        const itemTotal = item.price * item.quantity;
-                        total += itemTotal;
-                        const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100';
-                        const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : '';
-                        cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`;
-                    });
-                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`;
-                }
-                content.innerHTML = cartHTML;
-                if (!activeModals.includes('cart-modal')) {
-                    openModal('cart-modal');
-                }
-            }
-
-            window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); }
-            window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
-            
-            window.checkout = () => {
-                showConfirmOrderModal(state.cart, true);
-            }
-
-            function showConfirmOrderModal(items, isCheckout = false) { 
-                state.orderContext = { items, isCheckout };
-                const content = document.getElementById('confirm-order-modal-content'); 
-                const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0); 
-                const itemsHTML = items.map(item => { const optionsText = item.selectedOptions ? ` <span class="text-xs bg-slate-100 p-1 rounded">(${item.selectedOptions})</span>` : ''; return `<div class="text-sm"><strong>${item.quantity}x</strong> ${item.product.tenSP}${optionsText}</div>` }).join('');
-                const luuYDatHangHTML = state.shopInfo.luuYDatHang ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` : '';
-
-                content.innerHTML = `
-                    <button onclick="closeTopMostModal()" class="modal-close-btn">×</button>
-                    <h2 class="text-xl font-bold mb-4">Thông tin giao hàng</h2>
-                    <form onsubmit="handleOrderSubmit(event)">
-                        <div class="space-y-4 text-sm">
-                            <div class="p-3 bg-slate-50 rounded-lg space-y-2">${itemsHTML}</div>
-                            <div class="p-3 bg-slate-50 rounded-lg space-y-3">
-                                <h3 class="font-semibold">Thông tin người nhận</h3>
-                                <div><label class="text-xs font-medium text-slate-700">Họ và tên:</label><input type="text" id="order-name" class="input-field mt-1 text-sm" required></div>
-                                <div>
-                                    <label class="text-xs font-medium text-slate-700">Số điện thoại:</label>
-                                    <input type="tel" id="order-phone" class="input-field mt-1 text-sm" required>
-                                    <div id="phone-error-message" class="text-xs text-red-600 mt-1 h-4"></div>
-                                </div>
-                                <div><label class="text-xs font-medium text-slate-700">Tỉnh/Thành phố:</label><select id="order-province" onchange="loadDistricts(this.value, 'order-district', 'order-ward')" class="input-field mt-1 text-sm" required></select></div>
-                                <div><label class="text-xs font-medium text-slate-700">Quận/Huyện:</label><select id="order-district" onchange="loadWards(this.value, 'order-ward')" class="input-field mt-1 text-sm" required></select></div>
-                                <div><label class="text-xs font-medium text-slate-700">Phường/Xã:</label><select id="order-ward" class="input-field mt-1 text-sm" required></select></div>
-                                <div><label class="text-xs font-medium text-slate-700">Địa chỉ cụ thể:</label><input type="text" id="order-address" class="input-field mt-1 text-sm" placeholder="Số nhà, tên đường..." required></div>
-                                <div><label class="text-xs font-medium text-slate-700">Ghi chú cho người bán (tùy chọn):</label><textarea id="order-note" class="input-field mt-1 text-sm" rows="2" placeholder="Ví dụ: Giao hàng vào giờ hành chính..."></textarea></div>
-                            </div>
-                            ${luuYDatHangHTML}
-                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p></div>
-                        </div>
-                        <div class="mt-6 flex gap-3">
-                            <button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button>
-                            <button type="submit" class="btn btn-primary flex-1">Đặt hàng</button>
-                        </div>
-                    </form>`; 
-                
-                openModal('confirm-order-modal');
-                setTimeout(() => { loadProvinces('order-province'); }, 0);
-                const phoneInput = document.getElementById('order-phone');
-                const errorMessageDiv = document.getElementById('phone-error-message');
-                const submitButton = content.querySelector('button[type="submit"]');
-                phoneInput.addEventListener('input', () => {
-                    const phoneValue = phoneInput.value;
-                    const isValid = /^0[0-9]{9}$/.test(phoneValue);
-                    if (phoneValue.length > 0) {
-                        if (isValid) { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; } 
-                        else { errorMessageDiv.textContent = 'SĐT phải có 10 số, bắt đầu bằng 0.'; phoneInput.classList.add('border-red-500'); submitButton.disabled = true; }
-                    } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
-                });
-            }
-            window.updateModalQuantity = (change) => { const input = document.getElementById('product-quantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; };
-            const showLoading = () => loadingSpinner.classList.add('active'); 
-            const hideLoading = () => loadingSpinner.classList.remove('active');
-            function showNotification(msg, type = 'success') { const el = document.getElementById('notification'); el.textContent = msg; el.className = `notification ${type} show`; setTimeout(() => el.classList.remove('show'), 3000); }
-            
-            let fullscreenImages = [];
-            let currentFullscreenIndex = 0;
-            let fullscreenAnimating = false;
-
-            window.openImageViewer = () => {
-                fullscreenImages = state.currentProduct.hinhAnh.filter(img => img);
-                currentFullscreenIndex = currentImageIndex;
-                if (fullscreenImages.length > 0) {
-                    initFullscreenSwipe();
-                    updateFullscreenGalleryUI(true);
-                    openModal('image-viewer-modal');
-                }
-            };
-            
-            function initFullscreenSwipe() {
-                const swipeContainer = document.getElementById('fullscreen-swipe-container');
-                let touchStartX = 0, touchStartY = 0;
-                let mouseStartX = 0, dragging = false;
-
-                swipeContainer.addEventListener('touchstart', e => {
-                    touchStartX = e.changedTouches[0].screenX;
-                    touchStartY = e.changedTouches[0].screenY;
-                }, { passive: true });
-
-                swipeContainer.addEventListener('touchend', e => {
-                    const touchEndX = e.changedTouches[0].screenX;
-                    const touchEndY = e.changedTouches[0].screenY;
-                    const deltaX = touchEndX - touchStartX;
-                    const deltaY = touchEndY - touchStartY;
-                    const swipeThreshold = 50;
-
-                    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                        if (Math.abs(deltaY) > swipeThreshold) {
-                            e.preventDefault(); 
-                            closeImageViewer();
-                        }
-                    } else {
-                        if (deltaX < -swipeThreshold) {
-                            navigateFullscreenGallery(1); 
-                        } else if (deltaX > swipeThreshold) {
-                            navigateFullscreenGallery(-1); 
-                        }
-                    }
-                });
-
-                const handleMouseGestureEnd = (mouseEndX) => {
-                    const swipeThreshold = 50;
-                    if (mouseEndX < mouseStartX - swipeThreshold) navigateFullscreenGallery(1);
-                    if (mouseEndX > mouseStartX + swipeThreshold) navigateFullscreenGallery(-1);
-                };
-
-                swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; mouseStartX = e.screenX; swipeContainer.style.cursor = 'grabbing'; });
-                swipeContainer.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); });
-                swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); });
-            }
-
-            window.navigateFullscreenGallery = (direction) => {
-                if (fullscreenAnimating) return;
-                fullscreenAnimating = true;
-
-                const imageEl = document.getElementById('fullscreen-image');
-                const validImages = fullscreenImages;
-                currentFullscreenIndex = (currentFullscreenIndex + direction + validImages.length) % validImages.length;
-
-                imageEl.style.opacity = '0';
-                imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
-
-                setTimeout(() => {
-                    updateFullscreenGalleryUI(true);
-                    requestAnimationFrame(() => {
-                        imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
-                        setTimeout(() => {
-                             imageEl.style.opacity = '1';
-                             imageEl.style.transform = 'translateX(0)';
-                             fullscreenAnimating = false;
-                        }, 20);
-                    });
-                }, 250);
-            };
-            
-            function updateFullscreenGalleryUI(skipAnimation = false) {
-                const imageEl = document.getElementById('fullscreen-image');
-                const counterEl = document.getElementById('fullscreen-gallery-counter');
-                const navEl = document.getElementById('fullscreen-gallery-nav');
-
-                if (fullscreenImages.length > 0) {
-                    imageEl.src = fullscreenImages[currentFullscreenIndex];
-                    if (!skipAnimation) {
-                        imageEl.style.opacity = '1';
-                        imageEl.style.transform = 'translateX(0)';
-                    }
-                    if (fullscreenImages.length > 1) {
-                        navEl.style.display = 'block';
-                        counterEl.style.display = 'block';
-                        counterEl.textContent = `${currentFullscreenIndex + 1} / ${fullscreenImages.length}`;
-                    } else {
-                        navEl.style.display = 'none';
-                        counterEl.style.display = 'none';
-                    }
-                }
-            }
-
-            window.closeAndMarkWelcomePopup = function() {
-                if (isClosingModal) return;
+        window.closeImageViewer = () => {
+            if (isClosingModal) return;
+            if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'image-viewer-modal') {
                 isClosingModal = true;
-
-                sessionStorage.setItem('welcomePopupShown', 'true');
-
-                const modalId = 'welcome-modal';
-                const modalIndex = activeModals.indexOf(modalId);
-                if (modalIndex > -1) {
-                    activeModals.splice(modalIndex, 1);
-                }
-
+                const modalId = activeModals.pop();
                 closeModalUI(modalId);
-                
-                if (history.state && history.state.isModal) {
-                    history.back();
-                }
-
+                setTimeout(() => {
+                    if (history.state && history.state.isModal) {
+                        history.back();
+                    }
+                }, 50);
                 setTimeout(() => {
                     isClosingModal = false;
                 }, 350);
             }
+        };
+        
+        async function init() {
+            loadCart();
+            updateCartBadge();
+            
+            const shellResponse = await apiCall({ action: 'getShopShell' });
 
-            function triggerWelcomePopup() {
-                if (sessionStorage.getItem('welcomePopupShown') !== 'true') {
-                    setTimeout(() => {
-                        openModal('welcome-modal');
-                    }, 500);
-                }
+            if (shellResponse.success) {
+                const { shopInfo, categories, addressData: apiAddressData } = shellResponse.data;
+                state.shopInfo = shopInfo;
+                renderShopInfo(state.shopInfo);
+                state.categories = ['Tất cả', ...categories];
+                renderCategories();
+                if (apiAddressData) addressData.provinces = apiAddressData;
+            } else {
+                showNotification('Lỗi tải thông tin cửa hàng!', 'error');
+                document.getElementById('shop-name').textContent = 'Lỗi Tải Dữ Liệu';
+                return;
             }
 
-            init();
-        });
+            renderProductSkeleton();
+
+            const productsResponse = await apiCall({ action: 'getProducts' });
+
+            if (productsResponse.success && productsResponse.data.products) {
+                state.products = productsResponse.data.products;
+                renderProductsGrid();
+            } else {
+                showNotification('Lỗi tải danh sách sản phẩm!', 'error');
+                document.getElementById('products-grid').innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không thể tải sản phẩm. Vui lòng thử lại sau.</p>`;
+            }
+        }
+
+        async function apiCall(payload) {
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`Lỗi máy chủ: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                showNotification(error.message, "error");
+                console.error("API Call Error:", error);
+                return { success: false, message: error.message };
+            }
+        }
+
+        function renderShopInfo(info) {
+            document.title = info.tenCuaHang || 'Cửa Hàng';
+            document.getElementById('shop-name').textContent = info.tenCuaHang;
+            document.getElementById('shop-slogan').textContent = info.slogan;
+            document.getElementById('fab-phone-link').href = `tel:${info.sdt}`;
+            document.getElementById('fab-zalo-link').href = info.zalo;
+            document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
+            document.getElementById('footer-copyright').textContent = info.banQuyen || '';
+
+            if (info.noiDungPopup || info.canhBaoPopup) {
+                const titleEl = document.getElementById('welcome-title');
+                const messageEl = document.getElementById('welcome-message');
+                
+                if (info.tieuDePopup && info.tieuDePopup.trim() !== '') {
+                    titleEl.innerHTML = info.tieuDePopup.replace(/\n/g, '<br>');
+                    titleEl.style.display = 'block';
+                } else {
+                    titleEl.style.display = 'none';
+                }
+                
+                let finalMessageHTML = '';
+                if (info.noiDungPopup && info.noiDungPopup.trim() !== '') {
+                    finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
+                }
+                
+                if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
+                    const warningHTML = `<div class="mt-3 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
+                    finalMessageHTML += warningHTML;
+                }
+
+                messageEl.innerHTML = finalMessageHTML;
+                
+                if (finalMessageHTML.trim() !== '') {
+                   triggerWelcomePopup();
+                }
+            }
+        }
+
+        function renderProductSkeleton() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            const skeletonCount = 8;
+            for (let i = 0; i < skeletonCount; i++) {
+                grid.innerHTML += `
+                    <div class="skeleton-card">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text"></div>
+                        <div class="skeleton-price"></div>
+                    </div>`;
+            }
+        }
+        
+        function renderProductsGrid() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            const filtered = state.activeCategory === 'Tất cả' 
+                ? state.products 
+                : state.products.filter(p => p.danhMuc === state.activeCategory);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-slate-500 mt-8">Không có sản phẩm nào trong danh mục này.</p>`;
+                handleScrollIndicator();
+                return;
+            }
+
+            filtered.forEach(p => {
+                const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
+                const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng';
+                const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
+                grid.innerHTML += `
+                    <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')">
+                        <img data-src="${mainImage}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="${p.tenSP}" class="product-card-image lazy">
+                        <div class="product-card-info">
+                            <p class="product-card-name line-clamp-2">${p.tenSP}</p>
+                            <div class="product-card-footer">
+                                <p class="product-card-price">${p.giaBan}</p>
+                                ${statusHTML}
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            
+            initLazyLoading();
+            handleScrollIndicator();
+        }
+
+        function renderCategories() {
+            const nav = document.getElementById('category-nav');
+            const numCategories = state.categories.length;
+            nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0 gap-3';
+            nav.innerHTML = state.categories.map(cat => {
+                const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
+                const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
+                let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
+                if (numCategories > 0 && numCategories <= 4) { buttonClasses += ' flex-grow text-center'; }
+                buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`;
+                return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`;
+            }).join('');
+        }
+        
+        function initLazyLoading() {
+            const lazyImages = document.querySelectorAll('img.lazy');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        img.classList.add('lazyloaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            lazyImages.forEach(img => observer.observe(img));
+        }
+
+        function handleScrollIndicator() {
+            setTimeout(() => {
+                const isScrollable = document.body.scrollHeight > window.innerHeight;
+                if (!isScrollable) {
+                    scrollIndicator.style.display = 'flex';
+                    window.addEventListener('scroll', () => {
+                        scrollIndicator.style.display = 'none';
+                    }, { once: true });
+                } else {
+                    scrollIndicator.style.display = 'none';
+                }
+            }, 200);
+        }
+
+        window.filterByCategory = (category) => {
+            state.activeCategory = category;
+            renderCategories();
+            renderProductsGrid(); 
+        };
+
+        window.openProductModal = (maSP) => {
+            state.currentProduct = state.products.find(p => p.maSP === maSP);
+            if (!state.currentProduct) return;
+            renderProductModalContent();
+            openModal('product-modal');
+        };
+
+        function renderProductModalContent() {
+            const p = state.currentProduct;
+            const content = document.getElementById('product-modal-content');
+            const validImages = p.hinhAnh.filter(img => img);
+            currentImageIndex = 0;
+
+            const imageSliderHTML = `
+                <div>
+                    <div id="image-swipe-container" class="relative overflow-hidden rounded-lg bg-slate-100 cursor-pointer">
+                        <img id="main-product-image" src="${validImages[0] || 'https://via.placeholder.com/400'}" 
+                             class="w-full h-auto aspect-square object-cover" style="transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;"
+                             onclick="window.openImageViewer()" title="Nhấn để xem ảnh lớn">
+                        <div id="gallery-nav-buttons" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
+                            <button onclick="navigateGallery(-1, event)" class="gallery-nav-btn prev" aria-label="Ảnh trước"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg></button>
+                            <button onclick="navigateGallery(1, event)" class="gallery-nav-btn next" aria-label="Ảnh kế tiếp"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg></button>
+                        </div>
+                        <div id="gallery-counter" class="gallery-counter" style="display: ${validImages.length > 1 ? 'block' : 'none'};"></div>
+                    </div>
+                    <div id="thumbnail-container" class="flex gap-2 overflow-x-auto mt-2" style="display: ${validImages.length > 1 ? 'flex' : 'none'};">
+                        ${validImages.map((img, index) => `<img src="${img}" data-index="${index}" class="thumbnail-image w-16 h-16 object-cover rounded-md ${index === 0 ? 'active' : ''}" onclick="changeMainImage(this)">`).join('')}
+                    </div>
+                </div>`;
+            
+            const descriptionHTML = p.moTa ? `<div id="product-description" class="text-sm text-slate-600"></div>` : '';
+            let variantsHTML = '';
+            if (p.bienThe && p.bienThe.length > 0) {
+                variantsHTML = p.tenBienThe.map((dimName, dimIndex) => {
+                    const options = [...new Set(p.bienThe.map(v => v.tenTuyChon[dimIndex]).filter(Boolean))];
+                    return `<div class="mb-4"><p class="font-semibold text-sm mb-2">${dimName}:</p><div class="flex flex-wrap gap-2" data-dimension-index="${dimIndex}">${options.map(opt => `<label class="cursor-pointer"><input type="radio" onchange="updateVariantUI()" name="dim_${dimIndex}" value="${opt}" class="sr-only peer"><div class="px-3 py-1.5 border rounded-lg text-sm transition-colors bg-white peer-checked:bg-[var(--primary-color)] peer-checked:text-white peer-checked:border-[var(--primary-color)]">${opt}</div></label>`).join('')}</div></div>`;
+                }).join('');
+            }
+            const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : '';
+            
+            content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`;
+            
+            toggleDescription(true);
+            updateVariantUI();
+            if (validImages.length > 0) {
+                updateGalleryUI(validImages);
+                initSwipe(); 
+            }
+        }
+        
+        window.toggleDescription = (isInitial = false) => {
+            const p = state.currentProduct;
+            const container = document.getElementById('product-description');
+            if (!container || !p.moTa) return;
+            const isExpanded = container.dataset.expanded === 'true';
+            if (isInitial) { container.dataset.expanded = 'false'; } 
+            else { container.dataset.expanded = isExpanded ? 'false' : 'true'; }
+            const shouldExpand = container.dataset.expanded === 'true';
+            if (p.moTa.length <= 50) { container.innerHTML = p.moTa.replace(/\n/g, '<br>'); } 
+            else { if (shouldExpand) { container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; } else { container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } }
+        };
+
+        let currentImageIndex = 0;
+        let isGalleryAnimating = false;
+        
+        function initSwipe() {
+            const swipeContainer = document.getElementById('image-swipe-container');
+            let startX = 0;
+            let endX = 0;
+            let dragging = false;
+
+            const handleGestureEnd = () => {
+                const swipeThreshold = 50;
+                if (endX < startX - swipeThreshold) navigateGallery(1); 
+                if (endX > startX + swipeThreshold) navigateGallery(-1); 
+            };
+
+            swipeContainer.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true });
+            swipeContainer.addEventListener('touchend', e => { endX = e.changedTouches[0].screenX; handleGestureEnd(); });
+            swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; startX = e.screenX; swipeContainer.style.cursor = 'grabbing'; });
+            swipeContainer.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; endX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
+            swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; endX = e.screenX; swipeContainer.style.cursor = 'grab'; handleGestureEnd(); });
+        }
+
+        window.navigateGallery = (direction, event) => {
+            if(event) event.stopPropagation();
+            if (isGalleryAnimating) return;
+            isGalleryAnimating = true;
+
+            const imageEl = document.getElementById('main-product-image');
+            const p = state.currentProduct;
+            const validImages = p.hinhAnh.filter(img => img);
+            
+            imageEl.style.opacity = '0';
+            imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
+
+            setTimeout(() => {
+                currentImageIndex = (currentImageIndex + direction + validImages.length) % validImages.length;
+                updateGalleryUI(validImages);
+
+                imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
+                setTimeout(() => {
+                    imageEl.style.opacity = '1';
+                    imageEl.style.transform = 'translateX(0)';
+                    isGalleryAnimating = false;
+                }, 20);
+            }, 250);
+        };
+        
+        function updateGalleryUI(images) {
+            const mainImage = document.getElementById('main-product-image');
+            const thumbnails = document.querySelectorAll('.thumbnail-image');
+            const counter = document.getElementById('gallery-counter');
+            if (mainImage) mainImage.src = images[currentImageIndex];
+            if (counter) counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            if (thumbnails) {
+                thumbnails.forEach(thumb => {
+                    thumb.classList.remove('active');
+                    if (parseInt(thumb.dataset.index) === currentImageIndex) {
+                        thumb.classList.add('active');
+                        thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                });
+            }
+        }
+
+        window.changeMainImage = (thumb) => {
+            const newIndex = parseInt(thumb.dataset.index);
+            if (newIndex === currentImageIndex || isGalleryAnimating) return;
+
+            const imageEl = document.getElementById('main-product-image');
+            isGalleryAnimating = true;
+            imageEl.style.opacity = '0';
+            
+            setTimeout(() => {
+                currentImageIndex = newIndex;
+                const p = state.currentProduct;
+                const validImages = p.hinhAnh.filter(img => img);
+                updateGalleryUI(validImages);
+                imageEl.style.opacity = '1';
+                isGalleryAnimating = false;
+            }, 250);
+        };
+
+        function getSelectedVariant() {
+            const p = state.currentProduct;
+            if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parseFloat(p.giaBan.replace(/[^0-9]/g, '')) || 0, trangThai: p.trangThai }, options: [] };
+            const selectedOptions = p.tenBienThe.map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value);
+            if (selectedOptions.some(opt => !opt)) return null;
+            const variant = p.bienThe.find(v => v.tenTuyChon.every((opt, i) => opt === selectedOptions[i]));
+            return variant ? { variant, options: selectedOptions } : null;
+        }
+
+        window.updateVariantUI = () => {
+            const p = state.currentProduct; if (!p) return;
+            const priceEl = document.getElementById('dynamic-price-display');
+            const stockEl = document.getElementById('dynamic-stock-display');
+            const cartBtn = document.getElementById('modal-add-to-cart-btn');
+            const buyBtn = document.getElementById('modal-buy-now-btn');
+            const dimensionContainers = document.querySelectorAll('[data-dimension-index]');
+            if (dimensionContainers.length > 0) {
+                const selections = Array.from(dimensionContainers).map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value);
+                dimensionContainers.forEach((container, i) => {
+                    container.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        let tempSelections = [...selections]; tempSelections[i] = radio.value;
+                        radio.disabled = !p.bienThe.some(variant => {
+                            let match = true;
+                            for(let j = 0; j <= i; j++) { if (tempSelections[j] && variant.tenTuyChon[j] !== tempSelections[j]) { match = false; break; } }
+                            return match && variant.trangThai === '';
+                        });
+                    });
+                });
+            }
+            const currentSelection = getSelectedVariant();
+            const renderStatus = (el, trangThai) => {
+                if (trangThai === '') { el.innerHTML = `<span class="text-green-600">Còn hàng</span>`; cartBtn.disabled = false; buyBtn.disabled = false; } 
+                else { el.innerHTML = `<span class="text-red-600">${trangThai}</span>`; cartBtn.disabled = true; buyBtn.disabled = true; }
+            };
+            if (currentSelection && currentSelection.variant) { priceEl.textContent = currentSelection.variant.gia > 0 ? currentSelection.variant.gia.toLocaleString('vi-VN') + ' VNĐ' : 'Liên hệ'; renderStatus(stockEl, currentSelection.variant.trangThai); } 
+            else if (!p.bienThe || p.bienThe.length === 0) { renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); } 
+            else { priceEl.textContent = p.giaBan; stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; cartBtn.disabled = true; buyBtn.disabled = true; }
+        };
+
+        window.handleProductAction = (action) => {
+            const selection = getSelectedVariant(); if (!selection) { showNotification('Vui lòng chọn đủ các tùy chọn sản phẩm.', 'error'); return; }
+            const { variant, options } = selection; if (variant.trangThai !== '') { showNotification(`Sản phẩm này đang ${variant.trangThai.toLowerCase()}, không thể đặt hàng.`, 'error'); return; }
+            const quantity = parseInt(document.getElementById('product-quantity').value);
+            const optionsText = options.length > 0 ? options.join(' - ') : '';
+            const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia };
+            if (action === 'cart') {
+                addToCart(itemToAdd);
+            } 
+            else if (action === 'buy') {
+                showConfirmOrderModal([itemToAdd]);
+            }
+        };
+
+        window.updateModalQuantity = (change) => { const input = document.getElementById('product-quantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; };
+        
+        function loadCart() { state.cart = JSON.parse(localStorage.getItem('myShopCart') || '[]'); }
+        function saveCart() { localStorage.setItem('myShopCart', JSON.stringify(state.cart)); }
+        function addToCart(cartItem) { const existingItem = state.cart.find(item => item.cartItemId === cartItem.cartItemId); if (existingItem) existingItem.quantity += cartItem.quantity; else state.cart.push(cartItem); saveCart(); updateCartBadge(); showNotification('Đã thêm vào giỏ hàng!'); };
+        function updateCartBadge() { const badge = document.getElementById('cart-badge'); const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0); badge.textContent = totalItems; badge.classList.toggle('hidden', totalItems === 0); }
+        
+        window.showCartModal = () => {
+            if (activeModals.length > 0 && activeModals[activeModals.length - 1] === 'confirm-order-modal') {
+                closeTopMostModal();
+                return; 
+            }
+            const content = document.getElementById('cart-modal-content');
+            let cartHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn">×</button><h2 class="text-2xl font-bold mb-6">Giỏ hàng</h2>`;
+            if (state.cart.length === 0) {
+                cartHTML += '<p class="text-center text-slate-500">Giỏ hàng trống.</p>';
+            } else {
+                let total = 0;
+                cartHTML += '<div class="space-y-4">';
+                state.cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100';
+                    const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : '';
+                    cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`;
+                });
+                cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`;
+            }
+            content.innerHTML = cartHTML;
+            if (!activeModals.includes('cart-modal')) {
+                openModal('cart-modal');
+            }
+        };
+
+        window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); }
+        window.removeCartItem = (cartItemId) => { state.cart = state.cart.filter(i => i.cartItemId !== cartItemId); saveCart(); showCartModal(); updateCartBadge(); }
+        
+        window.checkout = () => {
+            showConfirmOrderModal(state.cart, true);
+        };
+
+        function showConfirmOrderModal(items, isCheckout = false) { 
+            state.orderContext = { items, isCheckout };
+            const content = document.getElementById('confirm-order-modal-content'); 
+            const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0); 
+            const itemsHTML = items.map(item => { const optionsText = item.selectedOptions ? ` <span class="text-xs bg-slate-100 p-1 rounded">(${item.selectedOptions})</span>` : ''; return `<div class="text-sm"><strong>${item.quantity}x</strong> ${item.product.tenSP}${optionsText}</div>` }).join('');
+            const luuYDatHangHTML = state.shopInfo.luuYDatHang ? `<div class="text-xs italic font-semibold text-red-600 p-2 bg-red-50 rounded-md">${state.shopInfo.luuYDatHang}</div>` : '';
+
+            content.innerHTML = `
+                <button onclick="closeTopMostModal()" class="modal-close-btn">×</button>
+                <h2 class="text-xl font-bold mb-4">Thông tin giao hàng</h2>
+                <form onsubmit="handleOrderSubmit(event)">
+                    <div class="space-y-4 text-sm">
+                        <div class="p-3 bg-slate-50 rounded-lg space-y-2">${itemsHTML}</div>
+                        <div class="p-3 bg-slate-50 rounded-lg space-y-3">
+                            <h3 class="font-semibold">Thông tin người nhận</h3>
+                            <div><label class="text-xs font-medium text-slate-700">Họ và tên:</label><input type="text" id="order-name" class="input-field mt-1 text-sm" required></div>
+                            <div>
+                                <label class="text-xs font-medium text-slate-700">Số điện thoại:</label>
+                                <input type="tel" id="order-phone" class="input-field mt-1 text-sm" required>
+                                <div id="phone-error-message" class="text-xs text-red-600 mt-1 h-4"></div>
+                            </div>
+                            <div><label class="text-xs font-medium text-slate-700">Tỉnh/Thành phố:</label><select id="order-province" onchange="loadDistricts(this.value, 'order-district', 'order-ward')" class="input-field mt-1 text-sm" required></select></div>
+                            <div><label class="text-xs font-medium text-slate-700">Quận/Huyện:</label><select id="order-district" onchange="loadWards(this.value, 'order-ward')" class="input-field mt-1 text-sm" required></select></div>
+                            <div><label class="text-xs font-medium text-slate-700">Phường/Xã:</label><select id="order-ward" class="input-field mt-1 text-sm" required></select></div>
+                            <div><label class="text-xs font-medium text-slate-700">Địa chỉ cụ thể:</label><input type="text" id="order-address" class="input-field mt-1 text-sm" placeholder="Số nhà, tên đường..." required></div>
+                            <div><label class="text-xs font-medium text-slate-700">Ghi chú cho người bán (tùy chọn):</label><textarea id="order-note" class="input-field mt-1 text-sm" rows="2" placeholder="Ví dụ: Giao hàng vào giờ hành chính..."></textarea></div>
+                        </div>
+                        ${luuYDatHangHTML}
+                        <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p></div>
+                    </div>
+                    <div class="mt-6 flex gap-3">
+                        <button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button>
+                        <button type="submit" class="btn btn-primary flex-1">Đặt hàng</button>
+                    </div>
+                </form>`; 
+            
+            openModal('confirm-order-modal');
+            setTimeout(() => { loadProvinces('order-province'); }, 0);
+            const phoneInput = document.getElementById('order-phone');
+            const errorMessageDiv = document.getElementById('phone-error-message');
+            const submitButton = content.querySelector('button[type="submit"]');
+            phoneInput.addEventListener('input', () => {
+                const phoneValue = phoneInput.value;
+                const isValid = /^0[0-9]{9}$/.test(phoneValue);
+                if (phoneValue.length > 0) {
+                    if (isValid) { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; } 
+                    else { errorMessageDiv.textContent = 'SĐT phải có 10 số, bắt đầu bằng 0.'; phoneInput.classList.add('border-red-500'); submitButton.disabled = true; }
+                } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
+            });
+        }
+
+        window.handleOrderSubmit = (event) => {
+            event.preventDefault();
+            const warningMsg = state.shopInfo.canhBaoDatHang || 'Bạn có chắc chắn muốn đặt hàng không?';
+            const alertContent = document.getElementById('alert-modal-content');
+            alertContent.innerHTML = `<h3 class="text-lg font-bold text-center mb-4">Xác nhận đơn hàng</h3><p class="text-center text-slate-600 mb-6">${warningMsg}</p><div class="flex gap-3"><button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button><button type="button" id="confirm-alert-btn" class="flex-1 btn btn-primary">Xác nhận</button></div>`;
+            openModal('alert-modal');
+            
+            document.getElementById('confirm-alert-btn').onclick = async () => {
+                showLoading();
+                const { items, isCheckout } = state.orderContext;
+                const name = document.getElementById('order-name').value, phone = document.getElementById('order-phone').value, address = document.getElementById('order-address').value;
+                const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
+                const customerNote = document.getElementById('order-note').value;
+                const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
+                const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${i.price.toLocaleString('vi-VN')}đ`; }).join('\n');
+                const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+                const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
+
+                const result = await apiCall({ action: 'submitOrder', order: orderData });
+                hideLoading();
+
+                if (result.success) {
+                    const modalsToCloseCount = activeModals.length;
+                    [...activeModals].reverse().forEach(id => closeModalUI(id));
+                    modalHistoryLock = true;
+                    if (history.length > modalsToCloseCount) {
+                        history.go(-modalsToCloseCount);
+                    }
+                    activeModals = [];
+                    document.body.classList.remove('modal-open');
+                    setTimeout(() => {
+                        modalHistoryLock = false;
+                    }, 100);
+                    if (isCheckout) {
+                        state.cart = [];
+                        saveCart();
+                        updateCartBadge();
+                    }
+                    showNotification(result.message);
+                } else {
+                    closeTopMostModal();
+                    showNotification(result.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
+                }
+            };
+        };
+
+        window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); }
+        window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; }
+        window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); }
+        
+        const showLoading = () => loadingSpinner.classList.add('active'); 
+        const hideLoading = () => loadingSpinner.classList.remove('active');
+        function showNotification(msg, type = 'success') { const el = document.getElementById('notification'); el.textContent = msg; el.className = `notification ${type} show`; setTimeout(() => el.classList.remove('show'), 3000); }
+        
+        let fullscreenImages = [];
+        let currentFullscreenIndex = 0;
+        let fullscreenAnimating = false;
+
+        window.openImageViewer = () => {
+            fullscreenImages = state.currentProduct.hinhAnh.filter(img => img);
+            currentFullscreenIndex = currentImageIndex;
+            if (fullscreenImages.length > 0) {
+                initFullscreenSwipe();
+                updateFullscreenGalleryUI(true);
+                openModal('image-viewer-modal');
+            }
+        };
+        
+        function initFullscreenSwipe() {
+            const swipeContainer = document.getElementById('fullscreen-swipe-container');
+            let touchStartX = 0, touchStartY = 0;
+            let mouseStartX = 0, dragging = false;
+
+            swipeContainer.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            swipeContainer.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].screenX;
+                const touchEndY = e.changedTouches[0].screenY;
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
+                const swipeThreshold = 50;
+
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    if (Math.abs(deltaY) > swipeThreshold) {
+                        e.preventDefault(); 
+                        closeImageViewer();
+                    }
+                } else {
+                    if (deltaX < -swipeThreshold) {
+                        navigateFullscreenGallery(1); 
+                    } else if (deltaX > swipeThreshold) {
+                        navigateFullscreenGallery(-1); 
+                    }
+                }
+            });
+
+            const handleMouseGestureEnd = (mouseEndX) => {
+                const swipeThreshold = 50;
+                if (mouseEndX < mouseStartX - swipeThreshold) navigateFullscreenGallery(1);
+                if (mouseEndX > mouseStartX + swipeThreshold) navigateFullscreenGallery(-1);
+            };
+
+            swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; mouseStartX = e.screenX; swipeContainer.style.cursor = 'grabbing'; });
+            swipeContainer.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); });
+            swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); });
+        }
+
+        window.navigateFullscreenGallery = (direction) => {
+            if (fullscreenAnimating) return;
+            fullscreenAnimating = true;
+
+            const imageEl = document.getElementById('fullscreen-image');
+            const validImages = fullscreenImages;
+            currentFullscreenIndex = (currentFullscreenIndex + direction + validImages.length) % validImages.length;
+
+            imageEl.style.opacity = '0';
+            imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`;
+
+            setTimeout(() => {
+                updateFullscreenGalleryUI(true);
+                requestAnimationFrame(() => {
+                    imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`;
+                    setTimeout(() => {
+                         imageEl.style.opacity = '1';
+                         imageEl.style.transform = 'translateX(0)';
+                         fullscreenAnimating = false;
+                    }, 20);
+                });
+            }, 250);
+        };
+        
+        function updateFullscreenGalleryUI(skipAnimation = false) {
+            const imageEl = document.getElementById('fullscreen-image');
+            const counterEl = document.getElementById('fullscreen-gallery-counter');
+            const navEl = document.getElementById('fullscreen-gallery-nav');
+
+            if (fullscreenImages.length > 0) {
+                imageEl.src = fullscreenImages[currentFullscreenIndex];
+                if (!skipAnimation) {
+                    imageEl.style.opacity = '1';
+                    imageEl.style.transform = 'translateX(0)';
+                }
+                if (fullscreenImages.length > 1) {
+                    navEl.style.display = 'block';
+                    counterEl.style.display = 'block';
+                    counterEl.textContent = `${currentFullscreenIndex + 1} / ${fullscreenImages.length}`;
+                } else {
+                    navEl.style.display = 'none';
+                    counterEl.style.display = 'none';
+                }
+            }
+        }
+
+        window.closeAndMarkWelcomePopup = function() {
+            if (isClosingModal) return;
+            isClosingModal = true;
+            sessionStorage.setItem('welcomePopupShown', 'true');
+            const modalId = 'welcome-modal';
+            const modalIndex = activeModals.indexOf(modalId);
+            if (modalIndex > -1) {
+                activeModals.splice(modalIndex, 1);
+            }
+            closeModalUI(modalId);
+            
+            if (history.state && history.state.isModal) {
+                history.back();
+            }
+
+            setTimeout(() => {
+                isClosingModal = false;
+            }, 350);
+        }
+
+        function triggerWelcomePopup() {
+            if (sessionStorage.getItem('welcomePopupShown') !== 'true') {
+                setTimeout(() => {
+                    openModal('welcome-modal');
+                }, 500);
+            }
+        }
+
+        init();
+    });
     </script>
 </body>
 </html>
