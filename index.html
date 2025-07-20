@@ -319,14 +319,22 @@
             let modalHistoryLock = false; 
             let isClosingModal = false; 
 
-            // START: NÂNG CẤP LAZY LOADING - BIẾN TOÀN CỤC
             let lazyImageObserver;
-            // END: NÂNG CẤP LAZY LOADING
+
+            // Helper function để định dạng tiền tệ
+            function formatCurrency(value) {
+                if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Liên hệ';
+                return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+
+            // Helper function để phân tích giá từ chuỗi
+            function parsePrice(priceString) {
+                 if (typeof priceString !== 'string') return 0;
+                 return parseFloat(priceString.replace(/[^0-9]/g, '')) || 0;
+            }
 
             window.addEventListener('popstate', (event) => { 
-                if (modalHistoryLock || isClosingModal) { 
-                    return; 
-                } 
+                if (modalHistoryLock || isClosingModal) return;
                 if (activeModals.length > 0) { 
                     const lastModalId = activeModals.pop(); 
                     closeModalUI(lastModalId); 
@@ -337,7 +345,6 @@
                 const modal = document.getElementById(id); 
                 if (modal && !modal.classList.contains('active')) { 
                     modal.style.zIndex = 1000 + activeModals.length + 1; 
-                    
                     modal.classList.add('active'); 
                     if (activeModals.length === 0) { 
                        document.body.classList.add('modal-open'); 
@@ -349,18 +356,12 @@
             
             function closeModalUI(id) { 
                 const modal = document.getElementById(id); 
-                if (modal) { 
-                    modal.classList.remove('active'); 
-                } 
-                if (activeModals.length === 0) { 
-                    document.body.classList.remove('modal-open'); 
-                } 
+                if (modal) modal.classList.remove('active');
+                if (activeModals.length === 0) document.body.classList.remove('modal-open');
             } 
 
             window.closeTopMostModal = () => { 
-                if (activeModals.length > 0) { 
-                    history.back(); 
-                } 
+                if (activeModals.length > 0) history.back();
             } 
 
             window.closeImageViewer = () => { 
@@ -370,13 +371,9 @@
                     const modalId = activeModals.pop(); 
                     closeModalUI(modalId); 
                     setTimeout(() => { 
-                        if (history.state && history.state.isModal) { 
-                            history.back(); 
-                        } 
+                        if (history.state && history.state.isModal) history.back();
                     }, 50); 
-                    setTimeout(() => { 
-                        isClosingModal = false; 
-                    }, 350); 
+                    setTimeout(() => { isClosingModal = false; }, 350); 
                 } 
             } 
 
@@ -411,29 +408,19 @@
                 if (info.noiDungPopup || info.canhBaoPopup) { 
                     const titleEl = document.getElementById('welcome-title'); 
                     const messageEl = document.getElementById('welcome-message'); 
-                    
                     if (info.tieuDePopup && info.tieuDePopup.trim() !== '') { 
                         titleEl.innerHTML = info.tieuDePopup.replace(/\n/g, '<br>'); 
                         titleEl.style.display = 'block'; 
                     } else { 
                         titleEl.style.display = 'none'; 
                     } 
-                    
                     let finalMessageHTML = ''; 
-                    if (info.noiDungPopup && info.noiDungPopup.trim() !== '') { 
-                        finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`; 
-                    } 
-                    
-                    if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') { 
-                        const warningHTML = `<div class="mt-3 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`; 
-                        finalMessageHTML += warningHTML; 
-                    } 
-
+                    if (info.noiDungPopup && info.noiDungPopup.trim() !== '') finalMessageHTML += `<div>${info.noiDungPopup.replace(/\n/g, '<br>')}</div>`;
+                    if (info.canhBaoPopup && info.canhBaoPopup.trim() !== '') {
+                        finalMessageHTML += `<div class="mt-3 font-bold italic text-red-600">${info.canhBaoPopup.replace(/\n/g, '<br>')}</div>`;
+                    }
                     messageEl.innerHTML = finalMessageHTML; 
-                    
-                    if (finalMessageHTML.trim() !== '') { 
-                       triggerWelcomePopup(); 
-                    } 
+                    if (finalMessageHTML.trim() !== '') triggerWelcomePopup();
                 } 
             } 
             
@@ -462,6 +449,7 @@
                     const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng'; 
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : ''; 
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
+                    const priceHTML = formatCurrency(parsePrice(p.giaBan));
 
                     grid.innerHTML += ` 
                         <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')"> 
@@ -469,7 +457,7 @@
                             <div class="product-card-info"> 
                                 <p class="product-card-name line-clamp-2">${p.tenSP}</p> 
                                 <div class="product-card-footer"> 
-                                    <p class="product-card-price">${p.giaBan}</p> 
+                                    <p class="product-card-price">${priceHTML}</p> 
                                     ${statusHTML} 
                                 </div> 
                             </div> 
@@ -488,9 +476,7 @@
                             observer.unobserve(img);
                         }
                     });
-                }, { 
-                    rootMargin: "0px 0px 200px 0px"
-                });
+                }, { rootMargin: "0px 0px 200px 0px" });
             }
 
             function observeLazyImages() {
@@ -502,22 +488,17 @@
                 let lastScrollY = window.scrollY;
                 const footer = document.querySelector('footer');
                 let ticking = false;
-
                 const updateFooterVisibility = () => {
                     if (window.innerWidth < 768) {
                         const currentScrollY = window.scrollY;
-                        if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                            footer.classList.add('footer-hidden');
-                        } else {
-                            footer.classList.remove('footer-hidden');
-                        }
+                        if (currentScrollY > lastScrollY && currentScrollY > 50) footer.classList.add('footer-hidden');
+                        else footer.classList.remove('footer-hidden');
                         lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
                     } else {
                         footer.classList.remove('footer-hidden');
                     }
                     ticking = false;
                 };
-
                 window.addEventListener('scroll', () => {
                     if (!ticking) {
                         window.requestAnimationFrame(updateFooterVisibility);
@@ -565,8 +546,9 @@
                     }).join(''); 
                 } 
                 const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : ''; 
+                const initialPrice = formatCurrency(parsePrice(p.giaBan));
                 
-                content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${p.giaBan}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`; 
+                content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${initialPrice}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`; 
                 
                 toggleDescription(true); 
                 updateVariantUI(); 
@@ -581,11 +563,11 @@
                 const container = document.getElementById('product-description'); 
                 if (!container || !p.moTa) return; 
                 const isExpanded = container.dataset.expanded === 'true'; 
-                if (isInitial) { container.dataset.expanded = 'false'; }  
-                else { container.dataset.expanded = isExpanded ? 'false' : 'true'; } 
+                if (isInitial) container.dataset.expanded = 'false';
+                else container.dataset.expanded = isExpanded ? 'false' : 'true';
                 const shouldExpand = container.dataset.expanded === 'true'; 
-                if (p.moTa.length <= 50) { container.innerHTML = p.moTa.replace(/\n/g, '<br>'); }  
-                else { if (shouldExpand) { container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; } else { container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } } 
+                if (p.moTa.length <= 50) container.innerHTML = p.moTa.replace(/\n/g, '<br>');
+                else { if (shouldExpand) container.innerHTML = `${p.moTa.replace(/\n/g, '<br>')} <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Rút gọn]</button>`; else container.innerHTML = `${p.moTa.substring(0, 50)}... <button class="text-blue-600 font-semibold" onclick="toggleDescription()">[Xem thêm]</button>`; } 
             }; 
 
             let currentImageIndex = 0; 
@@ -593,16 +575,12 @@
             
             function initSwipe() { 
                 const swipeContainer = document.getElementById('image-swipe-container'); 
-                let startX = 0; 
-                let endX = 0; 
-                let dragging = false; 
-
+                let startX = 0, endX = 0, dragging = false;
                 const handleGestureEnd = () => { 
                     const swipeThreshold = 50; 
                     if (endX < startX - swipeThreshold) navigateGallery(1);  
                     if (endX > startX + swipeThreshold) navigateGallery(-1);  
                 }; 
-
                 swipeContainer.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, { passive: true }); 
                 swipeContainer.addEventListener('touchend', e => { endX = e.changedTouches[0].screenX; handleGestureEnd(); }); 
                 swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; startX = e.screenX; swipeContainer.style.cursor = 'grabbing'; }); 
@@ -614,18 +592,14 @@
                 if(event) event.stopPropagation(); 
                 if (isGalleryAnimating) return; 
                 isGalleryAnimating = true; 
-
                 const imageEl = document.getElementById('main-product-image'); 
                 const p = state.currentProduct; 
                 const validImages = p.hinhAnh.filter(img => img); 
-                
                 imageEl.style.opacity = '0'; 
                 imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`; 
-
                 setTimeout(() => { 
                     currentImageIndex = (currentImageIndex + direction + validImages.length) % validImages.length; 
                     updateGalleryUI(validImages); 
-
                     imageEl.style.transform = `translateX(${direction > 0 ? 20 : -20}px)`; 
                     setTimeout(() => { 
                         imageEl.style.opacity = '1'; 
@@ -655,11 +629,9 @@
             window.changeMainImage = (thumb) => { 
                 const newIndex = parseInt(thumb.dataset.index); 
                 if (newIndex === currentImageIndex || isGalleryAnimating) return; 
-
                 const imageEl = document.getElementById('main-product-image'); 
                 isGalleryAnimating = true; 
                 imageEl.style.opacity = '0'; 
-                
                 setTimeout(() => { 
                     currentImageIndex = newIndex; 
                     const p = state.currentProduct; 
@@ -672,12 +644,13 @@
 
             function getSelectedVariant() { 
                 const p = state.currentProduct; 
-                if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parseFloat(p.giaBan.replace(/[^0-9]/g, '')) || 0, trangThai: p.trangThai }, options: [] }; 
+                if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parsePrice(p.giaBan), trangThai: p.trangThai }, options: [] }; 
                 const selectedOptions = p.tenBienThe.map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value); 
                 if (selectedOptions.some(opt => !opt)) return null; 
                 const variant = p.bienThe.find(v => v.tenTuyChon.every((opt, i) => opt === selectedOptions[i])); 
                 return variant ? { variant, options: selectedOptions } : null; 
             } 
+            
             window.updateVariantUI = () => { 
                 const p = state.currentProduct; if (!p) return; 
                 const priceEl = document.getElementById('dynamic-price-display'); 
@@ -685,6 +658,7 @@
                 const cartBtn = document.getElementById('modal-add-to-cart-btn'); 
                 const buyBtn = document.getElementById('modal-buy-now-btn'); 
                 const dimensionContainers = document.querySelectorAll('[data-dimension-index]'); 
+
                 if (dimensionContainers.length > 0) { 
                     const selections = Array.from(dimensionContainers).map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value); 
                     dimensionContainers.forEach((container, i) => { 
@@ -698,14 +672,24 @@
                         }); 
                     }); 
                 } 
+                
                 const currentSelection = getSelectedVariant(); 
                 const renderStatus = (el, trangThai) => { 
                     if (trangThai === '') { el.innerHTML = `<span class="text-green-600">Còn hàng</span>`; cartBtn.disabled = false; buyBtn.disabled = false; }  
                     else { el.innerHTML = `<span class="text-red-600">${trangThai}</span>`; cartBtn.disabled = true; buyBtn.disabled = true; } 
                 }; 
-                if (currentSelection && currentSelection.variant) { priceEl.textContent = currentSelection.variant.gia > 0 ? currentSelection.variant.gia.toLocaleString('vi-VN') + ' ₫' : 'Liên hệ'; renderStatus(stockEl, currentSelection.variant.trangThai); }  
-                else if (!p.bienThe || p.bienThe.length === 0) { renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); }  
-                else { priceEl.textContent = p.giaBan; stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; cartBtn.disabled = true; buyBtn.disabled = true; } 
+
+                if (currentSelection && currentSelection.variant) { 
+                    priceEl.textContent = formatCurrency(currentSelection.variant.gia);
+                    renderStatus(stockEl, currentSelection.variant.trangThai); 
+                } else if (!p.bienThe || p.bienThe.length === 0) { 
+                    renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); 
+                } else { 
+                    priceEl.textContent = formatCurrency(parsePrice(p.giaBan));
+                    stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; 
+                    cartBtn.disabled = true; 
+                    buyBtn.disabled = true; 
+                } 
             }; 
 
             window.handleProductAction = (action) => { 
@@ -716,8 +700,7 @@
                 const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia }; 
                 if (action === 'cart') { 
                     addToCart(itemToAdd); 
-                }  
-                else if (action === 'buy') { 
+                } else if (action === 'buy') { 
                     showConfirmOrderModal([itemToAdd]); 
                 } 
             }; 
@@ -736,7 +719,7 @@
                     const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text; 
                     const customerNote = document.getElementById('order-note').value; 
                     const fullAddress = `${address}, ${ward}, ${district}, ${province}`; 
-                    const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${i.price.toLocaleString('vi-VN')}đ`; }).join('\n'); 
+                    const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${formatCurrency(i.price)}`; }).join('\n'); 
                     const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0); 
                     const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" }; 
 
@@ -752,9 +735,7 @@
                         } 
                         activeModals = []; 
                         document.body.classList.remove('modal-open'); 
-                        setTimeout(() => { 
-                            modalHistoryLock = false; 
-                        }, 100); 
+                        setTimeout(() => { modalHistoryLock = false; }, 100); 
                         if (isCheckout) { 
                             state.cart = []; 
                             saveCart(); 
@@ -767,6 +748,7 @@
                     } 
                 }; 
             }; 
+            
             function renderCategories() { 
                 const nav = document.getElementById('category-nav'); 
                 const numCategories = state.categories.length; 
@@ -775,20 +757,24 @@
                     const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg'; 
                     const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm'; 
                     let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap'; 
-                    if (numCategories > 0 && numCategories <= 4) { buttonClasses += ' flex-grow text-center'; } 
+                    if (numCategories > 0 && numCategories <= 4) buttonClasses += ' flex-grow text-center';
                     buttonClasses += state.activeCategory === cat ? ` ${activeClasses}` : ` ${inactiveClasses}`; 
                     return `<button onclick="filterByCategory('${cat}')" class="${buttonClasses}">${cat}</button>`; 
                 }).join(''); 
             } 
+            
             window.filterByCategory = (category) => { state.activeCategory = category; renderCategories(); renderProductsGrid(); }; 
+            
             async function loadAddressData() { 
                 const result = await apiCall({ action: 'getAddressData' }); 
-                if (result.success) { addressData.provinces = result.data; }  
-                else { showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); } 
+                if (result.success) addressData.provinces = result.data; 
+                else showNotification(result.message || "Lỗi tải dữ liệu địa chỉ.", "error"); 
             } 
+            
             window.loadProvinces = (selectId) => { const select = document.getElementById(selectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Tỉnh/Thành --</option>'; addressData.provinces.forEach(p => select.innerHTML += `<option value="${p.code}">${p.name}</option>`); } 
             window.loadDistricts = (provinceCode, districtSelectId, wardSelectId) => { const province = addressData.provinces.find(p => p.code == provinceCode); const select = document.getElementById(districtSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>'; (province?.districts || []).forEach(d => select.innerHTML += `<option value="${d.code}">${d.name}</option>`); document.getElementById(wardSelectId).innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; } 
             window.loadWards = (districtCode, wardSelectId) => { const province = addressData.provinces.find(p => p.districts.some(d => d.code == districtCode)); const district = province?.districts.find(d => d.code == districtCode); const select = document.getElementById(wardSelectId); if(!select) return; select.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>'; (district?.wards || []).forEach(w => select.innerHTML += `<option value="${w.code}">${w.name}</option>`); } 
+            
             function loadCart() { state.cart = JSON.parse(localStorage.getItem('myShopCart') || '[]'); } 
             function saveCart() { localStorage.setItem('myShopCart', JSON.stringify(state.cart)); } 
             function addToCart(cartItem) { const existingItem = state.cart.find(item => item.cartItemId === cartItem.cartItemId); if (existingItem) existingItem.quantity += cartItem.quantity; else state.cart.push(cartItem); saveCart(); updateCartBadge(); showNotification('Đã thêm vào giỏ hàng!'); }; 
@@ -811,14 +797,12 @@
                         total += itemTotal; 
                         const mainImage = item.product.hinhAnh.find(img => img) || 'https://via.placeholder.com/100'; 
                         const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : ''; 
-                        cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`; 
+                        cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${formatCurrency(item.price)}</p><p class="font-bold text-[var(--primary-color)]">${formatCurrency(itemTotal)}</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`; 
                     }); 
-                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} ₫</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; 
+                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${formatCurrency(total)}</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; 
                 } 
                 content.innerHTML = cartHTML; 
-                if (!activeModals.includes('cart-modal')) { 
-                    openModal('cart-modal'); 
-                } 
+                if (!activeModals.includes('cart-modal')) openModal('cart-modal');
             } 
 
             window.updateCartItemQuantity = (cartItemId, change) => { const item = state.cart.find(i => i.cartItemId === cartItemId); if (item) { let newQuantity = item.quantity + change; if (newQuantity < 1) return; item.quantity = newQuantity; } saveCart(); showCartModal(); updateCartBadge(); } 
@@ -856,7 +840,7 @@
                                 <div><label class="text-xs font-medium text-slate-700">Ghi chú cho người bán (tùy chọn):</label><textarea id="order-note" class="input-field mt-1 text-sm" rows="2" placeholder="Ví dụ: Giao hàng vào giờ hành chính..."></textarea></div> 
                             </div> 
                             ${luuYDatHangHTML} 
-                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} ₫</p></div> 
+                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${formatCurrency(total)}</p></div> 
                         </div> 
                         <div class="mt-6 flex gap-3"> 
                             <button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button> 
@@ -878,9 +862,12 @@
                     } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; } 
                 }); 
             } 
+
             window.updateModalQuantity = (change) => { const input = document.getElementById('product-quantity'); let newValue = parseInt(input.value) + change; if (newValue < 1) newValue = 1; input.value = newValue; }; 
+            
             const showLoading = () => loadingSpinner.classList.add('active');  
             const hideLoading = () => loadingSpinner.classList.remove('active'); 
+            
             function showNotification(msg, type = 'success') { const el = document.getElementById('notification'); el.textContent = msg; el.className = `notification ${type} show`; setTimeout(() => el.classList.remove('show'), 3000); } 
             
             let fullscreenImages = []; 
@@ -901,39 +888,19 @@
                 const swipeContainer = document.getElementById('fullscreen-swipe-container'); 
                 let touchStartX = 0, touchStartY = 0; 
                 let mouseStartX = 0, dragging = false; 
-
-                swipeContainer.addEventListener('touchstart', e => { 
-                    touchStartX = e.changedTouches[0].screenX; 
-                    touchStartY = e.changedTouches[0].screenY; 
-                }, { passive: true }); 
-
+                swipeContainer.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; touchStartY = e.changedTouches[0].screenY; }, { passive: true }); 
                 swipeContainer.addEventListener('touchend', e => { 
-                    const touchEndX = e.changedTouches[0].screenX; 
-                    const touchEndY = e.changedTouches[0].screenY; 
-                    const deltaX = touchEndX - touchStartX; 
-                    const deltaY = touchEndY - touchStartY; 
+                    const touchEndX = e.changedTouches[0].screenX, touchEndY = e.changedTouches[0].screenY; 
+                    const deltaX = touchEndX - touchStartX, deltaY = touchEndY - touchStartY; 
                     const swipeThreshold = 50; 
-
-                    if (Math.abs(deltaY) > Math.abs(deltaX)) { 
-                        if (Math.abs(deltaY) > swipeThreshold) { 
-                            e.preventDefault();  
-                            closeImageViewer(); 
-                        } 
-                    } else { 
-                        if (deltaX < -swipeThreshold) { 
-                            navigateFullscreenGallery(1);  
-                        } else if (deltaX > swipeThreshold) { 
-                            navigateFullscreenGallery(-1);  
-                        } 
-                    } 
+                    if (Math.abs(deltaY) > Math.abs(deltaX)) { if (Math.abs(deltaY) > swipeThreshold) { e.preventDefault(); closeImageViewer(); } } 
+                    else { if (deltaX < -swipeThreshold) navigateFullscreenGallery(1); else if (deltaX > swipeThreshold) navigateFullscreenGallery(-1); } 
                 }); 
-
                 const handleMouseGestureEnd = (mouseEndX) => { 
                     const swipeThreshold = 50; 
                     if (mouseEndX < mouseStartX - swipeThreshold) navigateFullscreenGallery(1); 
                     if (mouseEndX > mouseStartX + swipeThreshold) navigateFullscreenGallery(-1); 
                 }; 
-
                 swipeContainer.addEventListener('mousedown', e => { e.preventDefault(); dragging = true; mouseStartX = e.screenX; swipeContainer.style.cursor = 'grabbing'; }); 
                 swipeContainer.addEventListener('mouseup', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); }); 
                 swipeContainer.addEventListener('mouseleave', e => { if (!dragging) return; dragging = false; const mouseEndX = e.screenX; swipeContainer.style.cursor = 'grab'; handleMouseGestureEnd(mouseEndX); }); 
@@ -942,14 +909,10 @@
             window.navigateFullscreenGallery = (direction) => { 
                 if (fullscreenAnimating) return; 
                 fullscreenAnimating = true; 
-
                 const imageEl = document.getElementById('fullscreen-image'); 
-                const validImages = fullscreenImages; 
-                currentFullscreenIndex = (currentFullscreenIndex + direction + validImages.length) % validImages.length; 
-
+                currentFullscreenIndex = (currentFullscreenIndex + direction + fullscreenImages.length) % fullscreenImages.length; 
                 imageEl.style.opacity = '0'; 
                 imageEl.style.transform = `translateX(${direction > 0 ? -20 : 20}px)`; 
-
                 setTimeout(() => { 
                     updateFullscreenGalleryUI(true); 
                     requestAnimationFrame(() => { 
@@ -967,7 +930,6 @@
                 const imageEl = document.getElementById('fullscreen-image'); 
                 const counterEl = document.getElementById('fullscreen-gallery-counter'); 
                 const navEl = document.getElementById('fullscreen-gallery-nav'); 
-
                 if (fullscreenImages.length > 0) { 
                     imageEl.src = fullscreenImages[currentFullscreenIndex]; 
                     if (!skipAnimation) { 
@@ -988,24 +950,13 @@
             window.closeAndMarkWelcomePopup = function() { 
                 if (isClosingModal) return; 
                 isClosingModal = true; 
-
                 sessionStorage.setItem('welcomePopupShown', 'true'); 
-
                 const modalId = 'welcome-modal'; 
                 const modalIndex = activeModals.indexOf(modalId); 
-                if (modalIndex > -1) { 
-                    activeModals.splice(modalIndex, 1); 
-                } 
-
+                if (modalIndex > -1) activeModals.splice(modalIndex, 1);
                 closeModalUI(modalId); 
-                
-                if (history.state && history.state.isModal) { 
-                    history.back(); 
-                } 
-
-                setTimeout(() => { 
-                    isClosingModal = false; 
-                }, 350); 
+                if (history.state && history.state.isModal) history.back();
+                setTimeout(() => { isClosingModal = false; }, 350); 
             } 
 
             function triggerWelcomePopup() { 
