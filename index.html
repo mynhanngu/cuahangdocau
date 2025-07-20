@@ -210,7 +210,7 @@
         /* START: NÂNG CẤP FOOTER ẨN/HIỆN - PHIÊN BẢN SIÊU MƯỢT */
         footer {
             will-change: transform;
-            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
         footer.footer-hidden {
             transform: translateY(100%);
@@ -703,7 +703,7 @@
                     if (trangThai === '') { el.innerHTML = `<span class="text-green-600">Còn hàng</span>`; cartBtn.disabled = false; buyBtn.disabled = false; }  
                     else { el.innerHTML = `<span class="text-red-600">${trangThai}</span>`; cartBtn.disabled = true; buyBtn.disabled = true; } 
                 }; 
-                if (currentSelection && currentSelection.variant) { priceEl.textContent = currentSelection.variant.gia > 0 ? currentSelection.variant.gia.toLocaleString('vi-VN') + ' VNĐ' : 'Liên hệ'; renderStatus(stockEl, currentSelection.variant.trangThai); }  
+                if (currentSelection && currentSelection.variant) { priceEl.textContent = currentSelection.variant.gia > 0 ? currentSelection.variant.gia.toLocaleString('vi-VN') + ' ₫' : 'Liên hệ'; renderStatus(stockEl, currentSelection.variant.trangThai); }  
                 else if (!p.bienThe || p.bienThe.length === 0) { renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); }  
                 else { priceEl.textContent = p.giaBan; stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; cartBtn.disabled = true; buyBtn.disabled = true; } 
             }; 
@@ -813,7 +813,7 @@
                         const optionsText = item.selectedOptions ? `<p class="text-xs text-slate-500">${item.selectedOptions}</p>` : ''; 
                         cartHTML += `<div class="flex items-center gap-4"><img src="${mainImage}" class="w-20 h-20 rounded-lg object-cover flex-shrink-0"><div class="flex-grow"><p class="font-semibold">${item.product.tenSP}</p>${optionsText}<p class="text-sm text-slate-600 mt-1">${item.quantity} x ${item.price.toLocaleString('vi-VN')}đ</p><p class="font-bold text-[var(--primary-color)]">${itemTotal.toLocaleString('vi-VN')}đ</p></div><div class="flex flex-col items-end gap-2"><div class="flex items-center"><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', -1)" class="w-7 h-7 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><span class="w-10 h-7 text-center border-t border-b flex items-center justify-center">${item.quantity}</span><button type="button" onclick="updateCartItemQuantity('${item.cartItemId}', 1)" class="w-7 h-7 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div><button onclick="removeCartItem('${item.cartItemId}')" class="text-xs text-rose-600 hover:underline">Xóa</button></div></div>`; 
                     }); 
-                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; 
+                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} ₫</p><button onclick="checkout()" class="btn btn-primary">Thanh toán</button></div>`; 
                 } 
                 content.innerHTML = cartHTML; 
                 if (!activeModals.includes('cart-modal')) { 
@@ -856,7 +856,7 @@
                                 <div><label class="text-xs font-medium text-slate-700">Ghi chú cho người bán (tùy chọn):</label><textarea id="order-note" class="input-field mt-1 text-sm" rows="2" placeholder="Ví dụ: Giao hàng vào giờ hành chính..."></textarea></div> 
                             </div> 
                             ${luuYDatHangHTML} 
-                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} VNĐ</p></div> 
+                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${total.toLocaleString('vi-VN')} ₫</p></div> 
                         </div> 
                         <div class="mt-6 flex gap-3"> 
                             <button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button> 
