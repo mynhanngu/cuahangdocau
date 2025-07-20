@@ -644,10 +644,13 @@
 
             function getSelectedVariant() { 
                 const p = state.currentProduct; 
-                if (!p.bienThe || p.bienThe.length === 0) return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parsePrice(p.giaBan), trangThai: p.trangThai }, options: [] }; 
+                if (!p.bienThe || p.bienThe.length === 0) {
+                    return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parsePrice(p.giaBan), trangThai: p.trangThai }, options: [] }; 
+                }
                 const selectedOptions = p.tenBienThe.map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value); 
                 if (selectedOptions.some(opt => !opt)) return null; 
                 const variant = p.bienThe.find(v => v.tenTuyChon.every((opt, i) => opt === selectedOptions[i])); 
+                if (variant) variant.gia = parsePrice(String(variant.gia));
                 return variant ? { variant, options: selectedOptions } : null; 
             } 
             
