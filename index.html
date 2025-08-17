@@ -332,6 +332,29 @@
                  if (typeof priceString !== 'string') return 0;
                  return parseFloat(priceString.replace(/[^0-9]/g, '')) || 0;
             }
+            
+            // START: NÂNG CẤP - HÀM MỚI ĐỂ HIỂN THỊ GIÁ (ĐƠN HOẶC KHOẢNG GIÁ)
+            function formatPriceDisplay(product) {
+                const formatSingle = (value) => {
+                    if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Liên hệ';
+                    return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                };
+
+                // Kiểm tra nếu sản phẩm đã được tính toán khoảng giá
+                if (product.minPrice && product.maxPrice) {
+                    if (product.minPrice === product.maxPrice) {
+                        return formatSingle(product.minPrice);
+                    }
+                    // Định dạng khoảng giá với dấu chấm ngăn cách hàng nghìn
+                    return `${product.minPrice.toLocaleString('vi-VN')}₫ - ${product.maxPrice.toLocaleString('vi-VN')}₫`;
+
+                } else {
+                    // Xử lý sản phẩm không có biến thể như cũ
+                    const singlePrice = parsePrice(product.giaBan);
+                    return formatSingle(singlePrice);
+                }
+            }
+            // END: NÂNG CẤP
 
             window.addEventListener('popstate', (event) => { 
                 if (modalHistoryLock || isClosingModal) return;
@@ -389,7 +412,26 @@
                     loadAddressData() 
                 ]).then(([shopInfoRes, productsRes, categoriesRes]) => { 
                     if (shopInfoRes.success) { state.shopInfo = shopInfoRes.data; renderShopInfo(state.shopInfo); } 
-                    if (productsRes.success) { state.products = productsRes.data; renderProductsGrid(); } 
+                    if (productsRes.success) { 
+                        state.products = productsRes.data; 
+                        
+                        // START: NÂNG CẤP - TÍNH TOÁN KHOẢNG GIÁ CHO SẢN PHẨM CÓ BIẾN THỂ
+                        state.products.forEach(p => {
+                            if (p.bienThe && p.bienThe.length > 0) {
+                                const prices = p.bienThe
+                                    .map(variant => parsePrice(String(variant.gia)))
+                                    .filter(price => price > 0); // Chỉ lấy giá hợp lệ
+
+                                if (prices.length > 0) {
+                                    p.minPrice = Math.min(...prices);
+                                    p.maxPrice = Math.max(...prices);
+                                }
+                            }
+                        });
+                        // END: NÂNG CẤP
+
+                        renderProductsGrid(); 
+                    } 
                     if (categoriesRes.success) { state.categories = ['Tất cả', ...categoriesRes.data]; renderCategories(); } 
                 }); 
                 updateCartBadge(); 
@@ -449,7 +491,10 @@
                     const isNotAvailable = p.trangThai.toLowerCase() !== 'còn hàng'; 
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : ''; 
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
-                    const priceHTML = formatCurrency(parsePrice(p.giaBan));
+                    
+                    // START: NÂNG CẤP - SỬ DỤNG HÀM HIỂN THỊ GIÁ MỚI
+                    const priceHTML = formatPriceDisplay(p);
+                    // END: NÂNG CẤP
 
                     grid.innerHTML += ` 
                         <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')"> 
@@ -546,7 +591,10 @@
                     }).join(''); 
                 } 
                 const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : ''; 
-                const initialPrice = formatCurrency(parsePrice(p.giaBan));
+                
+                // START: NÂNG CẤP - SỬ DỤNG HÀM HIỂN THỊ GIÁ MỚI CHO GIÁ BAN ĐẦU TRONG MODAL
+                const initialPrice = formatPriceDisplay(p);
+                // END: NÂNG CẤP
                 
                 content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${initialPrice}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`; 
                 
@@ -688,7 +736,7 @@
                 } else if (!p.bienThe || p.bienThe.length === 0) { 
                     renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); 
                 } else { 
-                    priceEl.textContent = formatCurrency(parsePrice(p.giaBan));
+                    priceEl.textContent = formatPriceDisplay(p); // Hiển thị lại khoảng giá nếu chưa chọn đủ
                     stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; 
                     cartBtn.disabled = true; 
                     buyBtn.disabled = true; 
