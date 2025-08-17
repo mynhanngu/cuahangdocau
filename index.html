@@ -207,7 +207,6 @@
             margin: 0 0.15em;
         } 
 
-        /* START: NÂNG CẤP FOOTER ẨN/HIỆN - PHIÊN BẢN SIÊU MƯỢT */
         footer {
             will-change: transform;
             transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
@@ -215,9 +214,7 @@
         footer.footer-hidden {
             transform: translateY(100%);
         }
-        /* END: NÂNG CẤP FOOTER ẨN/HIỆN */
 
-        /* START: NÂNG CẤP LAZY LOADING */
         .lazy {
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -225,7 +222,6 @@
         .lazy.loaded {
             opacity: 1;
         }
-        /* END: NÂNG CẤP LAZY LOADING */
     </style> 
 </head> 
 
@@ -306,7 +302,7 @@
 
     <script> 
         document.addEventListener('DOMContentLoaded', () => { 
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzH2rhrPkkq3u4OG1p2xskCL4sf8jrwmLBzl9_Eh4QkSbW4U7HgP-nOKNTu-tgPCYV86w/exec'; 
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOaNIZb4PJabWUIvrVvNrHwqfmpcgibMyBnsMdAcS1u8HKR0SpXP25kyqSnEftzZrmJA/exec'; 
             
             let state = { 
                 products: [], shopInfo: {}, cart: [], currentProduct: null,  
@@ -321,40 +317,32 @@
 
             let lazyImageObserver;
 
-            // Helper function để định dạng tiền tệ
             function formatCurrency(value) {
                 if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Liên hệ';
                 return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             }
 
-            // Helper function để phân tích giá từ chuỗi
             function parsePrice(priceString) {
                  if (typeof priceString !== 'string') return 0;
                  return parseFloat(priceString.replace(/[^0-9]/g, '')) || 0;
             }
             
-            // START: NÂNG CẤP - HÀM MỚI ĐỂ HIỂN THỊ GIÁ (ĐƠN HOẶC KHOẢNG GIÁ)
             function formatPriceDisplay(product) {
                 const formatSingle = (value) => {
                     if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Liên hệ';
                     return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 };
 
-                // Kiểm tra nếu sản phẩm đã được tính toán khoảng giá
                 if (product.minPrice && product.maxPrice) {
                     if (product.minPrice === product.maxPrice) {
                         return formatSingle(product.minPrice);
                     }
-                    // Định dạng khoảng giá với dấu chấm ngăn cách hàng nghìn
                     return `${product.minPrice.toLocaleString('vi-VN')}₫ - ${product.maxPrice.toLocaleString('vi-VN')}₫`;
-
                 } else {
-                    // Xử lý sản phẩm không có biến thể như cũ
                     const singlePrice = parsePrice(product.giaBan);
                     return formatSingle(singlePrice);
                 }
             }
-            // END: NÂNG CẤP
 
             window.addEventListener('popstate', (event) => { 
                 if (modalHistoryLock || isClosingModal) return;
@@ -415,12 +403,11 @@
                     if (productsRes.success) { 
                         state.products = productsRes.data; 
                         
-                        // START: NÂNG CẤP - TÍNH TOÁN KHOẢNG GIÁ CHO SẢN PHẨM CÓ BIẾN THỂ
                         state.products.forEach(p => {
                             if (p.bienThe && p.bienThe.length > 0) {
                                 const prices = p.bienThe
-                                    .map(variant => parsePrice(String(variant.gia)))
-                                    .filter(price => price > 0); // Chỉ lấy giá hợp lệ
+                                    .map(variant => variant.gia)
+                                    .filter(price => price > 0);
 
                                 if (prices.length > 0) {
                                     p.minPrice = Math.min(...prices);
@@ -428,8 +415,6 @@
                                 }
                             }
                         });
-                        // END: NÂNG CẤP
-
                         renderProductsGrid(); 
                     } 
                     if (categoriesRes.success) { state.categories = ['Tất cả', ...categoriesRes.data]; renderCategories(); } 
@@ -478,6 +463,7 @@
                 } 
             } 
             
+            // START: NÂNG CẤP HÀM RENDERPRODUCTSGRID
             function renderProductsGrid() { 
                 const grid = document.getElementById('products-grid');  
                 grid.innerHTML = ''; 
@@ -492,9 +478,13 @@
                     const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : ''; 
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
                     
-                    // START: NÂNG CẤP - SỬ DỤNG HÀM HIỂN THỊ GIÁ MỚI
                     const priceHTML = formatPriceDisplay(p);
-                    // END: NÂNG CẤP
+                    
+                    let soldCountHTML = '';
+                    const soldCount = p.daBan !== undefined ? p.daBan : p.tongDaBan;
+                    if (soldCount > 0) {
+                        soldCountHTML = `<p class="text-xs text-slate-500 mt-1 text-right">Đã bán: ${soldCount}</p>`;
+                    }
 
                     grid.innerHTML += ` 
                         <div class="product-card cursor-pointer" onclick="openProductModal('${p.maSP}')"> 
@@ -502,14 +492,18 @@
                             <div class="product-card-info"> 
                                 <p class="product-card-name line-clamp-2">${p.tenSP}</p> 
                                 <div class="product-card-footer"> 
-                                    <p class="product-card-price">${priceHTML}</p> 
-                                    ${statusHTML} 
+                                    <div class="flex justify-between items-center">
+                                         <p class="product-card-price">${priceHTML}</p> 
+                                         ${statusHTML} 
+                                    </div>
+                                    ${soldCountHTML}
                                 </div> 
                             </div> 
                         </div>`; 
                 }); 
                 observeLazyImages();
             } 
+            // END: NÂNG CẤP HÀM RENDERPRODUCTSGRID
             
             function initLazyLoading() {
                 lazyImageObserver = new IntersectionObserver((entries, observer) => {
@@ -592,11 +586,9 @@
                 } 
                 const ghiChuHTML = p.ghiChu ? `<div class="text-center text-sm italic font-semibold text-red-600 p-2 bg-red-50 rounded-md mb-4">${p.ghiChu}</div>` : ''; 
                 
-                // START: NÂNG CẤP - SỬ DỤNG HÀM HIỂN THỊ GIÁ MỚI CHO GIÁ BAN ĐẦU TRONG MODAL
                 const initialPrice = formatPriceDisplay(p);
-                // END: NÂNG CẤP
                 
-                content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${initialPrice}</div><div id="dynamic-stock-display" class="text-base font-bold mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`; 
+                content.innerHTML = `<button onclick="closeTopMostModal()" class="modal-close-btn z-20">×</button><div class="grid grid-cols-1 md:grid-cols-2 gap-6">${imageSliderHTML}<div class="flex flex-col"><h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2><div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${initialPrice}</div><div id="dynamic-stock-display" class="text-sm mb-4 h-6"></div><div class="space-y-4 mb-4 flex-grow">${descriptionHTML}${variantsHTML}<div><p class="font-semibold text-sm mb-2">Số lượng:</p><div class="flex items-center"><button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button><input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly><button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button></div></div></div>${ghiChuHTML}<div class="mt-auto flex gap-3"><button id="modal-add-to-cart-btn" onclick="handleProductAction('cart')" class="flex-1 btn btn-secondary">Thêm vào giỏ</button><button id="modal-buy-now-btn" onclick="handleProductAction('buy')" class="flex-1 btn btn-primary">Mua ngay</button></div></div></div>`; 
                 
                 toggleDescription(true); 
                 updateVariantUI(); 
@@ -693,7 +685,15 @@
             function getSelectedVariant() { 
                 const p = state.currentProduct; 
                 if (!p.bienThe || p.bienThe.length === 0) {
-                    return { variant: { maBienThe: p.maSP, tenTuyChon: [], gia: parsePrice(p.giaBan), trangThai: p.trangThai }, options: [] }; 
+                    // Trả về dữ liệu cho sản phẩm đơn
+                    return { variant: { 
+                        maBienThe: p.maSP, 
+                        tenTuyChon: [], 
+                        gia: parsePrice(p.giaBan), 
+                        trangThai: p.trangThai,
+                        daBan: p.daBan,
+                        tonKho: p.tonKho
+                    }, options: [] }; 
                 }
                 const selectedOptions = p.tenBienThe.map((_, i) => document.querySelector(`input[name="dim_${i}"]:checked`)?.value); 
                 if (selectedOptions.some(opt => !opt)) return null; 
@@ -702,6 +702,7 @@
                 return variant ? { variant, options: selectedOptions } : null; 
             } 
             
+            // START: NÂNG CẤP HÀM UPDATEVARIANTUI
             window.updateVariantUI = () => { 
                 const p = state.currentProduct; if (!p) return; 
                 const priceEl = document.getElementById('dynamic-price-display'); 
@@ -717,44 +718,106 @@
                             let tempSelections = [...selections]; tempSelections[i] = radio.value; 
                             radio.disabled = !p.bienThe.some(variant => { 
                                 let match = true; 
-                                for(let j = 0; j <= i; j++) { if (tempSelections[j] && variant.tenTuyChon[j] !== tempSelections[j]) { match = false; break; } } 
-                                return match && variant.trangThai === ''; 
+                                for(let j = 0; j < tempSelections.length; j++) { 
+                                    if(tempSelections[j] && variant.tenTuyChon[j] !== tempSelections[j]) {
+                                        match = false; 
+                                        break; 
+                                    }
+                                }
+                                return match && (variant.trangThai === '' || variant.tonKho > 0); 
                             }); 
                         }); 
                     }); 
                 } 
                 
                 const currentSelection = getSelectedVariant(); 
-                const renderStatus = (el, trangThai) => { 
-                    if (trangThai === '') { el.innerHTML = `<span class="text-green-600">Còn hàng</span>`; cartBtn.disabled = false; buyBtn.disabled = false; }  
-                    else { el.innerHTML = `<span class="text-red-600">${trangThai}</span>`; cartBtn.disabled = true; buyBtn.disabled = true; } 
-                }; 
+                
+                const renderStatus = (variant) => {
+                    let stockText = '';
+                    let soldText = '';
+                    
+                    if (variant.tonKho > 0 && variant.tonKho <= 5) {
+                        stockText = `<span class="font-semibold text-orange-500">Chỉ còn ${variant.tonKho} sản phẩm</span>`;
+                    } else if (variant.tonKho > 0) {
+                        stockText = `<span class="font-semibold text-green-600">Còn hàng (${variant.tonKho})</span>`;
+                    } else {
+                        stockText = `<span class="font-semibold text-red-600">${variant.trangThai || 'Hết hàng'}</span>`;
+                    }
+
+                    if (variant.daBan > 0) {
+                        soldText = `<span class="text-slate-500">Đã bán: ${variant.daBan}</span>`;
+                    }
+                    
+                    stockEl.innerHTML = `<div class="flex justify-between items-center">${stockText}${soldText}</div>`;
+
+                    const isAvailable = variant.trangThai === '' && variant.tonKho > 0;
+                    cartBtn.disabled = !isAvailable;
+                    buyBtn.disabled = !isAvailable;
+                };
 
                 if (currentSelection && currentSelection.variant) { 
                     priceEl.textContent = formatCurrency(currentSelection.variant.gia);
-                    renderStatus(stockEl, currentSelection.variant.trangThai); 
+                    renderStatus(currentSelection.variant); 
                 } else if (!p.bienThe || p.bienThe.length === 0) { 
-                    renderStatus(stockEl, p.trangThai === 'còn hàng' ? '' : p.trangThai); 
+                    const singleProductStatus = {
+                        tonKho: p.tonKho,
+                        daBan: p.daBan,
+                        trangThai: p.trangThai === 'còn hàng' ? '' : p.trangThai
+                    };
+                    renderStatus(singleProductStatus);
                 } else { 
-                    priceEl.textContent = formatPriceDisplay(p); // Hiển thị lại khoảng giá nếu chưa chọn đủ
-                    stockEl.textContent = 'Vui lòng chọn đủ tùy chọn'; 
+                    priceEl.textContent = formatPriceDisplay(p);
+                    
+                    let totalInfoHTML = `<span class="text-slate-500">Tổng tồn: ${p.tongTonKho}</span>`;
+                    if (p.tongDaBan > 0) {
+                        totalInfoHTML += ` | <span class="text-slate-500">Đã bán: ${p.tongDaBan}</span>`;
+                    }
+                    stockEl.innerHTML = `<div>${totalInfoHTML}</div>`;
+
                     cartBtn.disabled = true; 
                     buyBtn.disabled = true; 
                 } 
             }; 
+            // END: NÂNG CẤP HÀM UPDATEVARIANTUI
 
+            // START: NÂNG CẤP HÀM HANDLEPRODUCTACTION
             window.handleProductAction = (action) => { 
-                const selection = getSelectedVariant(); if (!selection) { showNotification('Vui lòng chọn đủ các tùy chọn sản phẩm.', 'error'); return; } 
-                const { variant, options } = selection; if (variant.trangThai !== '') { showNotification(`Sản phẩm này đang ${variant.trangThai.toLowerCase()}, không thể đặt hàng.`, 'error'); return; } 
+                const selection = getSelectedVariant(); 
+                if (!selection) { 
+                    showNotification('Vui lòng chọn đủ các tùy chọn sản phẩm.', 'error'); 
+                    return; 
+                } 
+
+                const { variant, options } = selection; 
+                
+                if (variant.trangThai !== '' || variant.tonKho <= 0) { 
+                    showNotification(`Sản phẩm này hiện đã hết hàng, không thể đặt.`, 'error'); 
+                    return; 
+                }
+                
                 const quantity = parseInt(document.getElementById('product-quantity').value); 
+                
+                if (quantity > variant.tonKho) {
+                    showNotification(`Số lượng tồn kho không đủ. Chỉ còn ${variant.tonKho} sản phẩm.`, 'error');
+                    return;
+                }
+
                 const optionsText = options.length > 0 ? options.join(' - ') : ''; 
-                const itemToAdd = { cartItemId: variant.maBienThe, product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, quantity, selectedOptions: optionsText, price: variant.gia }; 
+                const itemToAdd = { 
+                    cartItemId: variant.maBienThe, 
+                    product: { maSP: state.currentProduct.maSP, tenSP: state.currentProduct.tenSP, hinhAnh: state.currentProduct.hinhAnh }, 
+                    quantity, 
+                    selectedOptions: optionsText, 
+                    price: variant.gia 
+                }; 
+
                 if (action === 'cart') { 
                     addToCart(itemToAdd); 
                 } else if (action === 'buy') { 
                     showConfirmOrderModal([itemToAdd]); 
                 } 
-            }; 
+            };
+            // END: NÂNG CẤP HÀM HANDLEPRODUCTACTION
 
             window.handleOrderSubmit = (event) => { 
                 event.preventDefault(); 
