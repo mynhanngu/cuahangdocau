@@ -358,26 +358,20 @@
                             // ===== PHẦN HTML HIỂN THỊ ĐƠN HÀNG ĐÃ ĐƯỢC THIẾT KẾ LẠI =====
                             html += `
                                 <div class="order-item">
-                                    <!-- Header -->
-                                    <div class="flex flex-wrap gap-4 justify-between items-center">
-                                        <div class="flex-grow">
-                                            <p class="text-base" style="line-height: 1.0; margin-bottom: 8px;">
-                                                <strong class="font-bold text-slate-800">Mã ĐH:</strong> 
-                                                <span class="font-mono text-slate-700">${order.maDonHang || 'N/A'}</span>
-                                            </p>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
-                                        </div>
+                                    <div class="flex flex-wrap gap-4 justify-between items-center mb-4">
+                                        <p class="text-base" style="line-height: 1.0;">
+                                            <strong class="font-bold text-slate-800">Mã ĐH:</strong> 
+                                            <span class="font-mono text-slate-700">${order.maDonHang || 'N/A'}</span>
+                                        </p>
+                                        <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                     </div>
                                     
-                                    <!-- Body -->
-                                    <div class="pt-4 mt-4 border-t border-slate-200 space-y-1 text-base">
-                                        <p style="line-height: 1.0; margin-bottom: 8px;">
+                                    <div class="space-y-1 text-base border-t border-slate-200 pt-4">
+                                        <p style="line-height: 1.0; margin-bottom: 12px;">
                                             <strong class="font-semibold text-slate-600 w-28 inline-block">Thời gian:</strong>
                                             <span class="text-slate-700">${order.thoiGian || 'N/A'}</span>
                                         </p>
-                                        <p style="line-height: 1.0; margin-bottom: 8px;">
+                                        <p style="line-height: 1.0; margin-bottom: 12px;">
                                             <strong class="font-semibold text-slate-600 w-28 inline-block">Khách hàng:</strong>
                                             <span class="text-slate-700">${order.tenKhachHang || 'N/A'}</span>
                                         </p>
@@ -387,7 +381,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Footer -->
                                     <div class="text-right mt-4 pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 text-base">Tổng tiền: </strong>
                                         <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
