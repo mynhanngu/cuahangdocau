@@ -119,20 +119,61 @@
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
 
-        /* --- CSS CHO VIEW TRA CỨU ĐƠN HÀNG --- */
+        /* ===== PHẦN CSS ĐÃ SỬA VÀ NÂNG CẤP ===== */
         .order-status {
-            padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600;
-            text-align: center; white-space: nowrap;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
         }
-        .status-cho-xac-nhan { background-color: #fef3c7; color: #b45309; }
-        .status-dang-giao, .status-da-xac-nhan { background-color: #dbeafe; color: #1d4ed8; }
-        .status-da-giao, .status-hoan-thanh { background-color: #dcfce7; color: #15803d; }
-        .status-da-huy, .status-huy { background-color: #fee2e2; color: #b91c1c; }
-        .status-default { background-color: #e5e7eb; color: #4b5563; }
+        /* Chờ xác nhận & Mặc định (Màu xám) */
+        .status-cho-xac-nhan, .status-default {
+            background-color: #e5e7eb; /* slate-200 */
+            color: #4b5563; /* slate-600 */
+        }
+        /* Đã xác nhận (Xanh lá) */
+        .status-da-xac-nhan {
+            background-color: #dcfce7; /* green-100 */
+            color: #166534; /* green-800 */
+        }
+        /* Không nghe máy (Vàng) */
+        .status-khong-nghe-may {
+            background-color: #fef3c7; /* amber-100 */
+            color: #92400e; /* amber-800 */
+        }
+        /* Rủi ro cao (Cam) */
+        .status-rui-ro-cao {
+            background-color: #ffedd5; /* orange-100 */
+            color: #9a3412; /* orange-800 */
+        }
+        /* Hủy đơn (Đỏ) */
+        .status-huy {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
         
-        #lookup-order-results .order-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: white; }
-        #lookup-order-results .order-item:last-child { margin-bottom: 0; }
-        #lookup-order-results .order-products { white-space: pre-wrap; font-family: monospace; font-size: 12px; background-color: #f9fafb; padding: 0.75rem; border-radius: 6px; max-height: 150px; overflow-y: auto; border: 1px solid #f3f4f6; }
+        #lookup-order-results .order-item {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            border: 1px solid #e5e7eb; /* slate-200 */
+            padding: 1.25rem; /* 20px */
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        #lookup-order-results .order-products {
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 13px;
+            background-color: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #f3f4f6;
+        }
+        /* ===== KẾT THÚC PHẦN SỬA ===== */
     </style>
 </head>
 
@@ -178,12 +219,9 @@
                     
                     <p class="text-center text-slate-600 mb-6 text-base">Nhập số điện thoại bạn đã dùng để đặt hàng để tra cứu.</p>
                     
-                    <!-- ===== PHẦN ĐÃ SỬA THEO YÊU CẦU MỚI NHẤT ===== -->
                     <form id="lookup-order-form" class="max-w-lg mx-auto">
                         <div class="flex items-center bg-white rounded-full shadow-lg overflow-hidden border border-slate-200 focus-within:ring-2 focus-within:ring-[var(--primary-color-light)] focus-within:border-[var(--primary-color)] transition-all">
-                            <!-- input: đã thêm text-center, giảm py-3 -> py-2 -->
                             <input type="tel" id="lookup-phone-input" class="w-full flex-grow text-center pl-6 pr-2 py-2 bg-transparent border-none focus:outline-none focus:ring-0 text-base placeholder-slate-400" placeholder="Nhập số điện thoại..." required>
-                            <!-- button: đã giảm p-3 -> p-2 -->
                             <button type="submit" class="flex-shrink-0 p-2 m-1 rounded-full bg-[var(--primary-color)] hover:bg-[var(--primary-color-dark)] transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -191,7 +229,6 @@
                             </button>
                         </div>
                     </form>
-                    <!-- ===== KẾT THÚC PHẦN SỬA ===== -->
                     
                     <div id="lookup-order-results" class="mt-8">
                         <!-- Kết quả tra cứu sẽ được hiển thị ở đây -->
@@ -259,7 +296,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyGJ80FG1uNLgExa_4XjJAlCTbqL_vcEiAdHjeZXm4rQyeBJ3cS7hHDC33a50janASk-w/exec';
+            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx_i1KAUwX07X19v_jHlYFk3u2d5Vv7G8Fm0f6uXgL7wO8f_i8hE_zZk_l_wE_wB9g/exec';
             
             let state = {
                 products: [], shopInfo: {}, cart: [], currentProduct: null, 
@@ -269,7 +306,6 @@
             
             const loadingSpinner = document.getElementById('loading-spinner');
             
-            // --- CÁC BIẾN CHO VIỆC CHUYỂN ĐỔI GIAO DIỆN ---
             const productsContainer = document.getElementById('products-container');
             const lookupContainer = document.getElementById('lookup-container');
             const categoryNav = document.getElementById('category-nav');
@@ -279,31 +315,21 @@
             let isClosingModal = false;
             let lazyImageObserver;
 
-            // --- LOGIC TRA CỨU ĐƠN HÀNG (ĐÃ SỬA) ---
             window.showLookupView = () => {
-                // Ẩn nội dung sản phẩm và danh mục
                 productsContainer.classList.add('hidden');
                 categoryNav.classList.add('hidden');
-                
-                // Hiện nội dung tra cứu
                 lookupContainer.classList.remove('hidden');
-
-                // Xóa kết quả cũ và reset ô input
                 document.getElementById('lookup-order-results').innerHTML = '';
                 document.getElementById('lookup-phone-input').value = '';
-                window.scrollTo(0, 0); // Cuộn lên đầu trang
+                window.scrollTo(0, 0);
             };
 
             window.hideLookupView = (event) => {
-                if(event) event.preventDefault(); // Ngăn link '#' nhảy trang
-                // Hiện nội dung sản phẩm và danh mục
+                if(event) event.preventDefault();
                 productsContainer.classList.remove('hidden');
                 categoryNav.classList.remove('hidden');
-                
-                // Ẩn nội dung tra cứu
                 lookupContainer.classList.add('hidden');
             };
-            // --- KẾT THÚC SỬA LOGIC TRA CỨU ---
 
             async function handleLookupOrder(event) {
                 event.preventDefault();
@@ -328,48 +354,64 @@
                         result.data.forEach(order => {
                             const statusClass = getStatusClass(order.trangThai);
                             const totalAmount = order.tongTien ? formatCurrency(parsePrice(String(order.tongTien))) : 'Chưa có';
+                            
+                            // ===== PHẦN HTML HIỂN THỊ ĐƠN HÀNG ĐÃ ĐƯỢC THIẾT KẾ LẠI =====
                             html += `
                                 <div class="order-item">
-                                    <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
+                                    <!-- Header -->
+                                    <div class="flex justify-between items-center pb-3 border-b border-slate-200">
                                         <div>
-                                            <h4 class="font-bold text-base text-slate-800">Mã ĐH: ${order.maDonHang}</h4>
-                                            <p class="text-xs text-slate-500">${order.thoiGian}</p>
+                                            <h4 class="font-bold text-base text-slate-800">Mã ĐH: ${order.maDonHang || 'N/A'}</h4>
+                                            <p class="text-xs text-slate-500">${order.thoiGian || ''}</p>
                                         </div>
                                         <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                     </div>
-                                    <div class="text-sm text-slate-600 space-y-2">
-                                        <p><strong>Khách hàng:</strong> ${order.tenKhachHang}</p>
-                                        <p><strong>Sản phẩm:</strong></p>
-                                        <div class="order-products">${order.sanPham}</div>
-                                        <p class="text-right mt-2"><strong>Tổng tiền:</strong> <span class="font-bold text-lg text-rose-600">${totalAmount}</span></p>
+                                    
+                                    <!-- Body -->
+                                    <div class="pt-4 space-y-3 text-sm">
+                                        <p><strong class="font-semibold text-slate-600 w-24 inline-block">Khách hàng:</strong> ${order.tenKhachHang || ''}</p>
+                                        <div>
+                                            <p class="font-semibold text-slate-600 mb-1">Sản phẩm:</p>
+                                            <div class="order-products">${order.sanPham || ''}</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Footer -->
+                                    <div class="text-right mt-4 pt-4 border-t border-slate-200">
+                                        <strong class="font-semibold text-slate-600">Tổng tiền: </strong>
+                                        <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
                                     </div>
                                 </div>
                             `;
+                            // =============================================================
                         });
                         html += '</div>';
                         resultsContainer.innerHTML = html;
                     } else {
-                        resultsContainer.innerHTML = `<p class="text-center text-slate-500 p-4 bg-white rounded-lg">${result.message || 'Không tìm thấy đơn hàng nào.'}</p>`;
+                        resultsContainer.innerHTML = `<p class="text-center text-slate-500 p-4 bg-white rounded-lg shadow">${result.message || 'Không tìm thấy đơn hàng nào.'}</p>`;
                     }
                 } else {
                     resultsContainer.innerHTML = `<p class="text-center text-red-500 p-4 bg-red-50 rounded-lg">Lỗi: ${result.message}</p>`;
                 }
             }
 
+            // ===== HÀM getStatusClass ĐÃ ĐƯỢC CẬP NHẬT LOGIC MÀU SẮC =====
             function getStatusClass(status) {
                 if (!status) return 'status-default';
                 const s = status.toLowerCase().replace(/ /g, '-');
+                
+                if (s.includes('hủy')) return 'status-huy';
+                if (s.includes('đã-xác-nhận')) return 'status-da-xac-nhan';
+                if (s.includes('không-nghe-máy')) return 'status-khong-nghe-may';
+                if (s.includes('rủi-ro-cao')) return 'status-rui-ro-cao';
                 if (s.includes('chờ-xác-nhận')) return 'status-cho-xac-nhan';
-                if (s.includes('đang-giao') || s.includes('đã-xác-nhận')) return 'status-da-xac-nhan';
-                if (s.includes('đã-giao') || s.includes('hoàn-thành')) return 'status-da-giao';
-                if (s.includes('hủy')) return 'status-da-huy';
+                
                 return 'status-default';
             }
+            // =============================================================
 
-            // --- CÁC HÀM TIỆN ÍCH VÀ HIỂN THỊ (Không thay đổi nhiều, giữ nguyên) ---
-            
             function formatCurrency(value) {
-                if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Liên hệ';
+                if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Chưa có';
                 return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             }
 
