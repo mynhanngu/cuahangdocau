@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mỹ Nhân Ngư</title>
+    <!-- === ĐÃ THAY ĐỔI === Giữ lại link output.css gốc của bạn -->
     <link href="output.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,7 +120,7 @@
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
 
-        /* ===== PHẦN CSS ĐÃ SỬA VÀ NÂNG CẤP ===== */
+        /* ===== CSS GỐC CỦA BẠN (GIỮ NGUYÊN) ===== */
         .order-status {
             display: inline-flex;
             align-items: center;
@@ -179,7 +180,31 @@
             overflow-y: auto;
             border: 1px solid #f3f4f6;
         }
-        /* ===== KẾT THÚC PHẦN SỬA ===== */
+
+        /* <!-- === ĐÃ THAY ĐỔI === Bổ sung CSS cho bố cục cân đối --> */
+        .order-info-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Căn lề trên cùng */
+            gap: 1rem; /* Khoảng cách giữa khối thông tin và trạng thái */
+        }
+        
+        .order-details-grid {
+            display: grid;
+            /* 2 cột: Cột 1 tự động rộng, Cột 2 chiếm hết phần còn lại */
+            grid-template-columns: auto 1fr; 
+            /* Khoảng cách dọc 8px, khoảng cách ngang 16px */
+            gap: 8px 16px; 
+            align-items: center; /* Căn các mục vào giữa theo chiều dọc */
+        }
+        
+        /* Class chung cho tất cả các tiêu đề */
+        .order-details-grid .order-label {
+            font-weight: 700; /* In đậm */
+            color: #4b5563; /* Màu xám-đậm cho dễ đọc */
+            white-space: nowrap; /* Không xuống dòng */
+        }
+        /* <!-- === KẾT THÚC PHẦN THAY ĐỔI === --> */
     </style>
 </head>
 
@@ -355,40 +380,46 @@
                             const statusClass = getStatusClass(order.trangThai);
                             const totalAmount = order.tongTien ? formatCurrency(parsePrice(String(order.tongTien))) : 'Chưa có';
                             
-                            // ===== PHẦN HTML HIỂN THỊ ĐƠN HÀNG ĐÃ ĐƯỢC THIẾT KẾ LẠI =====
+                            // <!-- === ĐÃ THAY ĐỔI === Cập nhật template HTML với bố cục cân đối -->
                             html += `
                                 <div class="order-item">
-                                    <div class="space-y-1 text-base mb-4">
-                                        <p style="line-height: 1.0; margin-bottom: 12px;">
-                                            <strong class="font-bold text-slate-800">Mã ĐH:</strong> 
-                                            <span class="font-mono text-slate-700">${order.maDonHang || 'N/A'}</span>
-                                        </p>
-                                        <p style="line-height: 1.0; margin-bottom: 12px;">
-                                            <strong class="font-semibold text-slate-600">Thời gian:</strong>
-                                            <span class="text-slate-700">${order.thoiGian || 'N/A'}</span>
-                                        </p>
-                                        <p style="line-height: 1.0; margin-bottom: 12px;">
-                                            <strong class="font-semibold text-slate-600">Khách hàng:</strong>
-                                            <span class="text-slate-700">${order.tenKhachHang || 'N/A'}</span>
-                                        </p>
-                                        <p style="line-height: 1.0;">
-                                            <strong class="font-semibold text-slate-600">Trạng thái:</strong>
-                                            <span class="order-status ${statusClass}" style="display: inline-block; vertical-align: middle; margin-left: 8px;">${order.trangThai || 'Chưa cập nhật'}</span>
-                                        </p>
+                                    <!-- Khối thông tin chính, bao gồm cả Trạng thái -->
+                                    <div class="order-info-block pb-4 border-b border-slate-200">
+                                        <!-- Lưới thông tin cân đối -->
+                                        <div class="order-details-grid">
+                                            <!-- Dòng 1: Mã ĐH -->
+                                            <strong class="order-label">Mã ĐH:</strong>
+                                            <span class="font-mono text-slate-800 font-semibold">${order.maDonHang || 'N/A'}</span>
+                                            
+                                            <!-- Dòng 2: Thời gian -->
+                                            <strong class="order-label">Thời gian:</strong>
+                                            <span class="text-slate-600">${order.thoiGian || 'N/A'}</span>
+                                            
+                                            <!-- Dòng 3: Khách hàng -->
+                                            <strong class="order-label">Khách hàng:</strong>
+                                            <span class="text-slate-600">${order.tenKhachHang || 'N/A'}</span>
+                                        </div>
+                                        
+                                        <!-- Trạng thái đơn hàng (nằm bên phải) -->
+                                        <div class="flex-shrink-0">
+                                            <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
+                                        </div>
                                     </div>
-                                    
-                                    <div class="pt-4 border-t border-slate-200">
-                                        <strong class="font-semibold text-slate-600 mb-2 block text-base">Sản phẩm:</strong>
+
+                                    <!-- Danh sách sản phẩm -->
+                                    <div class="mt-4">
+                                        <strong class="font-semibold text-slate-700 mb-2 block">Sản phẩm:</strong>
                                         <div class="order-products">${order.sanPham || 'Không có thông tin.'}</div>
                                     </div>
 
+                                    <!-- Tổng tiền -->
                                     <div class="text-right mt-4 pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 text-base">Tổng tiền: </strong>
                                         <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
                                     </div>
                                 </div>
                             `;
-                            // =============================================================
+                            // <!-- === KẾT THÚC PHẦN THAY ĐỔI === -->
                         });
                         html += '</div>';
                         resultsContainer.innerHTML = html;
