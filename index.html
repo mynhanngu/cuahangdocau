@@ -124,15 +124,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 2px 16px;
-            height: 28px;
-            min-width: 140px; /* Tăng chiều rộng tối thiểu */
+            padding: 2px 16px; 
+            height: 28px; 
+            min-width: 140px; 
             border-radius: 9999px;
             font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
         }
-        /* Chờ xác nhận & Mặc định (Nền xám nhạt) */
+        /* Chờ xác nhận & Mặc định (Nền xám nhạt, không màu) */
         .status-cho-xac-nhan, .status-default {
             background-color: #f3f4f6; /* gray-100 */
             color: #4b5563; /* slate-600 */
@@ -171,6 +171,7 @@
             white-space: pre-wrap;
             font-family: monospace;
             font-size: 13px;
+            line-height: 1.5;
             background-color: #f9fafb;
             padding: 0.75rem;
             border-radius: 6px;
@@ -355,12 +356,12 @@
                             const totalAmount = order.tongTien ? formatCurrency(parsePrice(String(order.tongTien))) : 'Chưa có';
                             
                             // ===== PHẦN HTML HIỂN THỊ ĐƠN HÀNG ĐÃ ĐƯỢC THIẾT KẾ LẠI =====
-                            html += `
+                             html += `
                                 <div class="order-item">
                                     <!-- Header -->
                                     <div class="flex flex-wrap gap-4 justify-between items-center pb-4 border-b border-slate-200">
                                         <div class="flex-grow">
-                                            <p class="text-base"><strong class="font-bold text-slate-800">Mã ĐH:</strong> <span class="font-mono text-slate-700">${order.maDonHang || 'N/A'}</span></p>
+                                            <p class="text-base" style="line-height: 1.5;"><strong class="font-bold text-slate-800">Mã ĐH:</strong> <span class="font-mono text-slate-700">${order.maDonHang || 'N/A'}</span></p>
                                         </div>
                                         <div class="flex-shrink-0">
                                             <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
@@ -369,11 +370,11 @@
                                     
                                     <!-- Body -->
                                     <div class="pt-4 space-y-3 text-base">
-                                        <p>
+                                        <p style="line-height: 1.5;">
                                             <strong class="font-semibold text-slate-600 w-28 inline-block">Thời gian:</strong>
                                             <span class="text-slate-800">${order.thoiGian || 'N/A'}</span>
                                         </p>
-                                        <p>
+                                        <p style="line-height: 1.5;">
                                             <strong class="font-semibold text-slate-600 w-28 inline-block">Khách hàng:</strong>
                                             <span class="text-slate-800">${order.tenKhachHang || 'N/A'}</span>
                                         </p>
