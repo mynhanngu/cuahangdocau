@@ -25,42 +25,33 @@
             font-size: 14px;
         }
         body.modal-open { overflow: hidden; }
-
         #shop-name {
             font-family: 'Lexend', cursive;
             font-weight: 800;
         }
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-        
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-close-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 2.5rem; z-index: 1050; color: black; font-weight: 300; line-height: 1; cursor: pointer; transition: all 0.2s; background-color: transparent; padding: 0.5rem; text-shadow: 0 0 4px white, 0 0 6px white; }
         .modal-close-btn:hover { transform: scale(1.2); }
-
         #image-aspect-frame { position: relative; display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; aspect-ratio: unset; }
         #fullscreen-image { width: 100%; height: 100%; object-fit: contain; border-radius: 0; transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out; }
         @media (min-width: 768px) { #image-aspect-frame { max-width: 90vw; max-height: 90vh; width: auto; height: auto; aspect-ratio: 4 / 3; } #fullscreen-image { border-radius: 0.5rem; } }
         @media (max-width: 767px) { #image-viewer-modal .modal-close-btn { display: none; } }
-        
         .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.8); z-index: 2000; justify-content: center; align-items: center; }
         .loading.active { display: flex; }
         .spinner { border: 4px solid #e5e7eb; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .notification { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; z-index: 1500; opacity: 0; transition: all 0.4s ease-in-out; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
         .notification.show { transform: translate(-50%, 10px); opacity: 1; }
         .notification.success { background-color: #10b981; }
         .notification.error { background-color: var(--danger-color); }
-        
         .cart-badge { position: absolute; top: -4px; right: -8px; background-color: var(--danger-color); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
-        
         #category-nav::-webkit-scrollbar { display: none; }
         #product-modal-content { max-width: 800px !important; width: 95%; max-height: 90vh; overflow-y: auto; }
         #alert-modal-content { z-index: 1100; }
-        
         #footer-warning { white-space: pre-wrap; text-align: center; }
-        
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-color-dark); }
@@ -68,26 +59,20 @@
         .btn-secondary:hover { background-color: #a7f3d0; }
         .btn-danger { background-color: var(--danger-color); color: white; }
         .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
-        
         .input-field { width: 100%; padding: 0.6rem 1rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; transition: border-color 0.2s, box-shadow 0.2s; }
         .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-color-light); }
         .input-field.border-red-500 { border-color: #ef4444; }
         .input-field.border-red-500:focus { box-shadow: 0 0 0 2px #fecaca; }
-        
         .contact-fab-group { position: fixed; bottom: 5rem; right: 1rem; z-index: 999; display: flex; flex-direction: column; gap: 0.75rem; }
         .contact-fab { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease; }
         .contact-fab:hover { transform: scale(1.1); }
         .fab-phone { background-color: #25D366; }
         .fab-zalo { background-color: #E0F0FF; }
-        
         .peer:disabled + div { cursor: not-allowed; opacity: 0.5; }
-        
         .thumbnail-image { cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-image.active { border-color: var(--primary-color); }
-        
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        
         #products-grid { gap: 0.5rem; }
         @media (min-width: 768px) { #products-grid { gap: 1rem; } }
         .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
@@ -98,24 +83,19 @@
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
-
         .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
         .gallery-nav-btn.prev { left: 1rem; } .gallery-nav-btn.next { right: 1rem; }
         @media (min-width: 768px) { .gallery-nav-btn.prev { left: 1.5rem; } .gallery-nav-btn.next { right: 1.5rem; } }
         .gallery-nav-btn svg { width: 20px; height: 20px; color: #333; }
         .gallery-counter { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        
         #welcome-modal-content { width: 90%; max-width: 420px; margin: auto; padding: 1.5rem; }
         @media (max-width: 480px) { #welcome-modal-content { padding: 1.25rem; } }
         #footer-warning img, #welcome-title img, #welcome-message img { height: 1.2em; width: auto; display: inline-block; vertical-align: middle; margin: 0 0.15em; }
-        
         footer { will-change: transform; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
         footer.footer-hidden { transform: translateY(100%); }
-
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
-
         .order-status {
             display: inline-flex;
             align-items: center;
@@ -133,7 +113,6 @@
         .status-khong-nghe-may { background-color: #dbeafe; color: #1e40af; }
         .status-rui-ro-cao { background-color: #fef3c7; color: #92400e; }
         .status-huy { background-color: #fee2e2; color: #991b1b; }
-        
         #lookup-order-results .order-item {
             background-color: white;
             border-radius: 0.75rem;
@@ -177,7 +156,6 @@
         <div class="spinner"></div>
     </div>
     <div id="notification" class="notification"></div>
-    
     <div id="main-content-wrapper">
         <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
             <div class="container mx-auto pb-3">
@@ -208,9 +186,7 @@
         <main class="container mx-auto px-4 py-6 pb-28">
             <div id="lookup-container" class="hidden">
                 <div class="max-w-2xl mx-auto">
-                    
                     <p class="text-center text-slate-600 mb-6 text-base">Nhập số điện thoại bạn đã dùng để đặt hàng để tra cứu.</p>
-                    
                     <form id="lookup-order-form" class="max-w-lg mx-auto">
                         <div class="flex items-center bg-white rounded-full shadow-lg overflow-hidden border border-slate-200 focus-within:ring-2 focus-within:ring-[var(--primary-color-light)] focus-within:border-[var(--primary-color)] transition-all">
                             <input type="tel" id="lookup-phone-input" class="w-full flex-grow text-center pl-6 pr-2 py-2 bg-transparent border-none focus:outline-none focus:ring-0 text-base placeholder-slate-400" placeholder="Nhập số điện thoại..." required>
@@ -221,7 +197,6 @@
                             </button>
                         </div>
                     </form>
-                    
                     <div id="lookup-order-results" class="mt-8"></div>
                     <div class="text-center mt-8">
                          <a href="#" onclick="hideLookupView(event)" class="text-[var(--primary-color)] font-semibold hover:underline">
@@ -345,7 +320,7 @@
                             
                             html += `
                                 <div class="order-item">
-                                    <div class="order-info-block pb-4 border-b border-slate-200">
+                                    <div class="order-info-block">
                                         <div class="order-details-grid">
                                             <strong class="order-label">Mã ĐH:</strong>
                                             <span>${order.maDonHang || 'N/A'}</span>
@@ -360,7 +335,7 @@
                                             <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                         </div>
                                     </div>
-                                    <div class="mt-4">
+                                    <div class="pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 mb-2 block">Sản phẩm:</strong>
                                         <div class="order-products">${order.sanPham || 'Không có thông tin.'}</div>
                                     </div>
