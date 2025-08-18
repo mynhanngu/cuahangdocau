@@ -123,6 +123,7 @@
         }
         #lookup-order-results .order-products {
             white-space: pre-wrap;
+            font-family: monospace;
             font-size: 13px;
             line-height: 1.5;
             background-color: #f9fafb;
@@ -323,7 +324,7 @@
                             
                             html += `
                                 <div class="order-item">
-                                    <div class="order-info-block border-b border-slate-200">
+                                    <div class="order-info-block pb-4 border-b border-slate-200">
                                         <div class="order-details-grid">
                                             <strong class="order-label">Mã ĐH:</strong>
                                             <span>${order.maDonHang || 'N/A'}</span>
