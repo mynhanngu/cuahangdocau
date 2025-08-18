@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mỹ Nhân Ngư</title>
-    <!-- === ĐÃ THAY ĐỔI === Giữ lại link output.css gốc của bạn -->
     <link href="output.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,11 +119,11 @@
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
 
-        /* ===== CSS GỐC CỦA BẠN (GIỮ NGUYÊN) ===== */
+        /* ===== CSS CHO TRA CỨU ĐƠN HÀNG ===== */
         .order-status {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* Đảm bảo căn giữa */
             padding: 2px 16px; 
             height: 28px; 
             min-width: 140px; 
@@ -133,32 +132,11 @@
             font-weight: 600;
             white-space: nowrap;
         }
-        /* Chờ xác nhận & Mặc định (Nền xám nhạt, không màu) */
-        .status-cho-xac-nhan, .status-default {
-            background-color: #f3f4f6; /* gray-100 */
-            color: #4b5563; /* slate-600 */
-            border: 1px solid #e5e7eb; /* gray-200 */
-        }
-        /* Đã xác nhận (Xanh lá) */
-        .status-da-xac-nhan {
-            background-color: #dcfce7; /* green-100 */
-            color: #166534; /* green-800 */
-        }
-        /* Không nghe máy (Xanh biển) */
-        .status-khong-nghe-may {
-            background-color: #dbeafe; /* blue-100 */
-            color: #1e40af; /* blue-800 */
-        }
-        /* Rủi ro cao (Vàng) */
-        .status-rui-ro-cao {
-            background-color: #fef3c7; /* amber-100 */
-            color: #92400e; /* amber-800 */
-        }
-        /* Hủy đơn (Đỏ) */
-        .status-huy {
-            background-color: #fee2e2; /* red-100 */
-            color: #991b1b; /* red-800 */
-        }
+        .status-cho-xac-nhan, .status-default { background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+        .status-da-xac-nhan { background-color: #dcfce7; color: #166534; }
+        .status-khong-nghe-may { background-color: #dbeafe; color: #1e40af; }
+        .status-rui-ro-cao { background-color: #fef3c7; color: #92400e; }
+        .status-huy { background-color: #fee2e2; color: #991b1b; }
         
         #lookup-order-results .order-item {
             background-color: white;
@@ -180,31 +158,24 @@
             overflow-y: auto;
             border: 1px solid #f3f4f6;
         }
-
-        /* <!-- === ĐÃ THAY ĐỔI === Bổ sung CSS cho bố cục cân đối --> */
+        
         .order-info-block {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Căn lề trên cùng */
-            gap: 1rem; /* Khoảng cách giữa khối thông tin và trạng thái */
+            align-items: flex-start;
+            gap: 1rem;
         }
-        
         .order-details-grid {
             display: grid;
-            /* 2 cột: Cột 1 tự động rộng, Cột 2 chiếm hết phần còn lại */
             grid-template-columns: auto 1fr; 
-            /* Khoảng cách dọc 8px, khoảng cách ngang 16px */
             gap: 8px 16px; 
-            align-items: center; /* Căn các mục vào giữa theo chiều dọc */
+            align-items: center;
         }
-        
-        /* Class chung cho tất cả các tiêu đề */
         .order-details-grid .order-label {
-            font-weight: 700; /* In đậm */
-            color: #4b5563; /* Màu xám-đậm cho dễ đọc */
-            white-space: nowrap; /* Không xuống dòng */
+            font-weight: 700;
+            color: #64748b; /* text-slate-500 */
+            white-space: nowrap;
         }
-        /* <!-- === KẾT THÚC PHẦN THAY ĐỔI === --> */
     </style>
 </head>
 
@@ -380,46 +351,33 @@
                             const statusClass = getStatusClass(order.trangThai);
                             const totalAmount = order.tongTien ? formatCurrency(parsePrice(String(order.tongTien))) : 'Chưa có';
                             
-                            // <!-- === ĐÃ THAY ĐỔI === Cập nhật template HTML với bố cục cân đối -->
                             html += `
                                 <div class="order-item">
-                                    <!-- Khối thông tin chính, bao gồm cả Trạng thái -->
                                     <div class="order-info-block pb-4 border-b border-slate-200">
-                                        <!-- Lưới thông tin cân đối -->
                                         <div class="order-details-grid">
-                                            <!-- Dòng 1: Mã ĐH -->
                                             <strong class="order-label">Mã ĐH:</strong>
                                             <span class="font-mono text-slate-800 font-semibold">${order.maDonHang || 'N/A'}</span>
                                             
-                                            <!-- Dòng 2: Thời gian -->
                                             <strong class="order-label">Thời gian:</strong>
-                                            <span class="text-slate-600">${order.thoiGian || 'N/A'}</span>
+                                            <span class="text-slate-800">${order.thoiGian || 'N/A'}</span>
                                             
-                                            <!-- Dòng 3: Khách hàng -->
                                             <strong class="order-label">Khách hàng:</strong>
-                                            <span class="text-slate-600">${order.tenKhachHang || 'N/A'}</span>
+                                            <span class="text-slate-800">${toProperCase(order.tenKhachHang || 'N/A')}</span>
                                         </div>
-                                        
-                                        <!-- Trạng thái đơn hàng (nằm bên phải) -->
                                         <div class="flex-shrink-0">
                                             <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                         </div>
                                     </div>
-
-                                    <!-- Danh sách sản phẩm -->
                                     <div class="mt-4">
                                         <strong class="font-semibold text-slate-700 mb-2 block">Sản phẩm:</strong>
                                         <div class="order-products">${order.sanPham || 'Không có thông tin.'}</div>
                                     </div>
-
-                                    <!-- Tổng tiền -->
                                     <div class="text-right mt-4 pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 text-base">Tổng tiền: </strong>
                                         <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
                                     </div>
                                 </div>
                             `;
-                            // <!-- === KẾT THÚC PHẦN THAY ĐỔI === -->
                         });
                         html += '</div>';
                         resultsContainer.innerHTML = html;
@@ -431,20 +389,21 @@
                 }
             }
 
-            // ===== HÀM getStatusClass ĐÃ ĐƯỢC CẬP NHẬT LOGIC MÀU SẮC =====
             function getStatusClass(status) {
                 if (!status) return 'status-default';
                 const s = status.toLowerCase().replace(/ /g, '-');
-                
                 if (s.includes('hủy')) return 'status-huy';
                 if (s.includes('đã-xác-nhận')) return 'status-da-xac-nhan';
                 if (s.includes('không-nghe-máy')) return 'status-khong-nghe-may';
                 if (s.includes('rủi-ro-cao')) return 'status-rui-ro-cao';
                 if (s.includes('chờ-xác-nhận')) return 'status-cho-xac-nhan';
-                
-                return 'status-default'; // Các trường hợp khác
+                return 'status-default';
             }
-            // =============================================================
+
+            function toProperCase(str) {
+                if (!str) return '';
+                return str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase());
+            }
 
             function formatCurrency(value) {
                 if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Chưa có';
