@@ -307,34 +307,32 @@
                             
                             html += `
                                 <div class="order-item">
-                                    <div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 items-center">
-                                        <!-- Dòng 1: Mã ĐH -->
-                                        <strong class="font-semibold text-slate-800 text-right">Mã ĐH:</strong>
-                                        <span class="text-slate-600">${order.maDonHang || 'N/A'}</span>
-
-                                        <!-- Dòng 2: Khách hàng -->
-                                        <strong class="font-semibold text-slate-800 text-right">Khách hàng:</strong>
-                                        <span class="text-slate-600">${toProperCase(order.tenKhachHang || 'N/A')}</span>
-
-                                        <!-- Dòng 3: Thời gian -->
-                                        <strong class="font-semibold text-slate-800 text-right">Thời gian:</strong>
-                                        <span class="text-slate-600">${order.thoiGian || 'N/A'}</span>
-
-                                        <!-- Dòng 4: Trạng thái -->
-                                        <strong class="font-semibold text-slate-800 text-right">Trạng thái:</strong>
-                                        <div><span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span></div>
-
-                                        <!-- Đường kẻ phân cách -->
-                                        <div class="col-span-2 border-t border-slate-200 mt-1"></div>
-
-                                        <!-- Dòng 5: Sản phẩm -->
-                                        <strong class="font-semibold text-slate-800 text-right pt-2 align-top">Sản phẩm:</strong>
-                                        <div class="pt-2"> <!-- Thêm padding-top để căn với nhãn -->
-                                            <div class="order-products">${order.sanPham || 'Không có thông tin.'}</div>
+                                    <div class="flex flex-col space-y-3">
+                                        <div class="flex items-center">
+                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Mã ĐH:</strong>
+                                            <span class="text-slate-600">${order.maDonHang || 'N/A'}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Khách hàng:</strong>
+                                            <span class="text-slate-600">${toProperCase(order.tenKhachHang || 'N/A')}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Thời gian:</strong>
+                                            <span class="text-slate-600">${order.thoiGian || 'N/A'}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Trạng thái:</strong>
+                                            <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                         </div>
                                     </div>
+
+                                    <div class="border-t border-slate-200 my-3"></div>
                                     
-                                    <!-- Khối tổng tiền -->
+                                    <div class="flex items-start">
+                                        <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Sản phẩm:</strong>
+                                        <div class="order-products flex-1">${order.sanPham || 'Không có thông tin.'}</div>
+                                    </div>
+                                    
                                     <div class="text-right mt-4 pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 text-base">Tổng tiền: </strong>
                                         <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
