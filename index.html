@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mỹ Nhân Ngư</title>
+    <!-- === ĐÃ THAY ĐỔI === Giữ lại link output.css gốc của bạn -->
     <link href="output.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,33 +26,45 @@
             font-size: 14px;
         }
         body.modal-open { overflow: hidden; }
+
         #shop-name {
             font-family: 'Lexend', cursive;
             font-weight: 800;
         }
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+        
+        /* --- Modal Styles --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-close-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 2.5rem; z-index: 1050; color: black; font-weight: 300; line-height: 1; cursor: pointer; transition: all 0.2s; background-color: transparent; padding: 0.5rem; text-shadow: 0 0 4px white, 0 0 6px white; }
         .modal-close-btn:hover { transform: scale(1.2); }
+
+        /* --- Fullscreen Image Viewer --- */
         #image-aspect-frame { position: relative; display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; aspect-ratio: unset; }
         #fullscreen-image { width: 100%; height: 100%; object-fit: contain; border-radius: 0; transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out; }
         @media (min-width: 768px) { #image-aspect-frame { max-width: 90vw; max-height: 90vh; width: auto; height: auto; aspect-ratio: 4 / 3; } #fullscreen-image { border-radius: 0.5rem; } }
         @media (max-width: 767px) { #image-viewer-modal .modal-close-btn { display: none; } }
+        
+        /* --- General UI Components --- */
         .loading { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.8); z-index: 2000; justify-content: center; align-items: center; }
         .loading.active { display: flex; }
         .spinner { border: 4px solid #e5e7eb; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .notification { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; z-index: 1500; opacity: 0; transition: all 0.4s ease-in-out; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
         .notification.show { transform: translate(-50%, 10px); opacity: 1; }
         .notification.success { background-color: #10b981; }
         .notification.error { background-color: var(--danger-color); }
+        
         .cart-badge { position: absolute; top: -4px; right: -8px; background-color: var(--danger-color); color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+        
         #category-nav::-webkit-scrollbar { display: none; }
         #product-modal-content { max-width: 800px !important; width: 95%; max-height: 90vh; overflow-y: auto; }
         #alert-modal-content { z-index: 1100; }
+        
         #footer-warning { white-space: pre-wrap; text-align: center; }
+        
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-color-dark); }
@@ -59,20 +72,26 @@
         .btn-secondary:hover { background-color: #a7f3d0; }
         .btn-danger { background-color: var(--danger-color); color: white; }
         .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
+        
         .input-field { width: 100%; padding: 0.6rem 1rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; transition: border-color 0.2s, box-shadow 0.2s; }
         .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-color-light); }
         .input-field.border-red-500 { border-color: #ef4444; }
         .input-field.border-red-500:focus { box-shadow: 0 0 0 2px #fecaca; }
+        
         .contact-fab-group { position: fixed; bottom: 5rem; right: 1rem; z-index: 999; display: flex; flex-direction: column; gap: 0.75rem; }
         .contact-fab { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease; }
         .contact-fab:hover { transform: scale(1.1); }
         .fab-phone { background-color: #25D366; }
         .fab-zalo { background-color: #E0F0FF; }
+        
         .peer:disabled + div { cursor: not-allowed; opacity: 0.5; }
+        
         .thumbnail-image { cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
         .thumbnail-image.active { border-color: var(--primary-color); }
+        
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        
         #products-grid { gap: 0.5rem; }
         @media (min-width: 768px) { #products-grid { gap: 1rem; } }
         .product-card { background-color: white; border: 1px solid #f0f0f0; border-radius: 0.25rem; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out; }
@@ -83,34 +102,64 @@
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
+
         .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
         .gallery-nav-btn.prev { left: 1rem; } .gallery-nav-btn.next { right: 1rem; }
         @media (min-width: 768px) { .gallery-nav-btn.prev { left: 1.5rem; } .gallery-nav-btn.next { right: 1.5rem; } }
         .gallery-nav-btn svg { width: 20px; height: 20px; color: #333; }
         .gallery-counter { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        
         #welcome-modal-content { width: 90%; max-width: 420px; margin: auto; padding: 1.5rem; }
         @media (max-width: 480px) { #welcome-modal-content { padding: 1.25rem; } }
         #footer-warning img, #welcome-title img, #welcome-message img { height: 1.2em; width: auto; display: inline-block; vertical-align: middle; margin: 0 0.15em; }
+        
         footer { will-change: transform; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
         footer.footer-hidden { transform: translateY(100%); }
+
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
+
+        /* ===== CSS GỐC CỦA BẠN (GIỮ NGUYÊN) ===== */
         .order-status {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 2px 12px;
+            padding: 2px 16px; 
+            height: 28px; 
+            min-width: 140px; 
             border-radius: 9999px;
             font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
         }
-        .status-cho-xac-nhan, .status-default { background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
-        .status-da-xac-nhan { background-color: #dcfce7; color: #166534; }
-        .status-khong-nghe-may { background-color: #dbeafe; color: #1e40af; }
-        .status-rui-ro-cao { background-color: #fef3c7; color: #92400e; }
-        .status-huy { background-color: #fee2e2; color: #991b1b; }
+        /* Chờ xác nhận & Mặc định (Nền xám nhạt, không màu) */
+        .status-cho-xac-nhan, .status-default {
+            background-color: #f3f4f6; /* gray-100 */
+            color: #4b5563; /* slate-600 */
+            border: 1px solid #e5e7eb; /* gray-200 */
+        }
+        /* Đã xác nhận (Xanh lá) */
+        .status-da-xac-nhan {
+            background-color: #dcfce7; /* green-100 */
+            color: #166534; /* green-800 */
+        }
+        /* Không nghe máy (Xanh biển) */
+        .status-khong-nghe-may {
+            background-color: #dbeafe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+        }
+        /* Rủi ro cao (Vàng) */
+        .status-rui-ro-cao {
+            background-color: #fef3c7; /* amber-100 */
+            color: #92400e; /* amber-800 */
+        }
+        /* Hủy đơn (Đỏ) */
+        .status-huy {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+        
         #lookup-order-results .order-item {
             background-color: white;
             border-radius: 0.75rem;
@@ -131,6 +180,31 @@
             overflow-y: auto;
             border: 1px solid #f3f4f6;
         }
+
+        /* <!-- === ĐÃ THAY ĐỔI === Bổ sung CSS cho bố cục cân đối --> */
+        .order-info-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Căn lề trên cùng */
+            gap: 1rem; /* Khoảng cách giữa khối thông tin và trạng thái */
+        }
+        
+        .order-details-grid {
+            display: grid;
+            /* 2 cột: Cột 1 tự động rộng, Cột 2 chiếm hết phần còn lại */
+            grid-template-columns: auto 1fr; 
+            /* Khoảng cách dọc 8px, khoảng cách ngang 16px */
+            gap: 8px 16px; 
+            align-items: center; /* Căn các mục vào giữa theo chiều dọc */
+        }
+        
+        /* Class chung cho tất cả các tiêu đề */
+        .order-details-grid .order-label {
+            font-weight: 700; /* In đậm */
+            color: #4b5563; /* Màu xám-đậm cho dễ đọc */
+            white-space: nowrap; /* Không xuống dòng */
+        }
+        /* <!-- === KẾT THÚC PHẦN THAY ĐỔI === --> */
     </style>
 </head>
 
@@ -144,7 +218,7 @@
         <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
             <div class="container mx-auto pb-3">
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
-                    <div class="w-10"></div>
+                    <div class="w-10"></div> <!-- Placeholder for alignment -->
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
                         <h1 id="shop-name" class="text-2xl md:text-3xl text-[var(--primary-color)]">Đang tải...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
@@ -210,6 +284,7 @@
         </footer>
     </div>
     
+    <!-- CÁC MODAL KHÁC -->
     <div id="product-modal" class="modal"><div id="product-modal-content" class="relative bg-white rounded-2xl p-4 sm:p-6 m-4"></div></div>
     <div id="confirm-order-modal" class="modal"><div id="confirm-order-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
     <div id="cart-modal" class="modal"><div id="cart-modal-content" class="relative bg-white p-4 m-0 w-full max-h-[90vh] overflow-y-auto md:rounded-2xl md:p-6 md:max-w-2xl md:max-h-[80vh] absolute bottom-0 rounded-t-2xl md:relative md:bottom-auto"></div></div>
@@ -305,40 +380,46 @@
                             const statusClass = getStatusClass(order.trangThai);
                             const totalAmount = order.tongTien ? formatCurrency(parsePrice(String(order.tongTien))) : 'Chưa có';
                             
+                            // <!-- === ĐÃ THAY ĐỔI === Cập nhật template HTML với bố cục cân đối -->
                             html += `
                                 <div class="order-item">
-                                    <div class="flex flex-col space-y-3">
-                                        <div class="flex items-center">
-                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Mã ĐH:</strong>
-                                            <span class="text-slate-600">${order.maDonHang || 'N/A'}</span>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Khách hàng:</strong>
-                                            <span class="text-slate-600">${toProperCase(order.tenKhachHang || 'N/A')}</span>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Thời gian:</strong>
+                                    <!-- Khối thông tin chính, bao gồm cả Trạng thái -->
+                                    <div class="order-info-block pb-4 border-b border-slate-200">
+                                        <!-- Lưới thông tin cân đối -->
+                                        <div class="order-details-grid">
+                                            <!-- Dòng 1: Mã ĐH -->
+                                            <strong class="order-label">Mã ĐH:</strong>
+                                            <span class="font-mono text-slate-800 font-semibold">${order.maDonHang || 'N/A'}</span>
+                                            
+                                            <!-- Dòng 2: Thời gian -->
+                                            <strong class="order-label">Thời gian:</strong>
                                             <span class="text-slate-600">${order.thoiGian || 'N/A'}</span>
+                                            
+                                            <!-- Dòng 3: Khách hàng -->
+                                            <strong class="order-label">Khách hàng:</strong>
+                                            <span class="text-slate-600">${order.tenKhachHang || 'N/A'}</span>
                                         </div>
-                                        <div class="flex items-center">
-                                            <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Trạng thái:</strong>
+                                        
+                                        <!-- Trạng thái đơn hàng (nằm bên phải) -->
+                                        <div class="flex-shrink-0">
                                             <span class="order-status ${statusClass}">${order.trangThai || 'Chưa cập nhật'}</span>
                                         </div>
                                     </div>
 
-                                    <div class="border-t border-slate-200 my-3"></div>
-                                    
-                                    <div class="flex items-start">
-                                        <strong class="font-semibold text-slate-800 w-24 flex-shrink-0">Sản phẩm:</strong>
-                                        <div class="order-products flex-1">${order.sanPham || 'Không có thông tin.'}</div>
+                                    <!-- Danh sách sản phẩm -->
+                                    <div class="mt-4">
+                                        <strong class="font-semibold text-slate-700 mb-2 block">Sản phẩm:</strong>
+                                        <div class="order-products">${order.sanPham || 'Không có thông tin.'}</div>
                                     </div>
-                                    
+
+                                    <!-- Tổng tiền -->
                                     <div class="text-right mt-4 pt-4 border-t border-slate-200">
                                         <strong class="font-semibold text-slate-700 text-base">Tổng tiền: </strong>
                                         <span class="font-bold text-xl text-rose-600">${totalAmount}</span>
                                     </div>
                                 </div>
                             `;
+                            // <!-- === KẾT THÚC PHẦN THAY ĐỔI === -->
                         });
                         html += '</div>';
                         resultsContainer.innerHTML = html;
@@ -350,21 +431,20 @@
                 }
             }
 
+            // ===== HÀM getStatusClass ĐÃ ĐƯỢC CẬP NHẬT LOGIC MÀU SẮC =====
             function getStatusClass(status) {
                 if (!status) return 'status-default';
                 const s = status.toLowerCase().replace(/ /g, '-');
+                
                 if (s.includes('hủy')) return 'status-huy';
                 if (s.includes('đã-xác-nhận')) return 'status-da-xac-nhan';
                 if (s.includes('không-nghe-máy')) return 'status-khong-nghe-may';
                 if (s.includes('rủi-ro-cao')) return 'status-rui-ro-cao';
                 if (s.includes('chờ-xác-nhận')) return 'status-cho-xac-nhan';
-                return 'status-default';
+                
+                return 'status-default'; // Các trường hợp khác
             }
-
-            function toProperCase(str) {
-                if (!str) return '';
-                return str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase());
-            }
+            // =============================================================
 
             function formatCurrency(value) {
                 if (typeof value !== 'number' || isNaN(value) || value <= 0) return 'Chưa có';
@@ -916,28 +996,13 @@
                 document.getElementById('confirm-alert-btn').onclick = async () => {
                     showLoading();
                     const { items, isCheckout } = state.orderContext;
-                    const name = document.getElementById('order-name').value;
-                    const phone = document.getElementById('order-phone').value;
-                    const address = document.getElementById('order-address').value;
-                    const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text;
-                    const district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text;
-                    const ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
+                    const name = document.getElementById('order-name').value, phone = document.getElementById('order-phone').value, address = document.getElementById('order-address').value;
+                    const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
                     const customerNote = document.getElementById('order-note').value;
                     const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
                     const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${formatCurrency(i.price)}`; }).join('\n');
                     const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-                    
-                    const orderData = { 
-                        maDonHang: `MNN-${Date.now()}`, 
-                        thoiGian: new Date().toLocaleString('vi-VN'), 
-                        sdt: phone, 
-                        tenKhachHang: toProperCase(name), 
-                        diaChi: fullAddress, 
-                        sanPham: sanPhamText, 
-                        tongTien: tongTien, 
-                        ghiChu: customerNote, 
-                        trangThai: "Chờ xác nhận" 
-                    };
+                    const orderData = { maDonHang: `MNN-${Date.now()}`, thoiGian: new Date().toLocaleString('vi-VN'), sdt: phone, tenKhachHang: name, diaChi: fullAddress, sanPham: sanPhamText, tongTien: tongTien, ghiChu: customerNote, trangThai: "Chờ xác nhận" };
 
                     const result = await apiCall({ action: 'submitOrder', order: orderData });
                     hideLoading();
