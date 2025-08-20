@@ -980,7 +980,7 @@
                     const phone = document.getElementById('order-phone').value;
                     const address = document.getElementById('order-address').value;
                     const province = document.getElementById('order-province').options[document.getElementById('order-province').selectedIndex].text, district = document.getElementById('order-district').options[document.getElementById('order-district').selectedIndex].text, ward = document.getElementById('order-ward').options[document.getElementById('order-ward').selectedIndex].text;
-                    const customerNote = document.getElementById('order-note').value;
+                    const customerNote = document.getElementById('order-note').value.trim();
                     const fullAddress = `${address}, ${ward}, ${district}, ${province}`;
                     const sanPhamText = items.map(i => { const optionsText = i.selectedOptions ? ` (${i.selectedOptions})` : ''; return `${i.product.tenSP}${optionsText} x ${i.quantity} x ${formatCurrency(i.price)}`; }).join('\n');
                     const tongTien = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
