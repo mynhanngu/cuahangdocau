@@ -675,7 +675,10 @@
                 renderProductModalContent();
                 openModal('product-modal');
             };
-
+            
+            // ===============================================================
+            // ===== UPGRADED FUNCTION: Quantity input and long-press feature =====
+            // ===============================================================
             function renderProductModalContent() {
                 const p = state.currentProduct;
                 const content = document.getElementById('product-modal-content');
@@ -725,9 +728,9 @@
                                 <div>
                                     <p class="font-semibold text-sm mb-2">Số lượng:</p>
                                     <div class="flex items-center">
-                                        <button type="button" onclick="updateModalQuantity(-1)" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button>
-                                        <input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" readonly>
-                                        <button type="button" onclick="updateModalQuantity(1)" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button>
+                                        <button type="button" id="quantity-minus" class="w-10 h-10 border rounded-l-md font-bold text-slate-600 hover:bg-slate-100 transition">-</button>
+                                        <input type="number" id="product-quantity" value="1" min="1" class="w-12 h-10 text-center border-t border-b focus:outline-none" >
+                                        <button type="button" id="quantity-plus" class="w-10 h-10 border rounded-r-md font-bold text-slate-600 hover:bg-slate-100 transition">+</button>
                                     </div>
                                 </div>
                             </div>
@@ -740,11 +743,67 @@
                     </div>`;
                 
                 toggleDescription(true);
-                updateVariantUI();
+                updateVariantUI(); // Call this first to set initial max stock
                 if (validImages.length > 0) {
                     updateGalleryUI(validImages);
                     initSwipe(); 
                 }
+
+                // --- NEW Quantity Control Logic ---
+                const qtyInput = document.getElementById('product-quantity');
+                const minusBtn = document.getElementById('quantity-minus');
+                const plusBtn = document.getElementById('quantity-plus');
+                let changeInterval = null;
+                let timeout = null;
+
+                const updateAndValidateQuantity = (change) => {
+                    let currentVal = parseInt(qtyInput.value) || 1;
+                    let newVal = currentVal + change;
+                    const maxStock = parseInt(qtyInput.getAttribute('max')) || 999;
+                    
+                    if (newVal < 1) newVal = 1;
+                    if (newVal > maxStock) {
+                        newVal = maxStock;
+                        showNotification(`Chỉ còn ${maxStock} sản phẩm trong kho.`, 'error');
+                    }
+                    qtyInput.value = newVal;
+                };
+
+                qtyInput.addEventListener('change', () => {
+                    let currentVal = parseInt(qtyInput.value) || 1;
+                    const maxStock = parseInt(qtyInput.getAttribute('max')) || 999;
+                    if (currentVal < 1) qtyInput.value = 1;
+                    if (currentVal > maxStock) {
+                        qtyInput.value = maxStock;
+                        showNotification(`Chỉ còn ${maxStock} sản phẩm trong kho.`, 'error');
+                    }
+                });
+
+                const startChanging = (change) => {
+                    if (changeInterval) return;
+                    updateAndValidateQuantity(change); // Initial immediate change
+                    timeout = setTimeout(() => {
+                        changeInterval = setInterval(() => {
+                            updateAndValidateQuantity(change);
+                        }, 75); // Faster repeat rate
+                    }, 300); // Shorter initial delay
+                };
+
+                const stopChanging = () => {
+                    clearTimeout(timeout);
+                    clearInterval(changeInterval);
+                    changeInterval = null;
+                    timeout = null;
+                };
+
+                plusBtn.addEventListener('mousedown', () => startChanging(1));
+                minusBtn.addEventListener('mousedown', () => startChanging(-1));
+                plusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startChanging(1); });
+                minusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startChanging(-1); });
+
+                ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(event => {
+                    document.addEventListener(event, stopChanging, { once: true });
+                });
             }
 
             window.toggleDescription = (isInitial = false) => {
@@ -864,6 +923,7 @@
                 const stockEl = document.getElementById('dynamic-stock-display');
                 const cartBtn = document.getElementById('modal-add-to-cart-btn');
                 const buyBtn = document.getElementById('modal-buy-now-btn');
+                const qtyInput = document.getElementById('product-quantity');
                 const dimensionContainers = document.querySelectorAll('[data-dimension-index]');
 
                 if (dimensionContainers.length > 0) {
@@ -906,6 +966,10 @@
                     stockEl.innerHTML = `<div class="flex justify-between items-center">${stockText}${soldText}</div>`;
 
                     const isAvailable = variant.tonKho > 0;
+                    qtyInput.setAttribute('max', variant.tonKho);
+                    if (parseInt(qtyInput.value) > variant.tonKho) {
+                        qtyInput.value = variant.tonKho;
+                    }
                     cartBtn.disabled = !isAvailable;
                     buyBtn.disabled = !isAvailable;
                 };
@@ -927,6 +991,7 @@
                         totalInfoHTML += ` | <span class="text-slate-500">Đã bán: ${p.tongDaBan}</span>`;
                     }
                     stockEl.innerHTML = `<div>${totalInfoHTML}</div>`;
+                    qtyInput.removeAttribute('max');
                     cartBtn.disabled = true;
                     buyBtn.disabled = true;
                 }
@@ -1155,7 +1220,6 @@
                             </div>
                         </div>`;
                     });
-                    // ===== THIS IS THE CORRECTED LINE =====
                     cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${formatCurrency(total)}</p><button onclick="checkoutFromCart()" class="btn btn-primary">Thanh toán</button></div>`;
                 }
                 content.innerHTML = cartHTML;
@@ -1181,7 +1245,6 @@
                 updateCartBadge();
             }
             
-            // ===== THIS IS THE NEW "HELPER" FUNCTION =====
             window.checkoutFromCart = () => {
                 checkout(state.cart, true);
             }
@@ -1286,13 +1349,6 @@
                     } else { errorMessageDiv.textContent = ''; phoneInput.classList.remove('border-red-500'); submitButton.disabled = false; }
                 });
             }
-
-            window.updateModalQuantity = (change) => {
-                const input = document.getElementById('product-quantity');
-                let newValue = parseInt(input.value) + change;
-                if (newValue < 1) newValue = 1;
-                input.value = newValue;
-            };
             
             const showLoading = () => loadingSpinner.classList.add('active');
             const hideLoading = () => loadingSpinner.classList.remove('active');
