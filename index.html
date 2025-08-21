@@ -1156,7 +1156,7 @@
                         </div>`;
                     });
                     // ===== THIS IS THE CORRECTED LINE =====
-                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${formatCurrency(total)}</p><button onclick="checkout(state.cart, true)" class="btn btn-primary">Thanh toán</button></div>`;
+                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${formatCurrency(total)}</p><button onclick="checkoutFromCart()" class="btn btn-primary">Thanh toán</button></div>`;
                 }
                 content.innerHTML = cartHTML;
                 if (!activeModals.includes('cart-modal')) openModal('cart-modal');
@@ -1181,6 +1181,11 @@
                 updateCartBadge();
             }
             
+            // ===== THIS IS THE NEW "HELPER" FUNCTION =====
+            window.checkoutFromCart = () => {
+                checkout(state.cart, true);
+            }
+
             window.checkout = async (items, isFromCart) => {
                 if (!items || items.length === 0) {
                     showNotification("Giỏ hàng của bạn đang trống.", "error");
