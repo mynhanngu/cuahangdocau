@@ -676,9 +676,6 @@
                 openModal('product-modal');
             };
             
-            // ===============================================================
-            // ===== UPGRADED FUNCTION: Quantity input and long-press feature =====
-            // ===============================================================
             function renderProductModalContent() {
                 const p = state.currentProduct;
                 const content = document.getElementById('product-modal-content');
@@ -753,9 +750,7 @@
                 const qtyInput = document.getElementById('product-quantity');
                 const minusBtn = document.getElementById('quantity-minus');
                 const plusBtn = document.getElementById('quantity-plus');
-                let changeInterval = null;
-                let timeout = null;
-
+                
                 const updateAndValidateQuantity = (change) => {
                     let currentVal = parseInt(qtyInput.value) || 1;
                     let newVal = currentVal + change;
@@ -779,31 +774,8 @@
                     }
                 });
 
-                const startChanging = (change) => {
-                    if (changeInterval) return;
-                    updateAndValidateQuantity(change); // Initial immediate change
-                    timeout = setTimeout(() => {
-                        changeInterval = setInterval(() => {
-                            updateAndValidateQuantity(change);
-                        }, 75); // Faster repeat rate
-                    }, 300); // Shorter initial delay
-                };
-
-                const stopChanging = () => {
-                    clearTimeout(timeout);
-                    clearInterval(changeInterval);
-                    changeInterval = null;
-                    timeout = null;
-                };
-
-                plusBtn.addEventListener('mousedown', () => startChanging(1));
-                minusBtn.addEventListener('mousedown', () => startChanging(-1));
-                plusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startChanging(1); });
-                minusBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startChanging(-1); });
-
-                ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(event => {
-                    document.addEventListener(event, stopChanging, { once: true });
-                });
+                minusBtn.addEventListener('click', () => updateAndValidateQuantity(-1));
+                plusBtn.addEventListener('click', () => updateAndValidateQuantity(1));
             }
 
             window.toggleDescription = (isInitial = false) => {
