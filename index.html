@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mỹ Nhân Ngư</title>
+    <meta name="description" content="Mỹ Nhân Ngư - Mồi câu chất - Đam mê thật">
+    <meta property="og:title" content="Mỹ Nhân Ngư" />
+    <meta property="og:description" content="Mồi câu chất - Đam mê thật" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://your-website-url.com/" />
+    <meta property="og:image" content="https://your-website-url.com/meirenyu.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:site_name" content="Mỹ Nhân Ngư" />
+    <meta property="og:locale" content="vi_VN" />
     <link href="output.css" rel="stylesheet">
     <link rel="icon" href="meirenyu.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -188,7 +198,7 @@
             color: #4b5563; 
             white-space: nowrap; 
         }
-        /* Style for invalid items in cart */
+        
         .cart-item-invalid {
             background-color: #fff1f2;
             border: 1px solid #ffdde0;
@@ -740,13 +750,12 @@
                     </div>`;
                 
                 toggleDescription(true);
-                updateVariantUI(); // Call this first to set initial max stock
+                updateVariantUI();
                 if (validImages.length > 0) {
                     updateGalleryUI(validImages);
                     initSwipe(); 
                 }
 
-                // --- NEW Quantity Control Logic ---
                 const qtyInput = document.getElementById('product-quantity');
                 const minusBtn = document.getElementById('quantity-minus');
                 const plusBtn = document.getElementById('quantity-plus');
