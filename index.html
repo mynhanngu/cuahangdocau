@@ -295,11 +295,11 @@
     <div id="alert-modal" class="modal"><div id="alert-modal-content" class="relative bg-white rounded-2xl p-6 m-4 max-w-sm w-full"></div></div>
     <div id="welcome-modal" class="modal"> 
         <div id="welcome-modal-content" class="relative bg-white rounded-2xl"> 
-            <button onclick="closeAndMarkWelcomePopup()" class="modal-close-btn" aria-label="Đóng thông báo">×</button> 
+            <button onclick="closeWelcomePopup()" class="modal-close-btn" aria-label="Đóng thông báo">×</button> 
             <div id="welcome-title" class="text-2xl font-bold text-gray-800 mb-4 text-center"></div> 
             <div id="welcome-message" class="text-slate-600 mb-6 text-sm"></div> 
             <div class="text-center mt-6"> 
-                <button onclick="closeAndMarkWelcomePopup()" class="btn btn-primary"> 
+                <button onclick="closeWelcomePopup()" class="btn btn-primary"> 
                     Đã hiểu 
                 </button> 
             </div> 
@@ -1421,11 +1421,10 @@
                     }
                 }
             }
-
-            window.closeAndMarkWelcomePopup = function() {
+            
+            window.closeWelcomePopup = function() {
                 if (isClosingModal) return;
                 isClosingModal = true;
-                sessionStorage.setItem('welcomePopupShown', 'true');
                 const modalId = 'welcome-modal';
                 const modalIndex = activeModals.indexOf(modalId);
                 if (modalIndex > -1) activeModals.splice(modalIndex, 1);
@@ -1435,11 +1434,9 @@
             }
 
             function triggerWelcomePopup() {
-                if (sessionStorage.getItem('welcomePopupShown') !== 'true') {
-                    setTimeout(() => {
-                        openModal('welcome-modal');
-                    }, 500);
-                }
+                setTimeout(() => {
+                    openModal('welcome-modal');
+                }, 500);
             }
 
             init();
