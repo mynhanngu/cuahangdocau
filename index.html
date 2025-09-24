@@ -108,7 +108,6 @@
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
-        .product-status-warning { font-size: 0.75rem; font-weight: 600; color: #d97706; /* Amber 600 */ }
 
         .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
@@ -606,26 +605,8 @@
                 }
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
-                    
-                    // --- LOGIC HIỂN THỊ TRẠNG THÁI THỦ CÔNG TỪ CỘT "Trạng thái" ---
-                    let statusHTML = '';
-                    // Chỉ hiển thị nếu cột `trangThai` có nội dung (đã được trim())
-                    if (p.trangThai && p.trangThai.trim() !== '') {
-                        const statusText = p.trangThai.trim();
-                        let statusClass = '';
-
-                        // Nếu nội dung là "Hết hàng" (không phân biệt hoa thường) -> màu đỏ
-                        if (statusText.toLowerCase() === 'hết hàng') {
-                            statusClass = 'product-status-unavailable'; // Class màu đỏ
-                        } else {
-                            // Tất cả các nội dung khác sẽ có màu vàng
-                            statusClass = 'product-status-warning'; // Class màu vàng
-                        }
-                        
-                        statusHTML = `<p class="${statusClass}">${statusText}</p>`;
-                    }
-                    // --- KẾT THÚC LOGIC HIỂN THỊ TRẠNG THÁI ---
-                    
+                    const isNotAvailable = p.trangThai && p.trangThai.toLowerCase() !== 'còn hàng';
+                    const statusHTML = isNotAvailable ? `<p class="product-status-unavailable">${p.trangThai}</p>` : '';
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
                     
                     const priceHTML = formatPriceDisplay(p);
@@ -904,7 +885,7 @@
                         maBienThe: p.maSP,
                         tenTuyChon: [],
                         gia: parsePrice(p.giaBan),
-                        trangThai: p.trangThai, // Dữ liệu trạng thái từ sheet, nhưng không dùng để quyết định mua bán
+                        trangThai: p.trangThai,
                         daBan: p.daBan,
                         tonKho: p.tonKho
                     };
@@ -947,7 +928,6 @@
                 
                 const currentSelection = getSelectedVariant();
                 
-                // Logic hiển thị trạng thái tồn kho bên trong modal, dựa trên cột Tồn kho
                 const renderStatus = (variant) => {
                     let stockText = '';
                     let soldText = '';
@@ -957,8 +937,7 @@
                     } else if (variant.tonKho > 0) {
                         stockText = `<span class="font-semibold text-green-600">Còn hàng (${variant.tonKho})</span>`;
                     } else {
-                        // Kể cả khi cột "Trạng thái" là "Sắp về", nếu tồn kho là 0, ở đây vẫn hiển thị là "Hết hàng"
-                        stockText = `<span class="font-semibold text-red-600">Hết hàng</span>`;
+                        stockText = `<span class="font-semibold text-red-600">${variant.trangThai || 'Hết hàng'}</span>`;
                     }
 
                     if (variant.daBan > 0) {
