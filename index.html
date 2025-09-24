@@ -607,14 +607,14 @@
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
                     
-                    // --- BẮT ĐẦU PHẦN SỬA ĐỔI THEO YÊU CẦU MỚI ---
+                    // --- LOGIC HIỂN THỊ TRẠNG THÁI THỦ CÔNG TỪ CỘT "Trạng thái" ---
                     let statusHTML = '';
-                    // Chỉ hiển thị nếu cột trạng thái có nội dung
+                    // Chỉ hiển thị nếu cột `trangThai` có nội dung (đã được trim())
                     if (p.trangThai && p.trangThai.trim() !== '') {
                         const statusText = p.trangThai.trim();
                         let statusClass = '';
 
-                        // Nếu nội dung là "Hết hàng" (không phân biệt hoa thường) thì màu đỏ
+                        // Nếu nội dung là "Hết hàng" (không phân biệt hoa thường) -> màu đỏ
                         if (statusText.toLowerCase() === 'hết hàng') {
                             statusClass = 'product-status-unavailable'; // Class màu đỏ
                         } else {
@@ -624,7 +624,7 @@
                         
                         statusHTML = `<p class="${statusClass}">${statusText}</p>`;
                     }
-                    // --- KẾT THÚC PHẦN SỬA ĐỔI ---
+                    // --- KẾT THÚC LOGIC HIỂN THỊ TRẠNG THÁI ---
                     
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
                     
@@ -904,7 +904,7 @@
                         maBienThe: p.maSP,
                         tenTuyChon: [],
                         gia: parsePrice(p.giaBan),
-                        trangThai: p.trangThai,
+                        trangThai: p.trangThai, // Dữ liệu trạng thái từ sheet, nhưng không dùng để quyết định mua bán
                         daBan: p.daBan,
                         tonKho: p.tonKho
                     };
@@ -947,6 +947,7 @@
                 
                 const currentSelection = getSelectedVariant();
                 
+                // Logic hiển thị trạng thái tồn kho bên trong modal, dựa trên cột Tồn kho
                 const renderStatus = (variant) => {
                     let stockText = '';
                     let soldText = '';
@@ -956,7 +957,8 @@
                     } else if (variant.tonKho > 0) {
                         stockText = `<span class="font-semibold text-green-600">Còn hàng (${variant.tonKho})</span>`;
                     } else {
-                        stockText = `<span class="font-semibold text-red-600">${variant.trangThai || 'Hết hàng'}</span>`;
+                        // Kể cả khi cột "Trạng thái" là "Sắp về", nếu tồn kho là 0, ở đây vẫn hiển thị là "Hết hàng"
+                        stockText = `<span class="font-semibold text-red-600">Hết hàng</span>`;
                     }
 
                     if (variant.daBan > 0) {
