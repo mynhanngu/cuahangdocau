@@ -108,9 +108,9 @@
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
         .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         
-        /* === CSS CHO TRẠNG THÁI SẢN PHẨM === */
+        /* === CSS CHO TRẠNG THÁI (ĐÃ CẬP NHẬT MÀU) === */
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
-        .product-status-note { font-size: 0.75rem; font-weight: 600; color: #c2410c; /* Màu cam đậm */ }
+        .product-status-note { font-size: 0.75rem; font-weight: 600; color: #d97706; /* Màu cam ngả vàng sáng */ }
         /* === KẾT THÚC CSS TRẠNG THÁI === */
 
         .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
@@ -608,30 +608,28 @@
                     return;
                 }
                 
-                // === BẮT ĐẦU VÒNG LẶP SẢN PHẨM (ĐÃ CẬP NHẬT) ===
                 filtered.forEach(p => {
                     const mainImage = p.hinhAnh.find(img => img) || 'https://via.placeholder.com/300';
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
                     
                     const priceHTML = formatPriceDisplay(p);
 
-                    // --- LOGIC HIỂN THỊ TRẠNG THÁI MỚI ---
+                    // --- LOGIC HIỂN THỊ TRẠNG THÁI (ĐÃ SỬA) ---
                     let statusHTML = '';
-                    // 1. Chỉ xử lý nếu cột Trạng thái có nội dung
                     if (p.trangThai && p.trangThai.trim() !== '') {
-                        const trangThaiText = p.trangThai.trim(); // Lấy nội dung gốc để hiển thị
-                        const trangThaiLower = trangThaiText.toLowerCase(); // Chuyển sang chữ thường để so sánh
+                        const trangThaiText = p.trangThai.trim();
+                        const trangThaiLower = trangThaiText.toLowerCase();
 
-                        // 2. Quy tắc "Hết hàng": Nếu là "hết hàng", dùng màu đỏ
+                        // Quy tắc 1: Nếu là "hết hàng", hiển thị màu đỏ.
                         if (trangThaiLower === 'hết hàng' || trangThaiLower === 'tạm hết') {
                             statusHTML = `<p class="product-status-unavailable">${trangThaiText}</p>`;
-                        } 
-                        // 3. Quy tắc "Ghi chú khác": Nếu là bất kỳ chữ gì khác, dùng màu cam đậm
-                        else {
+                        }
+                        // Quy tắc 2: Nếu KHÔNG phải là "còn hàng", thì mới hiển thị ghi chú màu cam.
+                        else if (trangThaiLower !== 'còn hàng') {
                             statusHTML = `<p class="product-status-note">${trangThaiText}</p>`;
                         }
+                        // Nếu là "còn hàng" hoặc để trống, statusHTML sẽ không có gì cả.
                     }
-                    // Nếu p.trangThai trống, statusHTML sẽ là chuỗi rỗng và không hiển thị gì cả.
                     // --- KẾT THÚC LOGIC TRẠNG THÁI ---
                     
                     let soldCountHTML = '';
@@ -655,7 +653,6 @@
                             </div>
                         </div>`;
                 });
-                // === KẾT THÚC VÒNG LẶP SẢN PHẨM ===
 
                 observeLazyImages();
             }
@@ -962,7 +959,20 @@
                     } else if (variant.tonKho > 0) {
                         stockText = `<span class="font-semibold text-green-600">Còn hàng (${variant.tonKho})</span>`;
                     } else {
-                        stockText = `<span class="font-semibold text-red-600">${variant.trangThai || 'Hết hàng'}</span>`;
+                        // === LOGIC POP-UP KHI HẾT HÀNG (ĐÃ SỬA LỖI MÀU SẮC) ===
+                        // Lấy ghi chú gốc, nếu không có thì mặc định là 'Hết hàng'
+                        const statusText = state.currentProduct.trangThai || 'Hết hàng';
+                        const statusTextLower = (state.currentProduct.trangThai || '').toLowerCase();
+                        
+                        let statusColorClass = 'text-red-600'; // Mặc định màu đỏ
+                        
+                        // Nếu có ghi chú và nó KHÔNG phải là "hết hàng", đổi sang màu cam
+                        if (statusTextLower && statusTextLower !== 'hết hàng' && statusTextLower !== 'tạm hết') {
+                            statusColorClass = 'text-orange-600'; // Dùng màu cam cho các ghi chú như "Sắp về"
+                        }
+                        
+                        // Tạo HTML với đúng màu và đúng chữ hoa/thường
+                        stockText = `<span class="font-semibold ${statusColorClass}">${statusText}</span>`;
                     }
 
                     if (variant.daBan > 0) {
