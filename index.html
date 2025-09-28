@@ -21,12 +21,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Lexend&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #0d9488;
-            --primary-color-light: #ccfbf1;
-            --primary-color-dark: #0f766e;
-            --danger-color: #e11d48;
+            --primary-color: #E90000; 
+            --primary-pink: #FAA6FF;
+            --primary-gradient: linear-gradient(125deg, var(--primary-color) 0%, var(--primary-pink) 100%);
+            --primary-color-light: #FEE7FF;
+            --primary-color-dark: #C10000;
+            --danger-color: #E90000;
             --font-family: 'Be Vietnam Pro', sans-serif;
         }
+
+        @font-face {
+            font-family: 'FontThuPhapCuaToi';
+            src: url('fonts/dl-thuphap-webfont.woff2') format('woff2'),
+                 url('fonts/dl-thuphap-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         html { scroll-behavior: smooth; }
         body {
             font-family: var(--font-family);
@@ -37,11 +48,28 @@
         body.modal-open { overflow: hidden; }
 
         #shop-name {
-            font-family: 'Lexend', cursive;
-            font-weight: 800;
+            font-family: 'FontThuPhapCuaToi', cursive;
+            font-weight: normal;
         }
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
         
+        .gradient-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .product-card-price,
+        #dynamic-price-display,
+        #confirm-order-modal-content .font-bold.text-2xl {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); }
         .modal.active { display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -72,10 +100,20 @@
         #footer-warning { white-space: pre-wrap; text-align: center; }
         
         .btn { padding: 0.6rem 1.25rem; border-radius: 0.5rem; font-weight: 600; transition: all 0.2s ease-in-out; text-align: center; cursor: pointer; border: none; }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: var(--primary-color-dark); }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            background-size: 200% auto;
+            transition: all 0.4s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-position: right center;
+            box-shadow: 0 4px 15px rgba(233, 0, 0, 0.3);
+        }
+        
         .btn-secondary { background-color: var(--primary-color-light); color: var(--primary-color); }
-        .btn-secondary:hover { background-color: #a7f3d0; }
+        .btn-secondary:hover { background-color: #FED8FF; }
         .btn-danger { background-color: var(--danger-color); color: white; }
         .btn:disabled { background-color: #cbd5e1; color: #64748b; cursor: not-allowed; }
         
@@ -106,12 +144,9 @@
         .product-card-info { padding: 0.5rem; display: flex; flex-direction: column; flex-grow: 1; }
         .product-card-name { font-size: 0.8rem; font-weight: 500; line-height: 1.4; color: #1f2937; height: 40px; }
         .product-card-footer { margin-top: auto; padding-top: 0.25rem; }
-        .product-card-price { font-size: 0.95rem; font-weight: 700; color: var(--primary-color); }
         
-        /* === CSS CHO TRẠNG THÁI (ĐÃ CẬP NHẬT MÀU) === */
         .product-status-unavailable { font-size: 0.75rem; font-weight: 600; color: var(--danger-color); }
-        .product-status-note { font-size: 0.75rem; font-weight: 600; color: #d97706; /* Màu cam ngả vàng sáng */ }
-        /* === KẾT THÚC CSS TRẠNG THÁI === */
+        .product-status-note { font-size: 0.75rem; font-weight: 600; color: #d97706; }
 
         .gallery-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(255, 255, 255, 0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; border: 1px solid #eee; }
         .gallery-nav-btn:hover { background-color: white; transform: translateY(-50%) scale(1.1); }
@@ -130,96 +165,23 @@
         .lazy { opacity: 0; transition: opacity 0.5s ease-in-out; }
         .lazy.loaded { opacity: 1; }
 
-        .order-status {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2px 16px; 
-            height: 28px; 
-            min-width: 140px; 
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .status-cho-xac-nhan, .status-default {
-            background-color: #f3f4f6; 
-            color: #4b5563; 
-            border: 1px solid #e5e7eb; 
-        }
-        .status-da-xac-nhan {
-            background-color: #dcfce7; 
-            color: #166534; 
-        }
-        .status-khong-nghe-may {
-            background-color: #dbeafe; 
-            color: #1e40af; 
-        }
-        .status-rui-ro-cao {
-            background-color: #fef3c7; 
-            color: #92400e; 
-        }
-        .status-huy {
-            background-color: #fee2e2; 
-            color: #991b1b; 
-        }
+        .order-status { display: inline-flex; align-items: center; justify-content: center; padding: 2px 16px; height: 28px; min-width: 140px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .status-cho-xac-nhan, .status-default { background-color: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+        .status-da-xac-nhan { background-color: #dcfce7; color: #166534; }
+        .status-khong-nghe-may { background-color: #dbeafe; color: #1e40af; }
+        .status-rui-ro-cao { background-color: #fef3c7; color: #92400e; }
+        .status-huy { background-color: #fee2e2; color: #991b1b; }
         
-        #lookup-order-results .order-item {
-            background-color: white;
-            border-radius: 0.75rem;
-            border: 1px solid #e5e7eb;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        #lookup-order-results .order-products {
-            white-space: pre-wrap;
-            font-size: 13px;
-            line-height: 1.5;
-            background-color: #f9fafb;
-            padding: 0.75rem;
-            border-radius: 6px;
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid #f3f4f6;
-        }
-        .order-info-block {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start; 
-            gap: 1rem; 
-        }
+        #lookup-order-results .order-item { background-color: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        #lookup-order-results .order-products { white-space: pre-wrap; font-size: 13px; line-height: 1.5; background-color: #f9fafb; padding: 0.75rem; border-radius: 6px; max-height: 150px; overflow-y: auto; border: 1px solid #f3f4f6; }
+        .order-info-block { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
         
-        .order-details-grid {
-            display: grid;
-            grid-template-columns: auto 1fr; 
-            gap: 8px 16px; 
-            align-items: center; 
-        }
+        .order-details-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; align-items: center; }
+        .order-details-grid .order-label { font-weight: 700; color: #4b5563; white-space: nowrap; }
         
-        .order-details-grid .order-label {
-            font-weight: 700; 
-            color: #4b5563; 
-            white-space: nowrap; 
-        }
-        
-        .cart-item-invalid {
-            background-color: #fff1f2;
-            border: 1px solid #ffdde0;
-            border-radius: 0.5rem;
-            padding: 2px 4px;
-        }
-        .cart-item-invalid-msg {
-            font-size: 11px;
-            font-weight: 600;
-            color: #be123c;
-        }
-
-        /* === THÊM MỚI: CSS cho màu chữ thương hiệu ở footer === */
-        .brand-color {
-            color: var(--danger-color); /* Sử dụng biến màu có sẵn cho đồng bộ */
-            font-weight: 600;
-        }
+        .cart-item-invalid { background-color: #fff1f2; border: 1px solid #ffdde0; border-radius: 0.5rem; padding: 2px 4px; }
+        .cart-item-invalid-msg { font-size: 11px; font-weight: 600; color: #be123c; }
+        .brand-color { color: var(--primary-pink); font-weight: 600; }
     </style>
 </head>
 
@@ -235,7 +197,7 @@
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
                     <div class="w-10"></div> 
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                        <h1 id="shop-name" class="text-2xl md:text-3xl text-[var(--primary-color)]">Đang tải...</h1>
+                        <h1 id="shop-name" class="text-2xl md:text-3xl gradient-text">Đang tải...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                     </div>
                     <div class="flex items-center">
@@ -259,9 +221,7 @@
         <main class="container mx-auto px-4 py-6 pb-28">
             <div id="lookup-container" class="hidden">
                 <div class="max-w-2xl mx-auto">
-                    
                     <p class="text-center text-slate-600 mb-6 text-base">Nhập số điện thoại bạn đã dùng để đặt hàng để tra cứu.</p>
-                    
                     <form id="lookup-order-form" class="max-w-lg mx-auto">
                         <div class="flex items-center bg-white rounded-full shadow-lg overflow-hidden border border-slate-200 focus-within:ring-2 focus-within:ring-[var(--primary-color-light)] focus-within:border-[var(--primary-color)] transition-all">
                             <input type="tel" id="lookup-phone-input" class="w-full flex-grow text-center pl-6 pr-2 py-2 bg-transparent border-none focus:outline-none focus:ring-0 text-base placeholder-slate-400" placeholder="Nhập số điện thoại..." required>
@@ -272,7 +232,6 @@
                             </button>
                         </div>
                     </form>
-                    
                     <div id="lookup-order-results" class="mt-8"></div>
                     <div class="text-center mt-8">
                          <a href="#" onclick="hideLookupView(event)" class="text-[var(--primary-color)] font-semibold hover:underline">
@@ -281,7 +240,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="products-container">
                 <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
                 <div id="pagination-controls" class="flex justify-center items-center mt-8"></div>
@@ -564,14 +522,11 @@
 
             function renderShopInfo(info) {
                 document.title = info.tenCuaHang || 'Cửa Hàng';
-                document.getElementById('shop-name').textContent = info.tenCuaHang;
-                document.getElementById('shop-slogan').textContent = info.slogan;
+                document.getElementById('shop-name').innerHTML = info.tenCuaHang;
+                document.getElementById('shop-slogan').innerHTML = info.slogan;
                 document.getElementById('fab-phone-link').href = `tel:${info.sdt}`;
                 document.getElementById('fab-zalo-link').href = info.zalo;
                 document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
-                
-                // === SỬA ĐỔI QUAN TRỌNG: Đổi textContent thành innerHTML ===
-                // Lý do: Để trình duyệt có thể hiểu và hiển thị thẻ HTML (như <span class...>) thay vì in ra dưới dạng văn bản thô.
                 document.getElementById('footer-copyright').innerHTML = info.banQuyen || '';
 
                 if (info.noiDungPopup || info.canhBaoPopup) {
@@ -622,24 +577,17 @@
                     const placeholderImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E";
                     
                     const priceHTML = formatPriceDisplay(p);
-
-                    // --- LOGIC HIỂN THỊ TRẠNG THÁI (ĐÃ SỬA) ---
                     let statusHTML = '';
                     if (p.trangThai && p.trangThai.trim() !== '') {
                         const trangThaiText = p.trangThai.trim();
                         const trangThaiLower = trangThaiText.toLowerCase();
-
-                        // Quy tắc 1: Nếu là "hết hàng", hiển thị màu đỏ.
                         if (trangThaiLower === 'hết hàng' || trangThaiLower === 'tạm hết') {
                             statusHTML = `<p class="product-status-unavailable">${trangThaiText}</p>`;
                         }
-                        // Quy tắc 2: Nếu KHÔNG phải là "còn hàng", thì mới hiển thị ghi chú màu cam.
                         else if (trangThaiLower !== 'còn hàng') {
                             statusHTML = `<p class="product-status-note">${trangThaiText}</p>`;
                         }
-                        // Nếu là "còn hàng" hoặc để trống, statusHTML sẽ không có gì cả.
                     }
-                    // --- KẾT THÚC LOGIC TRẠNG THÁI ---
                     
                     let soldCountHTML = '';
                     const soldCount = p.daBan !== undefined ? p.daBan : p.tongDaBan;
@@ -758,7 +706,7 @@
                         ${imageSliderHTML}
                         <div class="flex flex-col">
                             <h2 class="text-2xl font-bold mb-2">${p.tenSP}</h2>
-                            <div id="dynamic-price-display" class="text-3xl font-bold text-[var(--primary-color)] mb-2">${initialPrice}</div>
+                            <div id="dynamic-price-display" class="text-3xl font-bold mb-2">${initialPrice}</div>
                             <div id="dynamic-stock-display" class="text-sm mb-4 h-6"></div>
                             <div class="space-y-4 mb-4 flex-grow">
                                 ${descriptionHTML}
@@ -968,19 +916,12 @@
                     } else if (variant.tonKho > 0) {
                         stockText = `<span class="font-semibold text-green-600">Còn hàng (${variant.tonKho})</span>`;
                     } else {
-                        // === LOGIC POP-UP KHI HẾT HÀNG (ĐÃ SỬA LỖI MÀU SẮC) ===
-                        // Lấy ghi chú gốc, nếu không có thì mặc định là 'Hết hàng'
                         const statusText = state.currentProduct.trangThai || 'Hết hàng';
                         const statusTextLower = (state.currentProduct.trangThai || '').toLowerCase();
-                        
-                        let statusColorClass = 'text-red-600'; // Mặc định màu đỏ
-                        
-                        // Nếu có ghi chú và nó KHÔNG phải là "hết hàng", đổi sang màu cam
+                        let statusColorClass = 'text-red-600';
                         if (statusTextLower && statusTextLower !== 'hết hàng' && statusTextLower !== 'tạm hết') {
-                            statusColorClass = 'text-orange-600'; // Dùng màu cam cho các ghi chú như "Sắp về"
+                            statusColorClass = 'text-orange-600';
                         }
-                        
-                        // Tạo HTML với đúng màu và đúng chữ hoa/thường
                         stockText = `<span class="font-semibold ${statusColorClass}">${statusText}</span>`;
                     }
 
@@ -1140,7 +1081,7 @@
                 const numCategories = state.categories.length;
                 nav.className = 'flex items-center justify-center overflow-x-auto pt-2 pb-4 px-4 md:px-0 gap-3';
                 nav.innerHTML = state.categories.map(cat => {
-                    const activeClasses = 'bg-[var(--primary-color)] text-white shadow-lg';
+                    const activeClasses = 'btn-primary text-white shadow-lg';
                     const inactiveClasses = 'bg-white text-slate-800 hover:bg-slate-100 border border-slate-200 shadow-sm';
                     let buttonClasses = 'px-5 py-2.5 rounded-full text-base font-semibold transition-all duration-200 ease-in-out transform hover:-translate-y-px whitespace-nowrap';
                     if (numCategories > 0 && numCategories <= 4) buttonClasses += ' flex-grow text-center';
@@ -1245,7 +1186,7 @@
                             </div>
                         </div>`;
                     });
-                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold text-[var(--primary-color)]">${formatCurrency(total)}</p><button onclick="checkoutFromCart()" class="btn btn-primary">Thanh toán</button></div>`;
+                    cartHTML += `</div><div class="mt-6 border-t pt-4 flex justify-between items-center"><p class="text-xl font-bold">${formatCurrency(total)}</p><button onclick="checkoutFromCart()" class="btn btn-primary">Thanh toán</button></div>`;
                 }
                 content.innerHTML = cartHTML;
                 if (!activeModals.includes('cart-modal')) openModal('cart-modal');
@@ -1352,7 +1293,7 @@
                                 <div><label class="text-xs font-medium text-slate-700">Ghi chú cho người bán (tùy chọn):</label><textarea id="order-note" class="input-field mt-1 text-sm" rows="2" placeholder="Ví dụ: Giao hàng vào giờ hành chính..."></textarea></div>
                             </div>
                             ${luuYDatHangHTML}
-                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl text-[var(--primary-color)]">${formatCurrency(total)}</p></div>
+                            <div class="text-right"><p class="text-slate-600">Tổng thanh toán</p><p class="font-bold text-2xl">${formatCurrency(total)}</p></div>
                         </div>
                         <div class="mt-6 flex gap-3">
                             <button type="button" onclick="closeTopMostModal()" class="btn btn-secondary flex-1">Hủy</button>
