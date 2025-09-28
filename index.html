@@ -48,18 +48,11 @@
         }
         body.modal-open { overflow: hidden; }
 
-        /* BƯỚC 1: TẠM THỜI ẨN TÊN SHOP KHI FONT CHƯA TẢI XONG */
-        body.font-loading #shop-name {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-
         #shop-name {
             font-family: 'FontThuPhapCuaToi', cursive;
             font-weight: normal;
             font-size: 1.9rem;
             line-height: 1.2;
-            opacity: 1; /* Đảm bảo nó sẽ hiện ra sau khi tải xong */
         }
         
         #shop-slogan {
@@ -214,7 +207,7 @@
     </style>
 </head>
 
-<body class="font-loading">
+<body>
     <div id="loading-spinner" class="loading">
         <div class="spinner"></div>
     </div>
@@ -226,7 +219,7 @@
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
                     <div class="w-10"></div> 
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                        <h1 id="shop-name" class="gradient-text">Đang tải...</h1>
+                        <h1 id="shop-name" class="gradient-text">Loading...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                     </div>
                     <div class="flex items-center">
@@ -340,20 +333,6 @@
             let modalHistoryLock = false;
             let isClosingModal = false;
             let lazyImageObserver;
-
-            // BƯỚC 2: SỬ DỤNG JAVASCRIPT ĐỂ CHỜ FONT TẢI XONG
-            if ('fonts' in document) {
-                document.fonts.ready.then(function () {
-                    document.body.classList.remove('font-loading');
-                });
-                // Thêm một timeout để phòng trường hợp font lỗi không tải được
-                setTimeout(() => {
-                    document.body.classList.remove('font-loading');
-                }, 2000); // Sau 2 giây, hiện chữ ra dù font có tải được hay không
-            } else {
-                // Nếu trình duyệt quá cũ không hỗ trợ, hiện ra luôn
-                document.body.classList.remove('font-loading');
-            }
 
             window.showLookupView = () => {
                 productsContainer.classList.add('hidden');
