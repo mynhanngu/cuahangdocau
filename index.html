@@ -50,11 +50,20 @@
         #shop-name {
             font-family: 'FontThuPhapCuaToi', cursive;
             font-weight: normal;
+            font-size: 2.5rem;
+            line-height: 1.2;
         }
+
+        @media (max-width: 767px) {
+            #shop-name {
+                font-size: 1.8rem;
+            }
+        }
+
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
         
         .gradient-text {
-            background: var(--primary-gradient);
+            background: linear-gradient(to bottom, #E90000 0%, #FAA6FF 50%, #E90000 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -181,7 +190,10 @@
         
         .cart-item-invalid { background-color: #fff1f2; border: 1px solid #ffdde0; border-radius: 0.5rem; padding: 2px 4px; }
         .cart-item-invalid-msg { font-size: 11px; font-weight: 600; color: #be123c; }
-        .brand-color { color: var(--primary-pink); font-weight: 600; }
+        .brand-color { 
+            color: var(--primary-color); 
+            font-weight: 600; 
+        }
     </style>
 </head>
 
@@ -197,7 +209,7 @@
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
                     <div class="w-10"></div> 
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                        <h1 id="shop-name" class="text-2xl md:text-3xl gradient-text">Đang tải...</h1>
+                        <h1 id="shop-name" class="gradient-text">Đang tải...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                     </div>
                     <div class="flex items-center">
