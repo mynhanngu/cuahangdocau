@@ -214,6 +214,12 @@
             font-weight: 600;
             color: #be123c;
         }
+
+        /* === THÊM MỚI: CSS cho màu chữ thương hiệu ở footer === */
+        .brand-color {
+            color: var(--danger-color); /* Sử dụng biến màu có sẵn cho đồng bộ */
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -563,7 +569,10 @@
                 document.getElementById('fab-phone-link').href = `tel:${info.sdt}`;
                 document.getElementById('fab-zalo-link').href = info.zalo;
                 document.getElementById('footer-warning').innerHTML = (info.canhBaoFooter || '').replace(/\n/g, '<br>');
-                document.getElementById('footer-copyright').textContent = info.banQuyen || '';
+                
+                // === SỬA ĐỔI QUAN TRỌNG: Đổi textContent thành innerHTML ===
+                // Lý do: Để trình duyệt có thể hiểu và hiển thị thẻ HTML (như <span class...>) thay vì in ra dưới dạng văn bản thô.
+                document.getElementById('footer-copyright').innerHTML = info.banQuyen || '';
 
                 if (info.noiDungPopup || info.canhBaoPopup) {
                     const titleEl = document.getElementById('welcome-title');
