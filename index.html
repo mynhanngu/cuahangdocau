@@ -18,7 +18,7 @@
     <link rel="icon" href="meirenyu.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Import Be Vietnam Pro với đầy đủ các độ dày bao gồm 900 -->
+    <!-- Import Be Vietnam Pro đầy đủ các độ dày -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Lexend:wght@500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -41,13 +41,19 @@
         body.modal-open { overflow: hidden; }
 
         #shop-name {
-            /* Đổi sang Be Vietnam Pro Black 900 */
+            /* Phông chữ Be Vietnam Pro Black 900 */
             font-family: 'Be Vietnam Pro', sans-serif;
             font-weight: 900;
             font-size: 1.85rem;
             line-height: 1.1;
             text-transform: uppercase;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.02em;
+            /* Đổi sang màu Cam đậm (Deep Orange) */
+            color: #FF5722; 
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            -webkit-text-stroke: 0;
         }
         
         #shop-slogan {
@@ -214,7 +220,8 @@
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
                     <div class="w-10"></div> 
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                        <h1 id="shop-name" class="gradient-text">Loading...</h1>
+                        <!-- Đã xóa class gradient-text để dùng màu Cam đậm đồng nhất -->
+                        <h1 id="shop-name">Loading...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                     </div>
                     <div class="flex items-center">
