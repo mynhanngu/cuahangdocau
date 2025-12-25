@@ -40,20 +40,28 @@
         }
         body.modal-open { overflow: hidden; }
 
+        /* Hiệu ứng Gradient chuyển động */
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
         #shop-name {
-            /* Phông chữ Be Vietnam Pro Black 900 */
             font-family: 'Be Vietnam Pro', sans-serif;
             font-weight: 900;
             font-size: 1.85rem;
             line-height: 1.1;
             text-transform: uppercase;
             letter-spacing: -0.02em;
-            /* Đổi sang màu Cam đậm (Deep Orange) */
-            color: #FF5722; 
-            background: none;
-            -webkit-background-clip: initial;
-            background-clip: initial;
-            -webkit-text-stroke: 0;
+            
+            /* Cấu hình Gradient chuyển động */
+            background: linear-gradient(to right, #E90000 0%, #FAA6FF 25%, #E90000 50%, #FAA6FF 75%, #E90000 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: moveGradient 4s linear infinite;
+            display: inline-block;
         }
         
         #shop-slogan {
@@ -70,16 +78,6 @@
         }
 
         .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-        
-        .gradient-text {
-            background: linear-gradient(to bottom, #E90000 0%, #FAA6FF 50%, #E90000 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-            -webkit-text-stroke: 0.5px #E90000;
-            text-stroke: 0.5px #E90000;
-        }
         
         .product-card-price,
         #dynamic-price-display,
@@ -220,7 +218,6 @@
                 <div class="h-16 md:h-20 flex items-center justify-between px-4 pt-2 mb-2">
                     <div class="w-10"></div> 
                     <div class="text-center cursor-pointer" onclick="window.location.reload()">
-                        <!-- Đã xóa class gradient-text để dùng màu Cam đậm đồng nhất -->
                         <h1 id="shop-name">Loading...</h1>
                         <p id="shop-slogan" class="text-xs text-slate-500 font-medium tracking-wide"></p>
                     </div>
