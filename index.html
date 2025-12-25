@@ -18,8 +18,8 @@
     <link rel="icon" href="meirenyu.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Thêm phông chữ mới Dancing Script cho tên shop -->
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Lexend:wght@500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <!-- Import phông chữ hiện đại Montserrat cho tên shop -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Lexend:wght@500&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #E90000; 
@@ -41,11 +41,13 @@
         body.modal-open { overflow: hidden; }
 
         #shop-name {
-            /* Thay đổi phông chữ tại đây */
-            font-family: 'Dancing Script', cursive;
-            font-weight: 700;
-            font-size: 2.4rem; /* Tăng kích thước một chút cho phù hợp với phông mới */
-            line-height: 1.2;
+            /* Thay đổi sang phông chữ hiện đại nhất */
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase; /* Viết hoa để tạo vẻ hiện đại, mạnh mẽ */
+            letter-spacing: -0.05em; /* Khoảng cách chữ hẹp lại theo xu hướng thiết kế mới */
+            font-size: 1.8rem;
+            line-height: 1;
         }
         
         #shop-slogan {
@@ -56,8 +58,8 @@
 
         @media (max-width: 767px) {
             #shop-name {
-                font-size: 1.8rem;
-                line-height: 1.1;
+                font-size: 1.5rem;
+                line-height: 1;
             }
         }
 
