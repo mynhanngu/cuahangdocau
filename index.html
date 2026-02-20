@@ -53,11 +53,7 @@
             .modal-wrapper { align-items: flex-end; } 
             .modal-wrapper .modal-content { transform: translateY(100%); border-radius: 0; } 
             .modal-wrapper.open .modal-content { transform: translateY(0); } 
-            .pm-mobile-full { 
-                position: absolute !important; inset: 0 !important; 
-                width: 100%; height: 100% !important; max-height: 100% !important; 
-                display: flex; flex-direction: column; overflow: hidden; background: white;
-            }
+            .pm-mobile-full { position: absolute !important; inset: 0 !important; width: 100%; height: 100% !important; max-height: 100% !important; display: flex; flex-direction: column; overflow: hidden; background: white; }
         }
 
         #mobile-menu { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 60; }
@@ -87,7 +83,7 @@
         #pm-slider-track { display: flex; height: 100%; transition: transform 0.3s; touch-action: pan-y; }
         .input-error { box-shadow: 0 0 0 2px #ef4444 !important; background-color: #fef2f2 !important; transition: all 0.3s ease; }
         
-        /* ĐÃ FIX LỖI CSS SPECIFICITY NGĂN CHẶN BẤM CHUỘT TRÊN PC */
+        /* BOTTOM SHEET BIẾN THỂ */
         #variant-sheet { z-index: 150 !important; align-items: flex-end; }
         @media (min-width: 768px) { #variant-sheet { align-items: center !important; } }
         .sheet-content { background: #fff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; max-height: 90dvh; position: relative;}
@@ -114,8 +110,8 @@
 
     <header class="dynamic-header sticky top-0 z-40 shadow-lg h-16 px-4 transition-colors duration-300 relative shrink-0">
         <div class="w-full h-full flex items-center justify-between relative z-10">
-            <button class="p-2 text-2xl focus:outline-none hover:opacity-80 text-white transition bg-transparent" onclick="openMenu()"><i class="fa-solid fa-bars"></i></button>
-            <div class="relative p-2 cursor-pointer hover:opacity-80 transition" onclick="openModal('cart-modal'); renderCartItems();">
+            <button class="p-2 w-12 h-12 flex items-center justify-center text-2xl focus:outline-none hover:opacity-80 text-white transition bg-transparent" onclick="openMenu()"><i class="fa-solid fa-bars"></i></button>
+            <div class="relative p-2 w-12 h-12 flex items-center justify-center cursor-pointer hover:opacity-80 transition" onclick="openModal('cart-modal'); renderCartItems();">
                 <i class="fa-solid fa-cart-shopping text-xl text-white"></i>
                 <div id="cart-count" class="cart-badge"><span>0</span></div>
             </div>
@@ -134,7 +130,7 @@
     <nav id="mobile-menu" class="fixed top-0 left-0 h-full w-[85%] max-w-sm shadow-2xl flex flex-col font-sans bg-white rounded-r-3xl overflow-hidden">
         <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10 shrink-0">
             <span class="font-extrabold text-dark text-xl tracking-tight">MENU</span>
-            <button onclick="closeMenu()" class="text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeMenu()" class="w-12 h-12 flex items-center justify-end text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
         </div>
         <div class="p-5 space-y-6 flex-1 overflow-y-auto custom-scrollbar">
              <div class="relative">
@@ -238,7 +234,7 @@
         <div class="absolute inset-0" onclick="closeTopModal()"></div>
         <div class="modal-content bg-white pm-mobile-full md:max-w-5xl md:h-[80vh] md:rounded-2xl relative z-10 md:flex md:flex-row shadow-2xl">
             
-            <button onclick="closeTopModal()" class="absolute top-2 right-2 md:top-4 md:right-4 z-[60] text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeTopModal()" class="absolute top-2 right-2 md:top-4 md:right-4 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
 
             <div class="w-full h-[350px] md:h-full md:w-1/2 flex-shrink-0 flex flex-col relative bg-white border-b md:border-b-0 md:border-r border-gray-100 z-10">
                 <div class="relative flex-1 w-full h-full overflow-hidden group">
@@ -253,18 +249,18 @@
             </div>
 
             <div class="w-full flex-1 flex flex-col bg-white relative z-20 md:w-1/2 md:h-full overflow-hidden">
-                <div class="flex-1 overflow-y-auto p-4 md:p-8 md:pt-14 custom-scrollbar relative pr-12 md:pr-8"> 
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 md:pt-14 custom-scrollbar relative pr-14 md:pr-8"> 
                     
-                    <div class="flex items-center justify-between -mx-4 md:-mx-8 px-4 md:px-8 py-2 bg-gray-50/80 mb-3 border-b border-gray-100">
-                        <span id="pm-badge" class="text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase hidden shadow-sm"></span>
-                        <span class="text-gray-500 text-xs font-medium ml-auto"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold">0</span></span>
+                    <div class="flex items-center justify-between -mx-4 md:-mx-8 px-4 md:px-8 py-2 md:py-3 bg-gray-50/80 mb-3 border-b border-gray-100">
+                        <span id="pm-badge" class="text-white text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
+                        <span class="text-gray-500 text-[11px] md:text-sm font-medium ml-auto"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
                     </div>
                     
                     <h2 id="pm-title" class="text-xl md:text-2xl font-extrabold text-dark leading-snug mb-2 text-left"></h2>
                     <div id="pm-ghichu" class="text-red-600 text-sm font-bold mb-4 hidden uppercase text-left"></div>
                     
                     <div class="mb-4 pb-4 border-b border-gray-100">
-                        <div id="pm-price" class="text-3xl product-price-current">0₫</div>
+                        <div id="pm-price" class="text-2xl md:text-3xl product-price-current whitespace-nowrap tracking-tighter">0₫</div>
                     </div>
 
                     <h3 class="font-bold text-dark text-base md:text-lg mb-2 flex items-center gap-2 pt-2"><i class="fa-solid fa-circle-info text-primary"></i> Chi tiết sản phẩm</h3>
@@ -283,13 +279,13 @@
         <div class="absolute inset-0" onclick="closeTopModal()"></div>
         <div class="sheet-content">
             <div class="p-4 border-b border-gray-100 flex relative">
-                <button onclick="closeTopModal()" class="absolute top-4 right-4 z-[60] text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeTopModal()" class="absolute top-2 right-2 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
                 
                 <div class="w-24 h-24 rounded-lg overflow-hidden border border-gray-200 p-1 shrink-0 bg-white -mt-8 shadow-md">
                     <img id="v-img" src="" class="w-full h-full object-contain">
                 </div>
-                <div class="ml-4 flex flex-col justify-end pb-1 pr-10">
-                    <div id="v-price" class="text-2xl font-black product-price-current leading-none mb-1">0₫</div>
+                <div class="ml-4 flex flex-col justify-end pb-1 pr-12 overflow-hidden">
+                    <div id="v-price" class="text-xl md:text-2xl font-black product-price-current leading-none mb-1 whitespace-nowrap tracking-tight">0₫</div>
                     <div class="text-sm text-gray-500 font-medium">Kho: <span id="v-stock" class="text-dark font-bold">0</span></div>
                 </div>
             </div>
@@ -314,7 +310,7 @@
     </div>
 
     <div id="lightbox" class="fixed inset-0 z-[200] hidden bg-black/95 flex flex-col items-center justify-center backdrop-blur-sm">
-        <button onclick="closeLightbox()" class="absolute top-4 right-4 md:top-6 md:right-6 text-red-600 hover:text-red-700 text-3xl z-[210] font-black transition bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closeLightbox()" class="absolute top-2 right-2 md:top-4 md:right-4 w-14 h-14 flex items-center justify-center text-red-600 hover:text-red-700 z-[210] transition bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark text-4xl"></i></button>
         
         <button onclick="prevLightbox()" class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl z-[210] hidden md:block transition bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
         <button onclick="nextLightbox()" class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-3xl z-[210] hidden md:block transition bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
@@ -331,7 +327,7 @@
         <div class="modal-content bg-white w-full md:max-w-2xl h-full md:h-auto md:max-h-[85vh] rounded-t-3xl md:rounded-3xl relative z-10 flex flex-col overflow-hidden font-sans shadow-2xl">
             <div class="px-6 py-4 border-b border-gray-100 bg-white flex justify-between items-center sticky top-0 z-20 shadow-sm shrink-0">
                 <span class="text-base font-extrabold text-primary uppercase tracking-widest flex items-center gap-2 leading-none"><i class="fa-solid fa-book-open"></i> Góc Kinh Nghiệm</span>
-                <button onclick="closeTopModal()" class="text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeTopModal()" class="w-12 h-12 flex items-center justify-end text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-0 bg-white custom-scrollbar" id="bm-body"></div>
         </div>
@@ -342,7 +338,7 @@
         <div class="modal-content bg-white w-full md:max-w-[450px] h-full md:h-[85vh] md:rounded-3xl relative z-10 flex flex-col overflow-hidden font-sans">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white shrink-0 relative">
                 <h3 class="font-extrabold text-2xl text-dark flex items-center gap-3"><i class="fa-solid fa-cart-shopping text-primary"></i> Giỏ hàng</h3>
-                <button onclick="closeTopModal()" class="absolute top-4 right-4 text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeTopModal()" class="absolute top-3 right-3 w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-5 bg-gray-50 space-y-4 custom-scrollbar" id="cart-items-list"></div>
             <div class="p-4 pb-[max(env(safe-area-inset-bottom),1rem)] border-t border-gray-100 bg-white shadow-[0_-10px_30px_rgba(0,0,0,0.03)] shrink-0 relative z-[9999]">
@@ -360,7 +356,7 @@
         <div class="modal-content bg-[#f8f9fa] md:rounded-3xl w-full h-full md:h-auto md:max-h-[92vh] max-w-[500px] relative z-10 overflow-hidden md:mx-4 flex flex-col font-sans shadow-2xl">
             <div class="p-5 bg-dark text-white flex justify-between items-center shrink-0 relative">
                 <h3 class="font-extrabold text-xl flex items-center gap-3"><i class="fa-solid fa-shield-halved text-primary"></i> Thanh toán</h3>
-                <button onclick="closeTopModal()" class="absolute top-4 right-4 text-red-600 hover:text-red-700 text-2xl font-black transition bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeTopModal()" class="absolute top-2 right-2 w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
             </div>
             <div class="p-5 overflow-y-auto space-y-5 flex-1 custom-scrollbar" id="pay-scroll-area">
                 
@@ -442,12 +438,14 @@
         let cart = {};
         try { let saved = localStorage.getItem('cart'); if (saved) { cart = JSON.parse(saved); if (typeof cart !== 'object' || Array.isArray(cart)) cart = {}; } } catch(e) { cart = {}; }
         
+        // ================= HỆ THỐNG MODAL KẾT HỢP HISTORY API =================
         let modalStack = [];
         let savedScrollY = 0;
 
-        function openModal(id) {
+        function openModal(id, isReplace = false) {
             const el = document.getElementById(id);
             if (!el) return;
+            
             if (modalStack.length === 0) {
                 savedScrollY = window.scrollY;
                 document.body.style.position = 'fixed';
@@ -455,14 +453,33 @@
                 document.body.style.width = '100%';
                 document.body.style.overflowY = 'scroll';
             }
+            
             el.classList.add('open');
-            if (!modalStack.includes(id)) modalStack.push(id);
+            
+            if (isReplace && modalStack.length > 0) {
+                const oldId = modalStack.pop();
+                const oldEl = document.getElementById(oldId);
+                if(oldEl) {
+                    if(oldId === 'lightbox') oldEl.classList.add('hidden');
+                    else oldEl.classList.remove('open');
+                }
+                modalStack.push(id);
+                history.replaceState({ step: modalStack.length }, '');
+            } else {
+                modalStack.push(id);
+                history.pushState({ step: modalStack.length }, '');
+            }
         }
 
-        function closeTopModal() {
+        // Bắt sự kiện người dùng bấm phím Back trên điện thoại
+        window.addEventListener('popstate', function(e) {
             if (modalStack.length > 0) {
                 const id = modalStack.pop();
-                document.getElementById(id).classList.remove('open');
+                const el = document.getElementById(id);
+                if(el) {
+                    if(id === 'lightbox') el.classList.add('hidden');
+                    else el.classList.remove('open');
+                }
                 
                 if(id === 'product-modal') clearInterval(pmSlideInterval);
                 
@@ -474,8 +491,16 @@
                     window.scrollTo(0, savedScrollY);
                 }
             }
+        });
+
+        // Hàm gọi khi bấm nút X
+        function closeTopModal() {
+            if (modalStack.length > 0) {
+                history.back(); // Kích hoạt sự kiện popstate ở trên để đóng Modal
+            }
         }
 
+        // ================= BIẾN LIGHTBOX =================
         let lbImages = []; let lbIndex = 0; let lbTouchStartX = 0; let lbTouchEndX = 0;
 
         function openLightbox(index) {
@@ -492,11 +517,20 @@
             updateLightboxSlider();
             document.getElementById('lightbox').classList.remove('hidden');
             
+            modalStack.push('lightbox');
+            history.pushState({ step: modalStack.length }, '');
+            
             track.ontouchstart = (e) => lbTouchStartX = e.touches[0].clientX;
             track.ontouchend = (e) => { lbTouchEndX = e.changedTouches[0].clientX; handleLbSwipe(); };
         }
 
-        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+        function closeLightbox() { 
+            if(modalStack[modalStack.length-1] === 'lightbox') {
+                history.back();
+            } else {
+                document.getElementById('lightbox').classList.add('hidden'); 
+            }
+        }
 
         function updateLightboxSlider() {
             document.getElementById('lightbox-track').style.transform = `translateX(-${lbIndex * 100}%)`;
@@ -754,7 +788,6 @@
         
         function handlePmSwipe() { const diff = touchStartX - touchEndX; if (Math.abs(diff) > 50) { if (diff > 0) nextPmSlide(); else prevPmSlide(); } }
 
-        // ================= BOTTOM SHEET / TÁCH BẢNG CHỌN SIZE =================
         function triggerVariantSheet(actionType) {
             try {
                 pendingAction = actionType;
@@ -838,13 +871,13 @@
 
         function actionAddCart() { 
             addToCart(parseInt(document.getElementById('pm-qty').value)); 
-            closeTopModal(); 
+            history.back(); // Đóng Variant Sheet bằng History API
             showToast('Đã thêm vào giỏ hàng!'); 
         }
         
         function actionBuyNow() { 
             isDirectBuy = true; 
-            closeTopModal();
+            
             let newOrderObj = Object.assign({}, finalVar, {
                 qty: parseInt(document.getElementById('pm-qty').value), 
                 sku: finalVar.maBienThe, 
@@ -853,7 +886,13 @@
                 price: finalVar.giaSKU, 
                 img: finalVar.anhDaiDien || currentGroup.info.anhDaiDien 
             });
-            openPaymentModal([newOrderObj]); 
+            
+            // Thay thế trạng thái Variant hiện tại bằng Payment (cực kỳ quan trọng để ko bị kẹt popup)
+            openModal('payment-modal', true); 
+            
+            const list = document.getElementById('pay-order-items'); list.innerHTML = ''; let total = 0, count = 0;
+            [newOrderObj].forEach(i => { total += i.price * i.qty; count += i.qty; list.innerHTML += `<div class="flex flex-col border-b border-dashed border-gray-200 pb-2 mb-2 last:border-0 last:pb-0 last:mb-0"><div class="text-xs font-bold text-dark">${i.name}</div><div class="text-[11px] text-gray-500 mb-1">Phân loại: ${i.detail || 'Mặc định'}</div><div class="flex justify-between items-center mt-1"><div class="text-xs text-gray-600">SL: <span class="font-bold text-dark">${i.qty}</span> <span class="mx-1">x</span> <span class="text-primary font-bold">${formatMoney(i.price)}</span></div><div class="text-sm font-black text-primary">${formatMoney(i.price * i.qty)}</div></div></div>`; });
+            const ship = parseInt(appData.config.SHIP_FEE || 30000); setText('pay-qty', count); setText('pay-subtotal', formatMoney(total)); setText('pay-shipping', formatMoney(ship)); setText('pay-total-final', formatMoney(total+ship)); window.currentOrderItems = [newOrderObj];
         }
 
         // ================= XỬ LÝ BLOG =================
@@ -909,14 +948,10 @@
         function goToPayment() { 
             if(Object.keys(cart).length === 0) return; 
             isDirectBuy = false; 
-            openPaymentModal(Object.values(cart)); 
-        }
-
-        function openPaymentModal(items) {
+            openModal('payment-modal', true); // Replace trạng thái giỏ hàng bằng thanh toán
             const list = document.getElementById('pay-order-items'); list.innerHTML = ''; let total = 0, count = 0;
-            items.forEach(i => { total += i.price * i.qty; count += i.qty; list.innerHTML += `<div class="flex flex-col border-b border-dashed border-gray-200 pb-2 mb-2 last:border-0 last:pb-0 last:mb-0"><div class="text-xs font-bold text-dark">${i.name}</div><div class="text-[11px] text-gray-500 mb-1">Phân loại: ${i.detail || 'Mặc định'}</div><div class="flex justify-between items-center mt-1"><div class="text-xs text-gray-600">SL: <span class="font-bold text-dark">${i.qty}</span> <span class="mx-1">x</span> <span class="text-primary font-bold">${formatMoney(i.price)}</span></div><div class="text-sm font-black text-primary">${formatMoney(i.price * i.qty)}</div></div></div>`; });
-            const ship = parseInt(appData.config.SHIP_FEE || 30000); setText('pay-qty', count); setText('pay-subtotal', formatMoney(total)); setText('pay-shipping', formatMoney(ship)); setText('pay-total-final', formatMoney(total+ship)); window.currentOrderItems = items; 
-            openModal('payment-modal');
+            Object.values(cart).forEach(i => { total += i.price * i.qty; count += i.qty; list.innerHTML += `<div class="flex flex-col border-b border-dashed border-gray-200 pb-2 mb-2 last:border-0 last:pb-0 last:mb-0"><div class="text-xs font-bold text-dark">${i.name}</div><div class="text-[11px] text-gray-500 mb-1">Phân loại: ${i.detail || 'Mặc định'}</div><div class="flex justify-between items-center mt-1"><div class="text-xs text-gray-600">SL: <span class="font-bold text-dark">${i.qty}</span> <span class="mx-1">x</span> <span class="text-primary font-bold">${formatMoney(i.price)}</span></div><div class="text-sm font-black text-primary">${formatMoney(i.price * i.qty)}</div></div></div>`; });
+            const ship = parseInt(appData.config.SHIP_FEE || 30000); setText('pay-qty', count); setText('pay-subtotal', formatMoney(total)); setText('pay-shipping', formatMoney(ship)); setText('pay-total-final', formatMoney(total+ship)); window.currentOrderItems = Object.values(cart); 
         }
 
         async function loadProvinces() { try { let res = await fetch('https://provinces.open-api.vn/api/p/'); let data = await res.json(); let html = '<option value="">Tỉnh/Thành phố</option>'; data.forEach(p => html += `<option value="${p.code}">${p.name}</option>`); document.getElementById('pay-prov').innerHTML = html; } catch(e) {} }
@@ -940,9 +975,11 @@
             try {
                 const res = await fetch(API_URL, { method: 'POST', headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload) }); const json = await res.json();
                 if(json.status === 'success') { 
-                    while(modalStack.length > 0) closeTopModal();
-                    showCustomPopup('ĐẶT HÀNG THÀNH CÔNG!', `Mã đơn hàng: <b class="text-orange-600 text-lg">${json.maDon}</b><br>Cảm ơn bạn đã tin tưởng Shop!<br><span class="block mt-4 text-xs text-red-600 font-bold"><i class="fa-regular fa-lightbulb mr-1"></i> Bạn có thể tra cứu hành trình ở mục Menu.</span>`); 
-                    if(!isDirectBuy) { cart = {}; saveCart(); updateCartBadge(); renderCartItems(); } 
+                    while(modalStack.length > 0) { history.back(); }
+                    setTimeout(() => {
+                        showCustomPopup('ĐẶT HÀNG THÀNH CÔNG!', `Mã đơn hàng: <b class="text-orange-600 text-lg">${json.maDon}</b><br>Cảm ơn bạn đã tin tưởng Shop!<br><span class="block mt-4 text-xs text-red-600 font-bold"><i class="fa-regular fa-lightbulb mr-1"></i> Bạn có thể tra cứu hành trình ở mục Menu.</span>`); 
+                        if(!isDirectBuy) { cart = {}; saveCart(); updateCartBadge(); renderCartItems(); } 
+                    }, 500);
                 } else throw new Error(json.message);
             } catch(e) { showCustomPopup('Lỗi đặt hàng', e.message, true); } finally { btn.innerHTML = origText; btn.disabled = false; }
         }
