@@ -15,9 +15,9 @@
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; background-color: #f8f9fa; color: var(--dark); overscroll-behavior-y: none; }
         .dynamic-header { background-color: var(--header-bg) !important; color: var(--header-text) !important; }
         .logo-crop-container { position: absolute; left: 50%; top: 0; transform: translateX(-50%); height: 100%; width: 60vw; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 40; pointer-events: none; }
-        .custom-logo { height: 100%; transform: scale(2); width: auto; object-fit: contain; display: none; pointer-events: auto; cursor: pointer; transition: transform 0.3s ease; image-rendering: crisp-edges; image-rendering: -webkit-optimize-contrast; }
+        .custom-logo { height: 160%; width: auto; object-fit: contain; display: none; pointer-events: auto; cursor: pointer; transition: transform 0.3s ease; }
         @keyframes gradientLeftToRight { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        .cart-badge { position: absolute; top: -2px; right: -4px; background: transparent !important; border: none !important; font-size: 13px; font-weight: 900; color: #cc5500; opacity: 0; transform: scale(0); transition: all 0.2s ease; }
+        .cart-badge { position: absolute; top: -2px; right: 4px; background: transparent !important; border: none !important; font-size: 13px; font-weight: 900; color: #cc5500; opacity: 0; transform: scale(0); transition: all 0.2s ease; }
         .cart-badge.show { opacity: 1; transform: scale(1); }
         .marquee-wrap { background: #111; color: #fff; height: 36px; overflow: hidden; display: flex; align-items: center; position: relative; }
         .marquee-track { display: flex; white-space: nowrap; animation: marquee-scroll 20s linear infinite; }
@@ -30,7 +30,7 @@
         .banner-slide img { width: 100%; height: 100%; object-fit: cover; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
         .modal-wrapper { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.3s; background-color: rgba(0,0,0,0.6); }
         .modal-wrapper.open { opacity: 1; visibility: visible; pointer-events: auto; }
-        .modal-content { transform: scale(0.95) translateY(20px); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--modern-shadow); }
+        .modal-content { transform: scale(0.95) translateY(20px); transition: all 0.3s ease-out; box-shadow: var(--modern-shadow); }
         .modal-wrapper.open .modal-content { transform: scale(1) translateY(0); }
         @media (max-width: 768px) { .modal-wrapper { align-items: flex-end; } .modal-wrapper .modal-content { transform: translateY(100%); border-radius: 0; } .modal-wrapper.open .modal-content { transform: translateY(0); } .pm-mobile-full { position: absolute !important; inset: 0 !important; width: 100%; height: 100% !important; max-height: 100% !important; display: flex; flex-direction: column; overflow: hidden; background: white; } }
         #mobile-menu { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 60; }
@@ -56,8 +56,9 @@
         .input-error { box-shadow: 0 0 0 2px #ef4444 !important; background-color: #fef2f2 !important; transition: all 0.3s ease; }
         #variant-sheet { z-index: 150 !important; align-items: flex-end; }
         @media (min-width: 768px) { #variant-sheet { align-items: center !important; } }
-        .sheet-content { background: #fff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; flex-direction: column; max-height: 90dvh; position: relative;}
-        @media (min-width: 768px) { .sheet-content { border-radius: 20px !important; transform: scale(0.95) translateY(20px) !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); } }
+        /* Box Variant: Đt bo cong bên trên, mt bo cong đều 4 góc */
+        .sheet-content { background: #fff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; max-height: 90dvh; position: relative;}
+        @media (min-width: 768px) { .sheet-content { border-radius: 24px !important; transform: scale(0.95) translateY(20px) !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); } }
         #variant-sheet.open .sheet-content { transform: translateY(0) scale(1) !important; }
         .toast-1-line { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 10px 16px; font-size: 13px; font-weight: 500; white-space: nowrap; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; transition: opacity 0.3s; pointer-events: none; }
     </style>
@@ -159,7 +160,7 @@
                 <div class="space-y-3 md:space-y-4">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><i class="fa-solid fa-phone text-gray-400"></i></div>
-                        <input type="tel" id="track-phone-input" oninput="removeError(this)" class="w-full pl-11 md:pl-12 border-0 ring-1 ring-gray-200 rounded-xl px-3 py-3 md:py-4 outline-none font-bold text-base md:text-lg text-dark focus:ring-2 focus:ring-primary transition text-center" placeholder="Ví dụ: 0912345678...">
+                        <input type="tel" id="track-phone-input" oninput="removeError(this)" onkeypress="if(event.key === 'Enter') { event.preventDefault(); performTracking(); }" class="w-full pl-11 md:pl-12 border-0 ring-1 ring-gray-200 rounded-xl px-3 py-3 md:py-4 outline-none font-bold text-base md:text-lg text-dark focus:ring-2 focus:ring-primary transition text-center" placeholder="Ví dụ: 0912345678...">
                     </div>
                     <button onclick="performTracking()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 md:py-4 rounded-xl shadow-md transition transform hover:-translate-y-1 text-base md:text-lg"><i class="fa-solid fa-magnifying-glass mr-2"></i>TÌM KIẾM</button>
                     <div id="tracking-result-area" class="hidden mt-6 border-t border-gray-100 pt-6"><div id="tracking-list" class="space-y-4"></div></div>
@@ -186,10 +187,8 @@
 
     <div id="product-modal" class="modal-wrapper">
         <div class="absolute inset-0" onclick="closeTopModal()"></div>
-        <!-- CHỈ dùng md:rounded-t-[24px] md:overflow-hidden để bo góc trên máy tính, giữ nguyên pm-mobile-full cho đt -->
-        <div class="modal-content bg-white pm-mobile-full md:max-w-5xl md:h-[80vh] md:rounded-t-[24px] md:rounded-b-none md:overflow-hidden relative z-10 md:flex md:flex-row shadow-2xl">
-            <!-- Nút X giữ nguyên nền trong suốt, trên máy tính đẩy dịch lên một chút md:top-2 md:right-2 -->
-            <button onclick="closeTopModal()" class="absolute top-2 right-2 md:top-2 md:right-2 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
+        <div class="modal-content bg-white pm-mobile-full md:max-w-5xl md:h-[80vh] md:rounded-3xl md:overflow-hidden relative z-10 md:flex md:flex-row shadow-2xl">
+            <button onclick="closeTopModal()" class="absolute top-0 right-0 md:top-0 md:right-0 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
             <div class="w-full h-[350px] md:h-full md:w-1/2 flex-shrink-0 flex flex-col relative bg-white border-b md:border-b-0 md:border-r border-gray-100 z-10">
                 <div class="relative flex-1 w-full h-full overflow-hidden group">
                     <div id="pm-slider-track" class="flex h-full w-full transition-transform duration-300"></div>
@@ -200,9 +199,8 @@
                 <div id="pm-thumbnails" class="hidden md:flex gap-3 p-4 pt-2 overflow-x-auto custom-scrollbar shrink-0 justify-center bg-white border-t border-gray-50"></div>
             </div>
             <div class="w-full flex-1 flex flex-col bg-white relative z-20 md:w-1/2 md:h-full overflow-hidden">
-                <div class="flex-1 overflow-y-auto p-4 md:p-8 md:pt-14 custom-scrollbar relative pr-14 md:pr-8"> 
-                    <!-- Bỏ hoàn toàn class bg xám và margin âm, để lề bằng mép tên sản phẩm -->
-                    <div class="flex items-center justify-between w-full mb-3">
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar relative"> 
+                    <div class="flex items-center justify-between w-full mb-3 mt-6 md:mt-0">
                         <span id="pm-badge" class="text-white text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
                         <span class="text-gray-500 text-[11px] md:text-sm font-medium"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
                     </div>
@@ -214,7 +212,6 @@
                     <h3 class="font-bold text-dark text-base md:text-lg mb-2 flex items-center gap-2 pt-2"><i class="fa-solid fa-circle-info text-primary"></i> Chi tiết sản phẩm</h3>
                     <div id="pm-desc" class="text-sm text-gray-600 leading-relaxed whitespace-pre-line text-justify pb-6"></div>
                 </div>
-                <!-- Cấu trúc nút Mua Hàng gốc, z-[9999] an toàn -->
                 <div class="shrink-0 p-3 pb-6 md:pb-4 border-t border-gray-100 bg-white grid grid-cols-2 gap-3 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] relative z-[9999]">
                     <button onclick="triggerVariantSheet('cart')" class="flex items-center justify-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-primary border border-orange-200 font-bold py-2.5 rounded-lg transition text-sm cursor-pointer"><i class="fa-solid fa-cart-plus text-base"></i><span>Thêm vào giỏ</span></button>
                     <button onclick="triggerVariantSheet('buy')" class="flex items-center justify-center gap-1.5 bg-primary hover:bg-primaryHover text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm cursor-pointer"><i class="fa-solid fa-bag-shopping text-base"></i><span>Mua ngay</span></button>
@@ -242,13 +239,12 @@
                     <h4 class="text-sm font-bold text-dark">Số lượng</h4>
                     <div class="flex items-center border border-gray-200 rounded-lg p-1 bg-white shadow-sm">
                         <button onclick="adjQty(-1)" class="w-9 h-9 rounded text-gray-600 font-bold hover:bg-gray-100 transition bg-transparent border-none cursor-pointer"><i class="fa-solid fa-minus"></i></button>
-                        <!-- Gỡ onchange, cho phép xóa bằng cách chuyển validate vào sự kiện onblur -->
                         <input id="pm-qty" type="text" inputmode="numeric" value="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');" onblur="validatePmQty(true)" class="w-12 h-9 bg-transparent text-center text-lg font-bold text-dark focus:outline-none mx-1 border-none">
                         <button onclick="adjQty(1)" class="w-9 h-9 rounded text-gray-600 font-bold hover:bg-gray-100 transition bg-transparent border-none cursor-pointer"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </div>
             </div>
-            <div class="p-4 pb-6 md:pb-4 border-t border-gray-100 bg-white shrink-0 relative z-[9999]">
+            <div class="p-4 pb-6 md:pb-4 border-t border-gray-100 bg-white shrink-0 relative z-[9999] md:rounded-b-[24px]">
                 <button id="btn-confirm-variant" onclick="executeVariantAction()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-2.5 rounded-lg shadow-md transition text-sm border-none cursor-pointer">Xác nhận</button>
             </div>
         </div>
@@ -359,7 +355,7 @@
     <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-6 px-4 font-sans">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="document.getElementById('confirm-modal').classList.add('hidden')"></div>
         <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full relative z-10 text-center transform transition-all scale-100">
-            <div class="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-500 text-4xl shadow-md rotate-3"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div class="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-50 text-4xl shadow-md rotate-3"><i class="fa-solid fa-circle-exclamation"></i></div>
             <h3 id="confirm-title" class="text-2xl font-extrabold text-dark mb-3 leading-tight">Xác nhận</h3>
             <p id="confirm-msg" class="text-gray-600 mb-8 leading-relaxed font-medium"></p>
             <div class="flex gap-3">
