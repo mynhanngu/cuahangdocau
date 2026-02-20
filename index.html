@@ -319,8 +319,8 @@
                         <p class="text-[10px] text-red-600 font-bold"><i class="fa-regular fa-lightbulb mr-1"></i> Vui lòng điền chính xác thông tin.</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                         <input type="tel" id="pay-phone" oninput="removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition" placeholder="SĐT (Đúng 10 số) *">
-                         <input type="text" id="pay-name" oninput="removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition" placeholder="Họ và tên *">
+                         <input type="tel" id="pay-phone" oninput="removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition" placeholder="SĐT... *">
+                         <input type="text" id="pay-name" oninput="removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition" placeholder="Tên người nhận... *">
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <select id="pay-prov" onchange="loadDistricts(); removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 appearance-none focus:ring-2 focus:ring-primary transition"><option value="">Tỉnh/Thành phố</option></select>
@@ -333,14 +333,17 @@
                      <h4 class="text-sm font-bold text-dark uppercase mb-2 flex items-center gap-2"><i class="fa-solid fa-wallet text-primary"></i> Thanh toán</h4>
                     <select id="pay-method" onchange="toggleQR(); removeError(this)" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-bold text-sm text-dark bg-orange-50 appearance-none focus:ring-2 focus:ring-primary transition cursor-pointer">
                         <option value="">--- Chọn hình thức ---</option>
-                        <option value="COD">💳 Nhận hàng thanh toán (COD)</option>
-                        <option value="BANK">🏦 Chuyển khoản ngân hàng</option>
+                        <option value="Cash On Delivery">💳 Nhận hàng thanh toán (COD)</option>
+                        <option value="Customer Banking">🏦 Chuyển khoản ngân hàng</option>
                     </select>
-                    <div id="qr-section" class="hidden text-center p-3 border border-dashed border-gray-300 rounded-lg bg-gray-50 transition-all">
-                        <img id="qr-image" src="" class="mx-auto h-32 object-contain bg-white p-2 rounded-lg shadow-sm" loading="lazy">
-                        <button onclick="downloadQR(event)" class="mt-2 w-full bg-white border border-gray-200 text-gray-700 text-xs font-bold py-2 px-3 rounded-md shadow-sm hover:bg-gray-100 transition border-none"><i class="fa-solid fa-download text-primary mr-1"></i> Tải ảnh QR về máy</button>
+                    <div id="qr-section" class="hidden text-center p-4 border border-dashed border-primary/50 rounded-xl bg-orange-50 transition-all duration-500 overflow-hidden mt-4">
+                        <p class="text-sm font-bold text-primary mb-3">Quét mã QR để thanh toán</p>
+                        <img id="qr-image" src="" class="w-full h-auto max-h-[300px] object-contain bg-white p-3 rounded-xl shadow-sm mb-4" loading="lazy">
+                        <button onclick="downloadQR(event)" class="w-full bg-white border border-primary text-primary font-bold py-3 px-4 rounded-xl shadow-sm hover:bg-orange-100 transition border-none cursor-pointer flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download text-lg"></i> Tải ảnh QR về máy
+                        </button>
                     </div>
-                    <input type="text" id="pay-note" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition" placeholder="Ghi chú cho shop (không bắt buộc)...">
+                    <input type="text" id="pay-note" class="w-full border-0 ring-1 ring-gray-200 rounded-lg px-3 py-2.5 outline-none font-medium text-sm bg-gray-50 focus:ring-2 focus:ring-primary transition mt-3" placeholder="Ghi chú cho shop (không bắt buộc)...">
                 </div>
             </div>
             <div class="p-4 pb-6 md:pb-4 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] shrink-0 relative z-[9999]">
@@ -349,7 +352,7 @@
                     <div class="flex justify-between text-gray-500"><span>Phí vận chuyển:</span><span id="pay-shipping" class="font-bold text-dark">0₫</span></div>
                     <div class="border-t border-dashed border-gray-200 pt-2 mt-1 flex justify-between items-end"><span class="font-bold text-dark text-base">Tổng cộng:</span><span id="pay-total-final" class="text-xl font-black product-price-current">0₫</span></div>
                 </div>
-                <button onclick="confirmPayment()" id="btn-submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm flex items-center justify-center gap-2 border-none cursor-pointer">Xác nhận đặt hàng <i class="fa-solid fa-check"></i></button>
+                <button onclick="confirmPayment()" id="btn-submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm flex items-center justify-center gap-2 border-none cursor-pointer">Xác nhận đặt hàng
             </div>
         </div>
     </div>
@@ -953,7 +956,20 @@
         function toggleCancelMenu(id) { const menu = document.getElementById(id); document.querySelectorAll('.cancel-menu-dropdown').forEach(m => { if(m.id !== id) m.classList.add('hidden'); }); menu.classList.toggle('hidden'); }
         function confirmCancelOrder(maDon) { document.querySelectorAll('.cancel-menu-dropdown').forEach(m => m.classList.add('hidden')); document.getElementById('confirm-title').innerText = 'Hủy đơn hàng?'; document.getElementById('confirm-msg').innerHTML = `Bạn có chắc chắn muốn hủy đơn hàng <b>${maDon}</b> không? Hành động này không thể hoàn tác!`; document.getElementById('confirm-modal').classList.remove('hidden'); document.getElementById('confirm-btn-yes').onclick = function() { document.getElementById('confirm-modal').classList.add('hidden'); executeCancelOrder(maDon); }; }
         async function executeCancelOrder(maDon) { showToast('Đang gửi yêu cầu hủy đơn...'); try { const payload = { action: 'cancelOrder', maDon: maDon }; const res = await fetch(API_URL, { method: 'POST', headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'success') { const statusWrap = document.getElementById('status-container-' + maDon); if(statusWrap) { statusWrap.className = ''; statusWrap.innerHTML = `<span class="text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider bg-red-100 text-red-600 border border-transparent shadow-sm">Hủy đơn</span>`; } showCustomPopup('Hủy đơn thành công!', `Đơn hàng <b>${maDon}</b> đã được hủy.`); } else { showCustomPopup('Không thể hủy', data.message || 'Đơn hàng đã được xử lý', true); } } catch(e) { showCustomPopup('Lỗi kết nối', 'Vui lòng kiểm tra mạng và thử lại!', true); } }
-        function toggleQR() { const sec = document.getElementById('qr-section'); if(val('pay-method') === 'BANK') { sec.classList.remove('hidden'); setTimeout(() => { sec.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150); } else { sec.classList.add('hidden'); } }
+        
+        // Hàm mở QR với hiệu ứng trượt lên mượt mà
+        function toggleQR() { 
+            const sec = document.getElementById('qr-section'); 
+            if(val('pay-method') === 'Customer Banking') { 
+                sec.classList.remove('hidden'); 
+                sec.classList.add('animate-fade-up'); // Thêm hiệu ứng trượt lên
+                setTimeout(() => { sec.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150); 
+            } else { 
+                sec.classList.add('hidden'); 
+                sec.classList.remove('animate-fade-up'); // Gỡ hiệu ứng để reset cho lần sau
+            } 
+        }
+
         async function downloadQR(e) { e.preventDefault(); const qrSrc = document.getElementById('qr-image').src; if(!qrSrc) return; try { const response = await fetch(qrSrc); const blob = await response.blob(); const url = window.URL.createObjectURL(blob); const a = document.createElement('a'); a.style.display = 'none'; a.href = url; a.download = 'QR_ThanhToan.png'; document.body.appendChild(a); a.click(); window.URL.revokeObjectURL(url); a.remove(); } catch(error) { window.open(qrSrc, '_blank'); } }
         
         function val(id) { return document.getElementById(id).value; } function setText(id, t) { let el=document.getElementById(id); if(el) el.innerText = t; } function setLink(id, l) { let el=document.getElementById(id); if(el) el.href = l; } 
