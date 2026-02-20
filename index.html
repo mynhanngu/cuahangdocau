@@ -32,7 +32,7 @@
         .modal-wrapper.open { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { transform: scale(0.95) translateY(20px); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: var(--modern-shadow); }
         .modal-wrapper.open .modal-content { transform: scale(1) translateY(0); }
-        @media (max-width: 768px) { .modal-wrapper { align-items: flex-end; } .modal-wrapper .modal-content { transform: translateY(100%); border-radius: 0; } .modal-wrapper.open .modal-content { transform: translateY(0); } .pm-mobile-full { position: absolute !important; top: 5vh !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100%; height: 95vh !important; max-height: 95vh !important; display: flex; flex-direction: column; overflow: hidden; background: white; border-radius: 24px 24px 0 0; } }
+        @media (max-width: 768px) { .modal-wrapper { align-items: flex-end; } .modal-wrapper .modal-content { transform: translateY(100%); border-radius: 0; } .modal-wrapper.open .modal-content { transform: translateY(0); } .pm-mobile-full { position: absolute !important; inset: 0 !important; width: 100%; height: 100% !important; max-height: 100% !important; display: flex; flex-direction: column; overflow: hidden; background: white; } }
         #mobile-menu { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(-100%); z-index: 60; }
         #mobile-menu.open { transform: translateX(0); }
         .card-gradient-border { position: relative; background: linear-gradient(to right, var(--gradient-colors)); background-size: 200% auto; animation: gradientLeftToRight 3s linear infinite; padding: 2px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
@@ -186,8 +186,10 @@
 
     <div id="product-modal" class="modal-wrapper">
         <div class="absolute inset-0" onclick="closeTopModal()"></div>
-        <div class="modal-content bg-white pm-mobile-full md:max-w-5xl md:h-[80vh] rounded-t-[24px] md:rounded-2xl relative z-10 md:flex md:flex-row shadow-2xl overflow-hidden">
-            <button onclick="closeTopModal()" class="absolute top-2 right-2 md:top-3 md:right-3 z-[60] w-10 h-10 flex items-center justify-center bg-gray-100/80 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-full transition border-none outline-none shadow-sm cursor-pointer"><i class="fa-solid fa-xmark text-xl md:text-2xl"></i></button>
+        <!-- CHỈ dùng md:rounded-t-[24px] md:overflow-hidden để bo góc trên máy tính, giữ nguyên pm-mobile-full cho đt -->
+        <div class="modal-content bg-white pm-mobile-full md:max-w-5xl md:h-[80vh] md:rounded-t-[24px] md:rounded-b-none md:overflow-hidden relative z-10 md:flex md:flex-row shadow-2xl">
+            <!-- Nút X giữ nguyên nền trong suốt, trên máy tính đẩy dịch lên một chút md:top-2 md:right-2 -->
+            <button onclick="closeTopModal()" class="absolute top-2 right-2 md:top-2 md:right-2 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none drop-shadow-md cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
             <div class="w-full h-[350px] md:h-full md:w-1/2 flex-shrink-0 flex flex-col relative bg-white border-b md:border-b-0 md:border-r border-gray-100 z-10">
                 <div class="relative flex-1 w-full h-full overflow-hidden group">
                     <div id="pm-slider-track" class="flex h-full w-full transition-transform duration-300"></div>
@@ -195,13 +197,14 @@
                     <button onclick="nextPmSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/20 hover:bg-black/50 text-white rounded-full hidden md:flex items-center justify-center transition z-20 opacity-0 group-hover:opacity-100 shadow-md border-none"><i class="fa-solid fa-chevron-right text-xs"></i></button>
                     <div id="pm-dots" class="absolute bottom-4 left-0 w-full flex md:hidden justify-center gap-2 z-20"></div>
                 </div>
-                <div id="pm-thumbnails" class="hidden md:flex gap-3 p-4 pt-2 overflow-x-auto custom-scrollbar shrink-0 justify-center bg-gray-50/50"></div>
+                <div id="pm-thumbnails" class="hidden md:flex gap-3 p-4 pt-2 overflow-x-auto custom-scrollbar shrink-0 justify-center bg-white border-t border-gray-50"></div>
             </div>
             <div class="w-full flex-1 flex flex-col bg-white relative z-20 md:w-1/2 md:h-full overflow-hidden">
-                <div class="flex-1 overflow-y-auto p-4 md:p-8 md:pt-14 custom-scrollbar relative pr-4 md:pr-8"> 
-                    <div class="flex items-center justify-between py-2 md:py-2.5 px-3 bg-gray-50 rounded-lg mb-4 border border-gray-100">
-                        <span id="pm-badge" class="text-white shrink-0 text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
-                        <span class="text-gray-500 shrink-0 text-[11px] md:text-sm font-medium"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 md:pt-14 custom-scrollbar relative pr-14 md:pr-8"> 
+                    <!-- Bỏ hoàn toàn class bg xám và margin âm, để lề bằng mép tên sản phẩm -->
+                    <div class="flex items-center justify-between w-full mb-3">
+                        <span id="pm-badge" class="text-white text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
+                        <span class="text-gray-500 text-[11px] md:text-sm font-medium"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
                     </div>
                     <h2 id="pm-title" class="text-xl md:text-2xl font-extrabold text-dark leading-snug mb-2 text-left"></h2>
                     <div id="pm-ghichu" class="text-red-600 text-sm font-bold mb-4 hidden uppercase text-left"></div>
@@ -211,6 +214,7 @@
                     <h3 class="font-bold text-dark text-base md:text-lg mb-2 flex items-center gap-2 pt-2"><i class="fa-solid fa-circle-info text-primary"></i> Chi tiết sản phẩm</h3>
                     <div id="pm-desc" class="text-sm text-gray-600 leading-relaxed whitespace-pre-line text-justify pb-6"></div>
                 </div>
+                <!-- Cấu trúc nút Mua Hàng gốc, z-[9999] an toàn -->
                 <div class="shrink-0 p-3 pb-6 md:pb-4 border-t border-gray-100 bg-white grid grid-cols-2 gap-3 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] relative z-[9999]">
                     <button onclick="triggerVariantSheet('cart')" class="flex items-center justify-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-primary border border-orange-200 font-bold py-2.5 rounded-lg transition text-sm cursor-pointer"><i class="fa-solid fa-cart-plus text-base"></i><span>Thêm vào giỏ</span></button>
                     <button onclick="triggerVariantSheet('buy')" class="flex items-center justify-center gap-1.5 bg-primary hover:bg-primaryHover text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm cursor-pointer"><i class="fa-solid fa-bag-shopping text-base"></i><span>Mua ngay</span></button>
@@ -238,6 +242,7 @@
                     <h4 class="text-sm font-bold text-dark">Số lượng</h4>
                     <div class="flex items-center border border-gray-200 rounded-lg p-1 bg-white shadow-sm">
                         <button onclick="adjQty(-1)" class="w-9 h-9 rounded text-gray-600 font-bold hover:bg-gray-100 transition bg-transparent border-none cursor-pointer"><i class="fa-solid fa-minus"></i></button>
+                        <!-- Gỡ onchange, cho phép xóa bằng cách chuyển validate vào sự kiện onblur -->
                         <input id="pm-qty" type="text" inputmode="numeric" value="1" oninput="this.value = this.value.replace(/[^0-9]/g, '');" onblur="validatePmQty(true)" class="w-12 h-9 bg-transparent text-center text-lg font-bold text-dark focus:outline-none mx-1 border-none">
                         <button onclick="adjQty(1)" class="w-9 h-9 rounded text-gray-600 font-bold hover:bg-gray-100 transition bg-transparent border-none cursor-pointer"><i class="fa-solid fa-plus"></i></button>
                     </div>
