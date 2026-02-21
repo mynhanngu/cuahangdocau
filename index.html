@@ -558,7 +558,7 @@
                 if(!groupedProducts[p.maSP]) groupedProducts[p.maSP] = { info: p, variants: [], min: Infinity, max: -Infinity, sold: 0 };
                 const g = groupedProducts[p.maSP]; g.variants.push(p);
                 let pr = parseInt(p.giaSKU) || 0; if(pr < g.min) g.min = pr; if(pr > g.max) g.max = pr;
-                g.sold += (parseInt(p.DaBan_Ao)||0) + (parseInt(p.DaBan_That)||0);
+                g.sold += (parseInt(p.DaBan_That)||0);
             });
         }
 
