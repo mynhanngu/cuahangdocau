@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đang tải dữ liệu...</title>
+    <title>Mỹ Nhân Ngư</title>
     <link rel="icon" href="meirenyu.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -69,7 +69,6 @@
         .input-error { box-shadow: 0 0 0 2px #ef4444 !important; background-color: #fef2f2 !important; transition: all 0.3s ease; }
         #variant-sheet { z-index: 150 !important; align-items: flex-end; }
         @media (min-width: 768px) { #variant-sheet { align-items: center !important; } }
-        /* Box Variant: Đt bo cong bên trên, mt bo cong đều 4 góc */
         .sheet-content { background: #fff; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; max-height: 90dvh; position: relative;}
         @media (min-width: 768px) { .sheet-content { border-radius: 24px !important; transform: scale(0.95) translateY(20px) !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); } }
         #variant-sheet.open .sheet-content { transform: translateY(0) scale(1) !important; }
@@ -353,7 +352,7 @@
                     <div class="flex justify-between text-gray-500"><span>Phí vận chuyển:</span><span id="pay-shipping" class="font-bold text-dark">0₫</span></div>
                     <div class="border-t border-dashed border-gray-200 pt-2 mt-1 flex justify-between items-end"><span class="font-bold text-dark text-base">Tổng cộng:</span><span id="pay-total-final" class="text-xl font-black product-price-current">0₫</span></div>
                 </div>
-                <button onclick="confirmPayment()" id="btn-submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm flex items-center justify-center gap-2 border-none cursor-pointer">Xác nhận đặt hàng
+                <button onclick="confirmPayment()" id="btn-submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-lg shadow-md transition transform hover:-translate-y-0.5 text-sm flex items-center justify-center gap-2 border-none cursor-pointer">Xác nhận đặt hàng</button>
             </div>
         </div>
     </div>
@@ -401,10 +400,10 @@
             currentView = v;
             hasTrackingResult = false;
             if (v==='tracking') { document.getElementById('tracking-result-area').classList.add('hidden'); }
-            if (push) history.pushState({ view: v, result: false }, '');
+            if (push) history.pushState({ view: v, result: false }, '', '?view=' + v);
         }
 
-        function openModal(id, isReplace = false) {
+        function openModal(id, isReplace = false, customUrl = null, skipPush = false) {
             const el = document.getElementById(id);
             if (!el) return;
             if (modalStack.length === 0) {
@@ -415,6 +414,13 @@
                 document.body.style.overflowY = 'scroll';
             }
             el.classList.add('open');
+
+            if (skipPush) {
+                modalStack.push(id);
+                return;
+            }
+
+            let url = customUrl || window.location.search;
             if (isReplace && modalStack.length > 0) {
                 const oldId = modalStack.pop();
                 const oldEl = document.getElementById(oldId);
@@ -423,10 +429,10 @@
                     else oldEl.classList.remove('open');
                 }
                 modalStack.push(id);
-                history.replaceState({ view: currentView, result: hasTrackingResult, modal: id }, '');
+                history.replaceState({ view: currentView, result: hasTrackingResult, modal: id }, '', url);
             } else {
                 modalStack.push(id);
-                history.pushState({ view: currentView, result: hasTrackingResult, modal: id }, '');
+                history.pushState({ view: currentView, result: hasTrackingResult, modal: id }, '', url);
             }
         }
 
@@ -446,6 +452,9 @@
                     document.body.style.overflowY = '';
                     window.scrollTo(0, savedScrollY);
                 }
+                if (modalStack.length === 0 && e.state && e.state.view) {
+                     currentView = e.state.view;
+                }
                 return;
             }
             if (e.state && e.state.view) {
@@ -462,6 +471,10 @@
                         document.getElementById('track-phone-input').value = '';
                     }
                 }
+            } else {
+                let params = new URLSearchParams(window.location.search);
+                let v = params.get('view') || 'shop';
+                switchView(v, false);
             }
         });
 
@@ -494,7 +507,7 @@
             updateLightboxSlider();
             document.getElementById('lightbox').classList.remove('hidden');
             modalStack.push('lightbox');
-            history.pushState({ view: currentView, result: hasTrackingResult, modal: 'lightbox' }, '');
+            history.pushState({ view: currentView, result: hasTrackingResult, modal: 'lightbox' }, '', window.location.search);
             track.ontouchstart = (e) => lbTouchStartX = e.touches[0].clientX;
             track.ontouchend = (e) => { lbTouchEndX = e.changedTouches[0].clientX; handleLbSwipe(); };
         }
@@ -529,7 +542,6 @@
         }
 
         window.onload = async function() {
-            history.replaceState({ view: 'shop', result: false }, '');
             try {
                 loadProvinces(); 
                 const fetchUrl = API_URL + "?t=" + new Date().getTime(); 
@@ -538,8 +550,31 @@
                 if(data.status === 'success') {
                     appData = data; groupProductsData(); applyConfig(); initMenuCategories(); renderProducts('all'); renderCartItems(); updateCartBadge();
                     document.getElementById('app-loading').remove();
-                    let popupOn = String(appData.config.POPUP_ON || "").toUpperCase();
-                    if(popupOn === "TRUE") { showCustomPopup(appData.config.POPUP_TITLE || "Thông báo", appData.config.POPUP_MSG || ""); }
+                    
+                    let params = new URLSearchParams(window.location.search);
+                    let initView = params.get('view') || 'shop';
+                    switchView(initView, false); 
+
+                    let product = params.get('product');
+                    let post = params.get('post');
+                    let showPopup = true;
+
+                    if(product && groupedProducts[product]) {
+                        history.replaceState({ view: initView, result: false, modal: 'product-modal' }, '', window.location.search);
+                        openProductDetail(product, false);
+                        showPopup = false;
+                    } else if (post !== null && appData.blog[parseInt(post)]) {
+                        history.replaceState({ view: initView, result: false, modal: 'blog-modal' }, '', window.location.search);
+                        openBlogDetail(parseInt(post), false);
+                        showPopup = false;
+                    } else {
+                        history.replaceState({ view: initView, result: false }, '', window.location.search);
+                    }
+
+                    if(showPopup) {
+                        let popupOn = String(appData.config.POPUP_ON || "").toUpperCase();
+                        if(popupOn === "TRUE") { showCustomPopup(appData.config.POPUP_TITLE || "Thông báo", appData.config.POPUP_MSG || ""); }
+                    }
                 } else throw new Error(data.message || "Lỗi xử lý Server");
             } catch(e) { document.getElementById('app-loading').innerHTML = `<div class="text-red-500 font-bold text-center p-4">Lỗi tải dữ liệu. Vui lòng tải lại trang!</div>`; }
         };
@@ -678,8 +713,10 @@
 
         function goToPage(page) { currentPage = page; displayProductsPage(); const filterSec = document.getElementById('filter-section'); if (filterSec && filterSec.style.display !== 'none') { window.scrollTo({top: filterSec.offsetTop - 80, behavior: 'smooth'}); } else { window.scrollTo({top: document.getElementById('products-grid').offsetTop - 100, behavior: 'smooth'}); } }
 
-        function openProductDetail(maSP) {
-            currentGroup = groupedProducts[maSP]; const info = currentGroup.info;
+        function openProductDetail(maSP, pushState = true) {
+            currentGroup = groupedProducts[maSP]; 
+            if(!currentGroup) return;
+            const info = currentGroup.info;
             pmCurrentIndex = 0; clearInterval(pmSlideInterval);
             const track = document.getElementById('pm-slider-track'); 
             const dots = document.getElementById('pm-dots');
@@ -713,7 +750,12 @@
             a1List = [...new Set(vars.map(v=>v.giaTri1).filter(Boolean))]; 
             a2List = [...new Set(vars.map(v=>v.giaTri2).filter(Boolean))];
             selA1 = ""; selA2 = ""; finalVar = null; document.getElementById('pm-qty').value = 1;
-            openModal('product-modal');
+            
+            if (pushState) {
+                openModal('product-modal', false, `?view=${currentView}&product=${maSP}`);
+            } else {
+                openModal('product-modal', false, null, true);
+            }
         }
 
         function startPmAutoSlide() { const c = document.querySelectorAll('.pm-slide').length; if (c <= 1) return; clearInterval(pmSlideInterval); pmSlideInterval = setInterval(() => { nextPmSlide(); }, 4000); }
@@ -867,11 +909,17 @@
         }
         function goToBlogPage(page) { blogCurrentPage = page; displayBlogPage(); window.scrollTo({top: document.getElementById('view-blog').offsetTop - 80, behavior: 'smooth'}); }
 
-        function openBlogDetail(idx) {
+        function openBlogDetail(idx, pushState = true) {
             let b = appData.blog[idx]; if(!b) return;
             let html = `<div class="relative h-72 md:h-96"><img src="${b.anhBia}" class="w-full h-full object-cover" loading="lazy"><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div><div class="absolute bottom-0 left-0 p-6 md:p-8 w-full"><h2 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight drop-shadow-lg">${b.tieuDe}</h2><p class="text-sm text-white/90 font-medium flex items-center gap-2"><i class="fa-regular fa-clock"></i> Ngày đăng: ${b.ngayDang}</p></div></div><div class="p-6 md:p-10 text-dark leading-relaxed space-y-8 text-justify bg-white">`;
             for(let i=1; i<=10; i++) { if(b[`noiDung${i}`]) html += `<p class="text-base md:text-lg text-gray-700">${String(b[`noiDung${i}`]).replace(/\n/g, '<br>')}</p>`; if(b[`anhMinhHoa${i}`]) html += `<div class="rounded-2xl overflow-hidden shadow-sm my-6"><img src="${b[`anhMinhHoa${i}`]}" class="w-full object-cover" loading="lazy"></div>`; }
-            html += `</div><div class="h-10 bg-white"></div>`; document.getElementById('bm-body').innerHTML = html; openModal('blog-modal');
+            html += `</div><div class="h-10 bg-white"></div>`; document.getElementById('bm-body').innerHTML = html; 
+            
+            if (pushState) {
+                openModal('blog-modal', false, `?view=${currentView}&post=${idx}`);
+            } else {
+                openModal('blog-modal', false, null, true);
+            }
         }
 
         function addToCart(qty) {
@@ -934,7 +982,7 @@
             if(!phoneRegex.test(p)) { pEl.classList.add('input-error'); pEl.focus(); return; } else { removeError(pEl); }
             const resArea = document.getElementById('tracking-result-area'); const listArea = document.getElementById('tracking-list');
             resArea.classList.remove('hidden'); listArea.innerHTML = '<div class="text-center py-8"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-primary mb-3"></i><p class="text-gray-500 font-medium">Đang tìm kiếm đơn hàng của bạn...</p></div>';
-            hasTrackingResult = true; history.pushState({ view: 'tracking', result: true }, '');
+            hasTrackingResult = true; history.pushState({ view: 'tracking', result: true }, '', '?view=tracking');
 
             try {
                 const payload = { action: 'trackOrder', sdt: p };
@@ -958,16 +1006,15 @@
         function confirmCancelOrder(maDon) { document.querySelectorAll('.cancel-menu-dropdown').forEach(m => m.classList.add('hidden')); document.getElementById('confirm-title').innerText = 'Hủy đơn hàng?'; document.getElementById('confirm-msg').innerHTML = `Bạn có chắc chắn muốn hủy đơn hàng <b>${maDon}</b> không? Hành động này không thể hoàn tác!`; document.getElementById('confirm-modal').classList.remove('hidden'); document.getElementById('confirm-btn-yes').onclick = function() { document.getElementById('confirm-modal').classList.add('hidden'); executeCancelOrder(maDon); }; }
         async function executeCancelOrder(maDon) { showToast('Đang gửi yêu cầu hủy đơn...'); try { const payload = { action: 'cancelOrder', maDon: maDon }; const res = await fetch(API_URL, { method: 'POST', headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload) }); const data = await res.json(); if(data.status === 'success') { const statusWrap = document.getElementById('status-container-' + maDon); if(statusWrap) { statusWrap.className = ''; statusWrap.innerHTML = `<span class="text-xs px-3 py-1.5 rounded-lg font-bold uppercase tracking-wider bg-red-100 text-red-600 border border-transparent shadow-sm">Hủy đơn</span>`; } showCustomPopup('Hủy đơn thành công!', `Đơn hàng <b>${maDon}</b> đã được hủy.`); } else { showCustomPopup('Không thể hủy', data.message || 'Đơn hàng đã được xử lý', true); } } catch(e) { showCustomPopup('Lỗi kết nối', 'Vui lòng kiểm tra mạng và thử lại!', true); } }
         
-        // Hàm mở QR với hiệu ứng trượt lên mượt mà
         function toggleQR() { 
             const sec = document.getElementById('qr-section'); 
             if(val('pay-method') === 'Customer Banking') { 
                 sec.classList.remove('hidden'); 
-                sec.classList.add('animate-fade-up'); // Thêm hiệu ứng trượt lên
+                sec.classList.add('animate-fade-up');
                 setTimeout(() => { sec.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150); 
             } else { 
                 sec.classList.add('hidden'); 
-                sec.classList.remove('animate-fade-up'); // Gỡ hiệu ứng để reset cho lần sau
+                sec.classList.remove('animate-fade-up');
             } 
         }
 
