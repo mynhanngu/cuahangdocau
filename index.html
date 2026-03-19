@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mỹ Nhân Ngư...</title>
+    <title>Đang tải dữ liệu...</title>
     <link rel="icon" href="meirenyu.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,7 +30,8 @@
             transition: transform 0.3s ease; 
         }
         @keyframes gradientLeftToRight { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        
+
+        /* --- HIỆU ỨNG ÁNH SÁNG & ÉP CỠ CHỮ CỐ ĐỊNH CHO FOOTER --- */
         @keyframes shine {
             0% { left: -100%; }
             100% { left: 200%; }
@@ -42,11 +43,17 @@
         }
         #footer-shop-name * {
             font-size: 14px !important; 
-            line-height: 1.25 !important; /* Nhả không gian ra một chút để chứa dấu */
+            line-height: 1.25 !important; 
             margin: 0 !important; 
-            padding: 2px 0 0 0 !important; /* Đệm thêm 2px trên đỉnh đầu bảo vệ dấu */
+            padding: 2px 0 0 0 !important; 
             display: block !important; 
         }
+        #footer-shop-name span {
+            padding: 0 !important;
+            position: absolute !important;
+            display: inline-block !important; 
+        }
+        /* -------------------------------------------------------- */
 
         .cart-badge { position: absolute; top: -2px; right: 4px; background: transparent !important; border: none !important; font-size: 13px; font-weight: 900; color: #cc5500; opacity: 0; transform: scale(0); transition: all 0.2s ease; }
         .cart-badge.show { opacity: 1; transform: scale(1); }
@@ -566,24 +573,34 @@
                 const res = await fetch(fetchUrl, { cache: 'no-store' }); 
                 const data = await res.json();
                 if(data.status === 'success') {
-                    appData = data; groupProductsData(); applyConfig(); initMenuCategories(); renderProducts('all'); renderCartItems(); updateCartBadge();
-                    document.getElementById('app-loading').remove();
+                    appData = data; groupProductsData(); applyConfig(); initMenuCategories(); 
                     
                     let params = new URLSearchParams(window.location.search);
                     let initView = params.get('view') || 'shop';
-                    switchView(initView, false); 
-
                     let product = params.get('product');
                     let post = params.get('post');
                     let showPopup = true;
 
+                    // Tự động trải nền bằng danh mục của sản phẩm
+                    let initialCat = 'all';
+                    if (product && groupedProducts[product]) {
+                        initialCat = groupedProducts[product].info.danhMuc || 'all';
+                    }
+                    renderProducts(initialCat); 
+
+                    renderCartItems(); updateCartBadge();
+                    document.getElementById('app-loading').remove();
+                    
+                    switchView(initView, false); 
+
+                    // BƠM LỊCH SỬ GIẢ & BẬT POPUP CHỐNG VĂNG WEB
                     if(product && groupedProducts[product]) {
-                        history.replaceState({ view: initView, result: false, modal: 'product-modal' }, '', window.location.search);
-                        openProductDetail(product, false);
+                        history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
+                        openProductDetail(product, true);
                         showPopup = false;
                     } else if (post !== null && appData.blog[parseInt(post)]) {
-                        history.replaceState({ view: initView, result: false, modal: 'blog-modal' }, '', window.location.search);
-                        openBlogDetail(parseInt(post), false);
+                        history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
+                        openBlogDetail(parseInt(post), true);
                         showPopup = false;
                     } else {
                         history.replaceState({ view: initView, result: false }, '', window.location.search);
@@ -621,21 +638,16 @@
             if(c.SLOGAN_COLOR) document.documentElement.style.setProperty('--slogan-color', c.SLOGAN_COLOR);
             if(c.GRADIENT_COLORS) document.documentElement.style.setProperty('--gradient-colors', c.GRADIENT_COLORS);
             
-            // --- XỬ LÝ LỌC MÃ HTML CHO TÊN SHOP ĐỂ KHÔNG BỊ LỖI HIỂN THỊ ---
+            // XỬ LÝ LỌC MÃ HTML CHO TÊN SHOP ĐỂ KHÔNG BỊ LỖI HIỂN THỊ TRÊN TITLE TRÌNH DUYỆT
             if(c.SHOP_NAME) { 
-                // Tạo 1 div ảo để bóc tách chữ "MỸ NHÂN NGƯ" thuần túy, loại bỏ các thẻ <h1> hay <style>
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = c.SHOP_NAME;
                 let plainShopName = tempDiv.textContent || tempDiv.innerText || c.SHOP_NAME;
                 
-                // Gán chữ thuần túy cho thanh trình duyệt và header
                 document.title = plainShopName; 
                 setText('header-shop-name', plainShopName); 
-                
-                // Gán nguyên mã HTML xịn xò để chạy hiệu ứng cho Footer
                 document.getElementById('footer-shop-name').innerHTML = c.SHOP_NAME;
             }
-            // -------------------------------------------------------------
 
             if(c.SLOGAN) { setText('footer-slogan', c.SLOGAN); }
             if(c.LOGO_URL) { const logo = document.getElementById('img-logo-display'); logo.src = c.LOGO_URL; logo.style.display = 'block'; document.getElementById('default-logo-wrap').style.display = 'none'; } 
@@ -685,7 +697,8 @@
             if (catId === 'all' && search === '') {
                 titleText = 'Trang chủ'; if(banner) banner.style.display = 'block'; document.getElementById('filter-section').style.display = 'none';
             } else {
-                let foundCat = appData.categories.find(c=>c.ID===catId);
+                // Thêm (appData.categories || []) để chống lỗi sập web khi danh mục trống
+                let foundCat = (appData.categories || []).find(c=>c.ID===catId);
                 if(search) titleText = `Kết quả cho: "${search}"`; else titleText = foundCat ? foundCat.Ten : 'Danh mục';
                 if(banner) banner.style.display = 'none'; document.getElementById('filter-section').style.display = 'block';
             }
