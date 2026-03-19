@@ -602,7 +602,11 @@
             if(c.BRAND_COLOR) document.documentElement.style.setProperty('--brand-color', c.BRAND_COLOR);
             if(c.SLOGAN_COLOR) document.documentElement.style.setProperty('--slogan-color', c.SLOGAN_COLOR);
             if(c.GRADIENT_COLORS) document.documentElement.style.setProperty('--gradient-colors', c.GRADIENT_COLORS);
-            if(c.SHOP_NAME) { document.title = c.SHOP_NAME; setText('footer-shop-name', c.SHOP_NAME); setText('header-shop-name', c.SHOP_NAME); }
+            if(c.SHOP_NAME) { 
+    document.title = c.SHOP_NAME; 
+    document.getElementById('footer-shop-name').innerHTML = c.SHOP_NAME; 
+    setText('header-shop-name', c.SHOP_NAME); 
+}
             if(c.SLOGAN) { setText('footer-slogan', c.SLOGAN); }
             if(c.LOGO_URL) { const logo = document.getElementById('img-logo-display'); logo.src = c.LOGO_URL; logo.style.display = 'block'; document.getElementById('default-logo-wrap').style.display = 'none'; } 
             if(c.MARQUEE_TEXT) { document.getElementById('marquee-track').innerHTML = `<div class="marquee-item"><i class="fa-solid fa-bullhorn"></i> ${c.MARQUEE_TEXT}</div>`.repeat(10); document.getElementById('marquee-section').classList.remove('hidden'); }
