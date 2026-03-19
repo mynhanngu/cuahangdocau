@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mỹ Nhân Ngư</title>
+    <title>Mỹ Nhân Ngư...</title>
     <link rel="icon" href="meirenyu.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,6 +30,24 @@
             transition: transform 0.3s ease; 
         }
         @keyframes gradientLeftToRight { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        #footer-shop-name {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        #footer-shop-name * {
+            font-size: 14px !important; 
+            line-height: 1.25 !important; /* Nhả không gian ra một chút để chứa dấu */
+            margin: 0 !important; 
+            padding: 2px 0 0 0 !important; /* Đệm thêm 2px trên đỉnh đầu bảo vệ dấu */
+            display: block !important; 
+        }
+
         .cart-badge { position: absolute; top: -2px; right: 4px; background: transparent !important; border: none !important; font-size: 13px; font-weight: 900; color: #cc5500; opacity: 0; transform: scale(0); transition: all 0.2s ease; }
         .cart-badge.show { opacity: 1; transform: scale(1); }
         .marquee-wrap { background: #111; color: #fff; height: 36px; overflow: hidden; display: flex; align-items: center; position: relative; }
@@ -193,7 +211,7 @@
     </div>
 
     <footer class="bg-white py-3 flex flex-col items-center justify-center border-t border-gray-100 relative z-10 shrink-0 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
-        <h3 id="footer-shop-name" class="text-sm font-black uppercase transition-colors" style="color: var(--brand-color);"></h3>
+        <div id="footer-shop-name" class="font-black uppercase transition-colors" style="color: var(--brand-color);"></div>
         <p id="footer-slogan" class="text-[11px] font-medium text-center px-4 mt-0.5" style="color: var(--slogan-color);"></p>
     </footer>
 
@@ -602,11 +620,23 @@
             if(c.BRAND_COLOR) document.documentElement.style.setProperty('--brand-color', c.BRAND_COLOR);
             if(c.SLOGAN_COLOR) document.documentElement.style.setProperty('--slogan-color', c.SLOGAN_COLOR);
             if(c.GRADIENT_COLORS) document.documentElement.style.setProperty('--gradient-colors', c.GRADIENT_COLORS);
+            
+            // --- XỬ LÝ LỌC MÃ HTML CHO TÊN SHOP ĐỂ KHÔNG BỊ LỖI HIỂN THỊ ---
             if(c.SHOP_NAME) { 
-    document.title = c.SHOP_NAME; 
-    document.getElementById('footer-shop-name').innerHTML = c.SHOP_NAME; 
-    setText('header-shop-name', c.SHOP_NAME); 
-}
+                // Tạo 1 div ảo để bóc tách chữ "MỸ NHÂN NGƯ" thuần túy, loại bỏ các thẻ <h1> hay <style>
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = c.SHOP_NAME;
+                let plainShopName = tempDiv.textContent || tempDiv.innerText || c.SHOP_NAME;
+                
+                // Gán chữ thuần túy cho thanh trình duyệt và header
+                document.title = plainShopName; 
+                setText('header-shop-name', plainShopName); 
+                
+                // Gán nguyên mã HTML xịn xò để chạy hiệu ứng cho Footer
+                document.getElementById('footer-shop-name').innerHTML = c.SHOP_NAME;
+            }
+            // -------------------------------------------------------------
+
             if(c.SLOGAN) { setText('footer-slogan', c.SLOGAN); }
             if(c.LOGO_URL) { const logo = document.getElementById('img-logo-display'); logo.src = c.LOGO_URL; logo.style.display = 'block'; document.getElementById('default-logo-wrap').style.display = 'none'; } 
             if(c.MARQUEE_TEXT) { document.getElementById('marquee-track').innerHTML = `<div class="marquee-item"><i class="fa-solid fa-bullhorn"></i> ${c.MARQUEE_TEXT}</div>`.repeat(10); document.getElementById('marquee-section').classList.remove('hidden'); }
