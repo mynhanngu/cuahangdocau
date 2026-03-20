@@ -31,7 +31,6 @@
         }
         @keyframes gradientLeftToRight { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 
-        /* --- HIỆU ỨNG ÁNH SÁNG & ÉP CỠ CHỮ CỐ ĐỊNH CHO FOOTER --- */
         @keyframes shine {
             0% { left: -100%; }
             100% { left: 200%; }
@@ -43,17 +42,12 @@
         }
         #footer-shop-name * {
             font-size: 14px !important; 
-            line-height: 1.25 !important; 
+            line-height: 1.25 !important; /* Nhả không gian ra một chút để chứa dấu */
             margin: 0 !important; 
-            padding: 2px 0 0 0 !important; 
+            padding: 2px 0 0 0 !important; /* Đệm thêm 2px trên đỉnh đầu bảo vệ dấu */
             display: block !important; 
         }
-        #footer-shop-name span {
-            padding: 0 !important;
-            position: absolute !important;
-            display: inline-block !important; 
-        }
-        /* -------------------------------------------------------- */
+
 
         .cart-badge { position: absolute; top: -2px; right: 4px; background: transparent !important; border: none !important; font-size: 13px; font-weight: 900; color: #cc5500; opacity: 0; transform: scale(0); transition: all 0.2s ease; }
         .cart-badge.show { opacity: 1; transform: scale(1); }
