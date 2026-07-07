@@ -503,8 +503,7 @@
                     if(popupOn === "TRUE") { showCustomPopup(appData.config.POPUP_TITLE || "Thông báo", appData.config.POPUP_MSG || ""); }
                 }
 
-                // [CẬP NHẬT REAL-TIME] Tự động tải lại kho nếu có thay đổi từ Supabase
-                db.channel('public:product_variants')
+                db.channel('kho-realtime')
                   .on('postgres_changes', { event: '*', schema: 'public', table: 'product_variants' }, payload => {
                       refreshData();
                   })
@@ -1106,13 +1105,11 @@
                 });
                 groupProductsData();
                 
-                // Thay thế dữ liệu trong currentFilteredProducts bằng các object mới nhất từ bộ nhớ
                 let oldFilteredIds = currentFilteredProducts.map(g => g.info.maSP);
                 currentFilteredProducts = oldFilteredIds.map(id => groupedProducts[id]).filter(Boolean);
                 
                 if (currentView === 'shop') displayProductsPage();
                 
-                // Nếu khách đang mở chi tiết sản phẩm, update luôn số lượng trong popup
                 if (currentGroup) {
                     currentGroup = groupedProducts[currentGroup.info.maSP];
                     if (document.getElementById('variant-sheet').classList.contains('open')) {
