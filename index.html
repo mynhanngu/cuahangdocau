@@ -502,6 +502,14 @@
                     let popupOn = String(appData.config.POPUP_ON || "").toUpperCase();
                     if(popupOn === "TRUE") { showCustomPopup(appData.config.POPUP_TITLE || "Thông báo", appData.config.POPUP_MSG || ""); }
                 }
+
+                // [CẬP NHẬT REAL-TIME] Tự động tải lại kho nếu có thay đổi từ Supabase
+                db.channel('public:product_variants')
+                  .on('postgres_changes', { event: '*', schema: 'public', table: 'product_variants' }, payload => {
+                      refreshData();
+                  })
+                  .subscribe();
+
             } catch(e) { 
                 console.error("Lỗi:", e);
                 let loadingEl = document.getElementById('app-loading');
@@ -1079,6 +1087,40 @@
         function closeMenu() { document.getElementById('mobile-menu').classList.remove('open'); const ov = document.getElementById('overlay'); ov.classList.remove('opacity-100', 'pointer-events-auto'); ov.classList.add('opacity-0', 'pointer-events-none'); document.body.style.overflow = ''; }
         function toggleCSKHMenu() { const m=document.getElementById('cskh-menu'); const a=document.getElementById('cskh-arrow'); if(m.classList.contains('hidden')){m.classList.remove('hidden');a.style.transform='rotate(180deg)';}else{m.classList.add('hidden');a.style.transform='rotate(0deg)';} }
         function showToast(msg) { const t = document.createElement('div'); t.className = 'toast-1-line'; t.innerHTML = `<i class="fa-solid fa-circle-check text-green-400"></i> ${msg}`; document.body.appendChild(t); setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 2000); }
+
+        async function refreshData() {
+            try {
+                const { data: prodRes, error } = await db.from('product_variants').select('*, products(*)').order('thu_tu', { ascending: true });
+                if (error) return;
+                appData.products = prodRes.map(v => {
+                    let p = v.products;
+                    return {
+                        maSP: p.id, tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
+                        anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
+                        anh1: p.anh_1, anh2: p.anh_2, anh3: p.anh_3, anh4: p.anh_4,
+                        maBienThe: v.ma_bien_the,
+                        thuocTinh1: v.thuoc_tinh_1, giaTri1: v.gia_tri_1,
+                        thuocTinh2: v.thuoc_tinh_2, giaTri2: v.gia_tri_2,
+                        giaSKU: v.gia_sku, TonKho_HienThi: v.ton_kho_hien_thi, DaBan_That: v.da_ban
+                    };
+                });
+                groupProductsData();
+                
+                // Thay thế dữ liệu trong currentFilteredProducts bằng các object mới nhất từ bộ nhớ
+                let oldFilteredIds = currentFilteredProducts.map(g => g.info.maSP);
+                currentFilteredProducts = oldFilteredIds.map(id => groupedProducts[id]).filter(Boolean);
+                
+                if (currentView === 'shop') displayProductsPage();
+                
+                // Nếu khách đang mở chi tiết sản phẩm, update luôn số lượng trong popup
+                if (currentGroup) {
+                    currentGroup = groupedProducts[currentGroup.info.maSP];
+                    if (document.getElementById('variant-sheet').classList.contains('open')) {
+                        updateVarLogic(true);
+                    }
+                }
+            } catch(e) { console.error("Lỗi realtime:", e); }
+        }
     </script>
 </body>
 </html>
