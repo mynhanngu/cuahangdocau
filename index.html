@@ -458,6 +458,7 @@
                     return {
                         maSP: p.id, tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
                         anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
+                        thoiGianSP: p.created_at, 
                         anh1: p.anh_1, anh2: p.anh_2, anh3: p.anh_3, anh4: p.anh_4,
                         maBienThe: v.ma_bien_the,
                         thuocTinh1: v.thuoc_tinh_1, giaTri1: v.gia_tri_1,
@@ -646,6 +647,13 @@
                 if(search && !p.tenSP.toLowerCase().includes(search.toLowerCase())) return;
                 currentFilteredProducts.push(g);
             });
+
+            currentFilteredProducts.sort((a, b) => {
+                let timeA = new Date(a.info.thoiGianSP || 0).getTime();
+                let timeB = new Date(b.info.thoiGianSP || 0).getTime();
+                return timeB - timeA;
+            });
+
             let titleText = ''; const banner = document.getElementById('main-banner');
             if (catId === 'all' && search === '') {
                 titleText = 'Trang chủ'; if(banner) banner.style.display = 'block'; document.getElementById('filter-section').style.display = 'none';
@@ -1096,6 +1104,7 @@
                     return {
                         maSP: p.id, tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
                         anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
+                        thoiGianSP: p.created_at, 
                         anh1: p.anh_1, anh2: p.anh_2, anh3: p.anh_3, anh4: p.anh_4,
                         maBienThe: v.ma_bien_the,
                         thuocTinh1: v.thuoc_tinh_1, giaTri1: v.gia_tri_1,
