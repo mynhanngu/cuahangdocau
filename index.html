@@ -996,8 +996,10 @@
                 try {
                     let chiTietDonEmail = window.currentOrderItems.map(i => `${i.name} (x${i.qty})`).join(', ');
                     await emailjs.send('service_u3lvuhn', 'template_p6myfj7', {
+                        ma_don: maDonHang,
                         khach_hang: nameEl.value.trim(),
                         so_dien_thoai: phoneVal,
+                        dia_chi: fullAddress,
                         tong_tien: formatMoney(totalRawNumber),
                         chi_tiet: chiTietDonEmail
                     });
