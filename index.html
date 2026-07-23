@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- MỚI: Thêm các thẻ meta SEO cơ bản -->
     <title>Đang tải dữ liệu...</title>
-    <meta name="description" content="Shop cung cấp sản phẩm chuyên nghiệp, uy tín">
+    <meta name="description" content="Mồi câu nhập khẩu chính hãng">
     <meta property="og:title" content="Shop Sản Phẩm">
-    <meta property="og:description" content="Shop cung cấp sản phẩm chuyên nghiệp, uy tín">
+    <meta property="og:description" content="Mồi câu nhập khẩu chính hãng">
     <meta property="og:image" content="">
     <meta property="og:type" content="website">
 
@@ -158,7 +157,6 @@
             </div>
             <main class="container mx-auto px-2 md:px-6 py-6 md:py-10">
                 <div class="mb-6 md:mb-8 px-2" id="filter-section" style="display: none;">
-                    <!-- MỚI: Đổi h2 thành h1 để tốt cho SEO trang danh mục -->
                     <h1 class="text-2xl md:text-3xl font-extrabold text-dark relative inline-block" id="category-title">Trang chủ
                         <span class="absolute bottom-1 left-0 w-full h-2 md:h-3 bg-primary/20 -z-10 skew-x-12 rounded-sm"></span>
                     </h1>
@@ -222,7 +220,6 @@
                         <span id="pm-badge" class="text-white text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
                         <span class="text-gray-500 text-[11px] md:text-sm font-medium"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
                     </div>
-                    <!-- MỚI: Đổi thẻ h2 pm-title thành h1 chuẩn SEO -->
                     <h1 id="pm-title" class="text-xl md:text-2xl font-extrabold text-dark leading-snug mb-2 text-left"></h1>
                     <div id="pm-ghichu" class="text-red-600 text-sm font-bold mb-4 hidden uppercase text-left"></div>
                     <div class="mb-4 pb-4 border-b border-gray-100 overflow-hidden w-full">
@@ -407,7 +404,6 @@
         let currentPage = 1; const productsPerPage = 10; let currentFilteredProducts = [];
         let blogCurrentPage = 1; const blogPerPage = 10; let pendingAction = ''; let isDirectBuy = false;
 
-        // --- MỚI: Hàm tạo Slug tự động ---
         function generateSlug(str) {
             if (!str) return '';
             return str.toLowerCase()
@@ -419,7 +415,6 @@
                 .replace(/^-+|-+$/g, '');
         }
 
-        // --- MỚI: Hàm cập nhật SEO On-page ---
         function updateSEO(title, description, image) {
             document.title = title;
             let metaDesc = document.querySelector('meta[name="description"]');
@@ -483,7 +478,7 @@
 
                 appData.blog = blogRes.data.map(b => ({
                     id: b.id, 
-                    slug: b.slug || generateSlug(b.tieu_de), // MỚI: Bổ sung trường slug
+                    slug: b.slug || generateSlug(b.tieu_de), 
                     tieuDe: b.tieu_de, anhBia: b.anh_bia, ngayDang: formatTimeVN(b.ngay_dang),
                     noiDung1: b.noi_dung_1, anhMinhHoa1: b.anh_minh_hoa_1,
                     noiDung2: b.noi_dung_2, anhMinhHoa2: b.anh_minh_hoa_2,
@@ -496,7 +491,7 @@
                     let p = v.products;
                     return {
                         maSP: p.id, 
-                        slug: p.slug || generateSlug(p.ten_sp), // MỚI: Bổ sung trường slug
+                        slug: p.slug || generateSlug(p.ten_sp), 
                         tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
                         anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
                         thoiGianSP: p.created_at, 
@@ -513,7 +508,6 @@
                 let params = new URLSearchParams(window.location.search);
                 let initView = params.get('view') || 'shop';
                 
-                // MỚI: Đọc slug thay vì đọc id
                 let productSlugParam = params.get('product'); 
                 let postSlugParam = params.get('post'); 
                 let showPopup = true;
@@ -535,7 +529,6 @@
                 
                 switchView(initView, false); 
 
-                // MỚI: Logic mở chi tiết dựa theo Slug
                 if(targetProductInfo && groupedProducts[targetProductInfo.maSP]) {
                     history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
                     openProductDetail(targetProductInfo.maSP, true, productSlugParam);
@@ -581,7 +574,6 @@
             if (v==='tracking') { document.getElementById('tracking-result-area').classList.add('hidden'); }
             if (push) history.pushState({ view: v, result: false }, '', '?view=' + v);
 
-            // MỚI: Reset SEO khi về trang chủ
             if(v === 'shop') {
                 updateSEO(
                     appData.config.SHOP_NAME || "Trang chủ", 
@@ -748,7 +740,6 @@
                 const div = document.createElement('div'); div.className = 'card-gradient-border'; div.onclick = () => openProductDetail(p.maSP);
                 div.innerHTML = `
                     <div class="card-inner group">
-                        <!-- MỚI: Đã gắn thẻ alt cho ảnh sản phẩm chuẩn SEO -->
                         <div class="product-image-wrapper"><img src="${p.anhDaiDien}" alt="${p.tenSP}" class="product-image" loading="lazy">${badgeHtml}</div>
                         <div class="p-3 md:p-4 flex flex-col flex-grow">
                             <h3 class="product-title group-hover:text-primary transition text-left line-clamp-2">${p.tenSP}</h3>
@@ -787,7 +778,6 @@
             if(!currentGroup) return;
             const info = currentGroup.info;
             
-            // MỚI: Lấy slug thay vì ID cho URL
             let slug = customSlug || info.slug;
 
             pmCurrentIndex = 0; clearInterval(pmSlideInterval);
@@ -799,7 +789,6 @@
             const imgs = [info.anhDaiDien, info.anh1, info.anh2, info.anh3, info.anh4].filter(Boolean);
             lbImages = imgs;
             imgs.forEach((url, i) => {
-                // MỚI: Bổ sung alt tag cho ảnh trong popup
                 track.innerHTML += `<div class="pm-slide w-full h-full flex-shrink-0 flex items-center justify-center p-2 bg-white"><img src="${url}" alt="${info.tenSP} - Ảnh ${i+1}" onclick="openLightbox(${i})" class="max-w-full max-h-full object-contain cursor-zoom-in hover:opacity-90 transition" loading="lazy"></div>`;
                 const dot = document.createElement('div'); 
                 dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i===0 ? 'bg-primary scale-125' : 'bg-gray-300 hover:bg-primary/50'} cursor-pointer`;
@@ -827,11 +816,9 @@
             a2List = [...new Set(vars.map(v=>v.giaTri2).filter(Boolean))];
             selA1 = ""; selA2 = ""; finalVar = null; document.getElementById('pm-qty').value = 1;
 
-            // MỚI: Update SEO tự động khi mở sản phẩm
             let plainDesc = (info.moTa || "").replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
             updateSEO(info.tenSP + " | " + (appData.config.SHOP_NAME || "Shop"), plainDesc, info.anhDaiDien);
 
-            // MỚI: Link gắn biến Slug thay vì ID
             if (pushState) { openModal('product-modal', false, `?view=${currentView}&product=${slug}`); } else { openModal('product-modal', false, null, true); }
         }
 
@@ -957,16 +944,13 @@
             let b = appData.blog[idx]; if(!b) return;
             let slug = customSlug || b.slug;
 
-            // MỚI: Thay đổi thẻ Tiêu đề bài viết thành H1 chuẩn SEO
             let html = `<div class="relative h-72 md:h-96"><img src="${b.anhBia}" alt="${b.tieuDe}" class="w-full h-full object-cover" loading="lazy"><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div><div class="absolute bottom-0 left-0 p-6 md:p-8 w-full"><h1 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight drop-shadow-lg">${b.tieuDe}</h1><p class="text-sm text-white/90 font-medium flex items-center gap-2"><i class="fa-regular fa-clock"></i> Ngày đăng: ${b.ngayDang}</p></div></div><div class="p-6 md:p-10 text-dark leading-relaxed space-y-8 text-justify bg-white">`;
             for(let i=1; i<=10; i++) { if(b[`noiDung${i}`]) html += `<p class="text-base md:text-lg text-gray-700">${String(b[`noiDung${i}`]).replace(/\n/g, '<br>')}</p>`; if(b[`anhMinhHoa${i}`]) html += `<div class="rounded-2xl overflow-hidden shadow-sm my-6"><img src="${b[`anhMinhHoa${i}`]}" alt="Hình ảnh minh họa bài viết" class="w-full object-cover" loading="lazy"></div>`; }
             html += `</div><div class="h-10 bg-white"></div>`; document.getElementById('bm-body').innerHTML = html; 
 
-            // MỚI: Update SEO cho trang bài viết
             let plainDesc = (b.noiDung1 || "").replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
             updateSEO(b.tieuDe, plainDesc, b.anhBia);
 
-            // MỚI: Link gắn biến Slug thay vì ID
             if (pushState) { openModal('blog-modal', false, `?view=${currentView}&post=${slug}`); } else { openModal('blog-modal', false, null, true); }
         }
 
