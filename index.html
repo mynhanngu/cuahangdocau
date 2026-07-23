@@ -14,6 +14,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- CHÈN LẠI CDN LAYUI VÀ FILESAVER.JS Ở ĐÂY ĐỂ FIX LỖI 404 VÀ HIỆU ỨNG -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/layui/2.9.3/css/layui.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/layui/2.9.3/layui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <script>
@@ -576,7 +582,7 @@
 
             if(v === 'shop') {
                 updateSEO(
-                    appData.config.SHOP_NAME || "Trang chủ", 
+                    appData.config.SHOP_NAME_CLEAN || "Trang chủ", 
                     appData.config.SLOGAN || "Shop cung cấp sản phẩm chuyên nghiệp, uy tín", 
                     appData.config.LOGO_URL || ""
                 );
@@ -651,7 +657,12 @@
             if(c.SLOGAN_COLOR) document.documentElement.style.setProperty('--slogan-color', c.SLOGAN_COLOR);
             if(c.GRADIENT_COLORS) document.documentElement.style.setProperty('--gradient-colors', c.GRADIENT_COLORS);
             if(c.SHOP_NAME) { 
-                let tempDiv = document.createElement('div'); tempDiv.innerHTML = c.SHOP_NAME; let plainShopName = tempDiv.textContent || tempDiv.innerText || c.SHOP_NAME;
+                // XỬ LÝ LỘ CODE TAB TITLE Ở ĐÂY
+                let tempDiv = document.createElement('div'); 
+                tempDiv.innerHTML = c.SHOP_NAME; 
+                let plainShopName = tempDiv.textContent || tempDiv.innerText || c.SHOP_NAME;
+                
+                appData.config.SHOP_NAME_CLEAN = plainShopName;
                 document.title = plainShopName; 
                 document.getElementById('header-shop-name').innerHTML = c.SHOP_NAME; 
                 document.getElementById('footer-shop-name').innerHTML = c.SHOP_NAME;
@@ -817,7 +828,7 @@
             selA1 = ""; selA2 = ""; finalVar = null; document.getElementById('pm-qty').value = 1;
 
             let plainDesc = (info.moTa || "").replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
-            updateSEO(info.tenSP + " | " + (appData.config.SHOP_NAME || "Shop"), plainDesc, info.anhDaiDien);
+            updateSEO(info.tenSP + " | " + (appData.config.SHOP_NAME_CLEAN || "Shop"), plainDesc, info.anhDaiDien);
 
             if (pushState) { openModal('product-modal', false, `?view=${currentView}&product=${slug}`); } else { openModal('product-modal', false, null, true); }
         }
