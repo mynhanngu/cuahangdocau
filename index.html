@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- MỚI: Thêm các thẻ meta SEO cơ bản -->
     <title>Đang tải dữ liệu...</title>
+    <meta name="description" content="Shop cung cấp sản phẩm chuyên nghiệp, uy tín">
+    <meta property="og:title" content="Shop Sản Phẩm">
+    <meta property="og:description" content="Shop cung cấp sản phẩm chuyên nghiệp, uy tín">
+    <meta property="og:image" content="">
+    <meta property="og:type" content="website">
+
     <link rel="icon" href="meirenyu.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -151,9 +158,10 @@
             </div>
             <main class="container mx-auto px-2 md:px-6 py-6 md:py-10">
                 <div class="mb-6 md:mb-8 px-2" id="filter-section" style="display: none;">
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-dark relative inline-block" id="category-title">Trang chủ
+                    <!-- MỚI: Đổi h2 thành h1 để tốt cho SEO trang danh mục -->
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-dark relative inline-block" id="category-title">Trang chủ
                         <span class="absolute bottom-1 left-0 w-full h-2 md:h-3 bg-primary/20 -z-10 skew-x-12 rounded-sm"></span>
-                    </h2>
+                    </h1>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 animate-fade-up px-1" id="products-grid"></div>
                 <div id="pagination-container" class="mt-12 w-full flex justify-center items-center"></div>
@@ -214,7 +222,8 @@
                         <span id="pm-badge" class="text-white text-[10px] md:text-xs font-bold px-2 py-0.5 md:py-1 rounded uppercase hidden shadow-sm"></span>
                         <span class="text-gray-500 text-[11px] md:text-sm font-medium"><i class="fa-solid fa-fire-flame-simple text-orange-400 mr-1"></i> Đã bán: <span id="pm-sold" class="text-dark font-bold text-xs md:text-sm">0</span></span>
                     </div>
-                    <h2 id="pm-title" class="text-xl md:text-2xl font-extrabold text-dark leading-snug mb-2 text-left"></h2>
+                    <!-- MỚI: Đổi thẻ h2 pm-title thành h1 chuẩn SEO -->
+                    <h1 id="pm-title" class="text-xl md:text-2xl font-extrabold text-dark leading-snug mb-2 text-left"></h1>
                     <div id="pm-ghichu" class="text-red-600 text-sm font-bold mb-4 hidden uppercase text-left"></div>
                     <div class="mb-4 pb-4 border-b border-gray-100 overflow-hidden w-full">
                         <div id="pm-price" class="text-2xl md:text-3xl product-price-current whitespace-nowrap overflow-hidden text-ellipsis tracking-tighter">0₫</div>
@@ -236,7 +245,7 @@
             <div class="p-4 border-b border-gray-100 flex relative">
                 <button onclick="closeTopModal()" class="absolute top-2 right-2 z-[60] w-12 h-12 flex items-center justify-center text-red-600 hover:text-red-700 bg-transparent border-none outline-none cursor-pointer"><i class="fa-solid fa-xmark text-3xl"></i></button>
                 <div class="w-24 h-24 rounded-lg overflow-hidden border border-gray-200 p-1 shrink-0 bg-white -mt-8 shadow-md">
-                    <img id="v-img" src="" class="w-full h-full object-contain">
+                    <img id="v-img" src="" class="w-full h-full object-contain" alt="Variant Image">
                 </div>
                 <div class="ml-4 flex flex-col justify-end pb-1 pr-12 overflow-hidden">
                     <div id="v-price" class="text-xl md:text-2xl font-black product-price-current leading-none mb-1 whitespace-nowrap overflow-hidden text-ellipsis tracking-tight">0₫</div>
@@ -336,7 +345,7 @@
                     </select>
                     <div id="qr-section" class="hidden text-center p-4 border border-dashed border-primary/50 rounded-xl bg-orange-50 transition-all duration-500 overflow-hidden mt-4">
                         <p class="text-sm font-bold text-primary mb-3">Quét mã QR để thanh toán</p>
-                        <img id="qr-image" src="" class="w-full h-auto max-h-[300px] object-contain bg-white p-3 rounded-xl shadow-sm mb-4" loading="lazy">
+                        <img id="qr-image" src="" class="w-full h-auto max-h-[300px] object-contain bg-white p-3 rounded-xl shadow-sm mb-4" loading="lazy" alt="Mã QR thanh toán">
                         <button onclick="downloadQR(event)" class="w-full bg-white border border-primary text-primary font-bold py-3 px-4 rounded-xl shadow-sm hover:bg-orange-100 transition border-none cursor-pointer flex items-center justify-center gap-2">
                             <i class="fa-solid fa-download text-lg"></i> Tải ảnh QR về máy
                         </button>
@@ -398,6 +407,34 @@
         let currentPage = 1; const productsPerPage = 10; let currentFilteredProducts = [];
         let blogCurrentPage = 1; const blogPerPage = 10; let pendingAction = ''; let isDirectBuy = false;
 
+        // --- MỚI: Hàm tạo Slug tự động ---
+        function generateSlug(str) {
+            if (!str) return '';
+            return str.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[đĐ]/g, 'd')
+                .replace(/([^0-9a-z-\s])/g, '')
+                .replace(/(\s+)/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        // --- MỚI: Hàm cập nhật SEO On-page ---
+        function updateSEO(title, description, image) {
+            document.title = title;
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if(metaDesc) metaDesc.content = description;
+            
+            let ogTitle = document.querySelector('meta[property="og:title"]');
+            if(ogTitle) ogTitle.content = title;
+            
+            let ogDesc = document.querySelector('meta[property="og:description"]');
+            if(ogDesc) ogDesc.content = description;
+            
+            let ogImage = document.querySelector('meta[property="og:image"]');
+            if(ogImage && image) ogImage.content = image;
+        }
+
         function formatMoney(num) { return (parseInt(num) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '₫'; }
         function removeError(el) { el.classList.remove('input-error'); }
         function formatTimeVN(dateStr) {
@@ -445,7 +482,9 @@
                 appData.categories = catRes.data.map(c => ({ ID: String(c.id), Ten: c.ten, Icon: c.icon }));
 
                 appData.blog = blogRes.data.map(b => ({
-                    id: b.id, tieuDe: b.tieu_de, anhBia: b.anh_bia, ngayDang: formatTimeVN(b.ngay_dang),
+                    id: b.id, 
+                    slug: b.slug || generateSlug(b.tieu_de), // MỚI: Bổ sung trường slug
+                    tieuDe: b.tieu_de, anhBia: b.anh_bia, ngayDang: formatTimeVN(b.ngay_dang),
                     noiDung1: b.noi_dung_1, anhMinhHoa1: b.anh_minh_hoa_1,
                     noiDung2: b.noi_dung_2, anhMinhHoa2: b.anh_minh_hoa_2,
                     noiDung3: b.noi_dung_3, anhMinhHoa3: b.anh_minh_hoa_3,
@@ -456,7 +495,9 @@
                 appData.products = prodRes.data.map(v => {
                     let p = v.products;
                     return {
-                        maSP: p.id, tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
+                        maSP: p.id, 
+                        slug: p.slug || generateSlug(p.ten_sp), // MỚI: Bổ sung trường slug
+                        tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
                         anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
                         thoiGianSP: p.created_at, 
                         anh1: p.anh_1, anh2: p.anh_2, anh3: p.anh_3, anh4: p.anh_4,
@@ -471,30 +512,41 @@
                 
                 let params = new URLSearchParams(window.location.search);
                 let initView = params.get('view') || 'shop';
-                let product = params.get('product');
-                let post = params.get('post');
+                
+                // MỚI: Đọc slug thay vì đọc id
+                let productSlugParam = params.get('product'); 
+                let postSlugParam = params.get('post'); 
                 let showPopup = true;
 
                 let initialCat = 'all';
-                if (product && groupedProducts[product]) {
-                    initialCat = groupedProducts[product].info.danhMuc || 'all';
-                }
-                renderProducts(initialCat); 
+                let targetProductInfo = null;
 
+                if (productSlugParam) {
+                    targetProductInfo = appData.products.find(p => p.slug === productSlugParam);
+                    if (targetProductInfo && groupedProducts[targetProductInfo.maSP]) {
+                        initialCat = targetProductInfo.danhMuc || 'all';
+                    }
+                }
+                
+                renderProducts(initialCat); 
                 renderCartItems(); updateCartBadge();
                 let loadingEl = document.getElementById('app-loading');
                 if (loadingEl) loadingEl.style.display = 'none';
                 
                 switchView(initView, false); 
 
-                if(product && groupedProducts[product]) {
+                // MỚI: Logic mở chi tiết dựa theo Slug
+                if(targetProductInfo && groupedProducts[targetProductInfo.maSP]) {
                     history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
-                    openProductDetail(product, true);
+                    openProductDetail(targetProductInfo.maSP, true, productSlugParam);
                     showPopup = false;
-                } else if (post !== null && appData.blog[parseInt(post)]) {
-                    history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
-                    openBlogDetail(parseInt(post), true);
-                    showPopup = false;
+                } else if (postSlugParam) {
+                    let targetBlogIdx = appData.blog.findIndex(b => b.slug === postSlugParam);
+                    if (targetBlogIdx !== -1) {
+                        history.replaceState({ view: initView, result: false }, '', '?view=' + initView);
+                        openBlogDetail(targetBlogIdx, true, postSlugParam);
+                        showPopup = false;
+                    }
                 } else {
                     history.replaceState({ view: initView, result: false }, '', window.location.search);
                 }
@@ -528,6 +580,15 @@
             currentView = v; hasTrackingResult = false;
             if (v==='tracking') { document.getElementById('tracking-result-area').classList.add('hidden'); }
             if (push) history.pushState({ view: v, result: false }, '', '?view=' + v);
+
+            // MỚI: Reset SEO khi về trang chủ
+            if(v === 'shop') {
+                updateSEO(
+                    appData.config.SHOP_NAME || "Trang chủ", 
+                    appData.config.SLOGAN || "Shop cung cấp sản phẩm chuyên nghiệp, uy tín", 
+                    appData.config.LOGO_URL || ""
+                );
+            }
         }
 
         function openModal(id, isReplace = false, customUrl = null, skipPush = false) {
@@ -617,7 +678,7 @@
             if (!appData.banners || appData.banners.length === 0) return;
             const s = document.getElementById('banner-slider'); const d = document.getElementById('banner-dots');
             s.innerHTML = ''; d.innerHTML = ''; activeBanners = appData.banners.slice(0, 5);
-            activeBanners.forEach((url, i) => { s.innerHTML += `<div class="banner-slide"><img src="${url}" loading="lazy"></div>`; d.innerHTML += `<div class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${i===0 ? 'bg-primary scale-125' : 'bg-gray-300 hover:bg-primary/50'} cursor-pointer" onclick="goToBanner(${i})"></div>`; });
+            activeBanners.forEach((url, i) => { s.innerHTML += `<div class="banner-slide"><img src="${url}" loading="lazy" alt="Banner ${i+1}"></div>`; d.innerHTML += `<div class="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all ${i===0 ? 'bg-primary scale-125' : 'bg-gray-300 hover:bg-primary/50'} cursor-pointer" onclick="goToBanner(${i})"></div>`; });
             if (activeBanners.length > 1) startBannerAutoSlide();
         }
         function startBannerAutoSlide() { clearInterval(bannerInterval); bannerInterval = setInterval(() => { nextBanner(); }, 4000); }
@@ -687,7 +748,8 @@
                 const div = document.createElement('div'); div.className = 'card-gradient-border'; div.onclick = () => openProductDetail(p.maSP);
                 div.innerHTML = `
                     <div class="card-inner group">
-                        <div class="product-image-wrapper"><img src="${p.anhDaiDien}" class="product-image" loading="lazy">${badgeHtml}</div>
+                        <!-- MỚI: Đã gắn thẻ alt cho ảnh sản phẩm chuẩn SEO -->
+                        <div class="product-image-wrapper"><img src="${p.anhDaiDien}" alt="${p.tenSP}" class="product-image" loading="lazy">${badgeHtml}</div>
                         <div class="p-3 md:p-4 flex flex-col flex-grow">
                             <h3 class="product-title group-hover:text-primary transition text-left line-clamp-2">${p.tenSP}</h3>
                             <div class="product-footer mt-auto flex flex-col items-center justify-center w-full overflow-hidden">
@@ -720,10 +782,14 @@
 
         function goToPage(page) { currentPage = page; displayProductsPage(); const filterSec = document.getElementById('filter-section'); if (filterSec && filterSec.style.display !== 'none') { window.scrollTo({top: filterSec.offsetTop - 80, behavior: 'smooth'}); } else { window.scrollTo({top: document.getElementById('products-grid').offsetTop - 100, behavior: 'smooth'}); } }
 
-        function openProductDetail(maSP, pushState = true) {
+        function openProductDetail(maSP, pushState = true, customSlug = null) {
             currentGroup = groupedProducts[maSP]; 
             if(!currentGroup) return;
             const info = currentGroup.info;
+            
+            // MỚI: Lấy slug thay vì ID cho URL
+            let slug = customSlug || info.slug;
+
             pmCurrentIndex = 0; clearInterval(pmSlideInterval);
             const track = document.getElementById('pm-slider-track'); 
             const dots = document.getElementById('pm-dots');
@@ -733,13 +799,14 @@
             const imgs = [info.anhDaiDien, info.anh1, info.anh2, info.anh3, info.anh4].filter(Boolean);
             lbImages = imgs;
             imgs.forEach((url, i) => {
-                track.innerHTML += `<div class="pm-slide w-full h-full flex-shrink-0 flex items-center justify-center p-2 bg-white"><img src="${url}" onclick="openLightbox(${i})" class="max-w-full max-h-full object-contain cursor-zoom-in hover:opacity-90 transition" loading="lazy"></div>`;
+                // MỚI: Bổ sung alt tag cho ảnh trong popup
+                track.innerHTML += `<div class="pm-slide w-full h-full flex-shrink-0 flex items-center justify-center p-2 bg-white"><img src="${url}" alt="${info.tenSP} - Ảnh ${i+1}" onclick="openLightbox(${i})" class="max-w-full max-h-full object-contain cursor-zoom-in hover:opacity-90 transition" loading="lazy"></div>`;
                 const dot = document.createElement('div'); 
                 dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i===0 ? 'bg-primary scale-125' : 'bg-gray-300 hover:bg-primary/50'} cursor-pointer`;
                 dot.onclick = () => goToPmSlide(i); dots.appendChild(dot);
                 const thumb = document.createElement('div');
                 thumb.className = `w-14 h-14 rounded-lg border-2 overflow-hidden cursor-pointer transition-all flex-shrink-0 bg-white ${i===0 ? 'border-primary opacity-100 shadow-sm' : 'border-transparent opacity-50 hover:opacity-100'}`;
-                thumb.innerHTML = `<img src="${url}" class="w-full h-full object-contain p-1">`;
+                thumb.innerHTML = `<img src="${url}" alt="Thumb ${i+1}" class="w-full h-full object-contain p-1">`;
                 thumb.onclick = () => goToPmSlide(i); thumbs.appendChild(thumb);
             });
             if(imgs.length > 1) { startPmAutoSlide(); track.ontouchstart = (e) => touchStartX = e.touches[0].clientX; track.ontouchend = (e) => { touchEndX = e.changedTouches[0].clientX; handlePmSwipe(); }; }
@@ -759,7 +826,13 @@
             a1List = [...new Set(vars.map(v=>v.giaTri1).filter(Boolean))]; 
             a2List = [...new Set(vars.map(v=>v.giaTri2).filter(Boolean))];
             selA1 = ""; selA2 = ""; finalVar = null; document.getElementById('pm-qty').value = 1;
-            if (pushState) { openModal('product-modal', false, `?view=${currentView}&product=${maSP}`); } else { openModal('product-modal', false, null, true); }
+
+            // MỚI: Update SEO tự động khi mở sản phẩm
+            let plainDesc = (info.moTa || "").replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
+            updateSEO(info.tenSP + " | " + (appData.config.SHOP_NAME || "Shop"), plainDesc, info.anhDaiDien);
+
+            // MỚI: Link gắn biến Slug thay vì ID
+            if (pushState) { openModal('product-modal', false, `?view=${currentView}&product=${slug}`); } else { openModal('product-modal', false, null, true); }
         }
 
         function startPmAutoSlide() { const c = document.querySelectorAll('.pm-slide').length; if (c <= 1) return; clearInterval(pmSlideInterval); pmSlideInterval = setInterval(() => { nextPmSlide(); }, 4000); }
@@ -863,7 +936,7 @@
             const itemsToShow = (appData.blog || []).slice(start, end);
             itemsToShow.forEach((b, i) => {
                 let realIdx = start + i; const div = document.createElement('div'); div.className = 'card-gradient-border'; div.onclick = () => openBlogDetail(realIdx);
-                div.innerHTML = `<div class="card-inner group"><div class="relative aspect-[4/3] overflow-hidden border-b border-gray-100"><img src="${b.anhBia}" class="w-full h-full object-cover transition transform group-hover:scale-105 duration-500" loading="lazy"></div><div class="p-4 flex flex-col flex-1"><h3 class="font-bold text-sm text-dark leading-tight line-clamp-2">${b.tieuDe}</h3><p class="text-[10px] text-gray-400 mt-2 font-bold"><i class="fa-regular fa-calendar-days mr-1"></i> ${b.ngayDang}</p></div></div>`;
+                div.innerHTML = `<div class="card-inner group"><div class="relative aspect-[4/3] overflow-hidden border-b border-gray-100"><img src="${b.anhBia}" alt="${b.tieuDe}" class="w-full h-full object-cover transition transform group-hover:scale-105 duration-500" loading="lazy"></div><div class="p-4 flex flex-col flex-1"><h3 class="font-bold text-sm text-dark leading-tight line-clamp-2">${b.tieuDe}</h3><p class="text-[10px] text-gray-400 mt-2 font-bold"><i class="fa-regular fa-calendar-days mr-1"></i> ${b.ngayDang}</p></div></div>`;
                 grid.appendChild(div);
             }); renderBlogPagination();
         }
@@ -880,12 +953,21 @@
         }
         function goToBlogPage(page) { blogCurrentPage = page; displayBlogPage(); window.scrollTo({top: document.getElementById('view-blog').offsetTop - 80, behavior: 'smooth'}); }
 
-        function openBlogDetail(idx, pushState = true) {
+        function openBlogDetail(idx, pushState = true, customSlug = null) {
             let b = appData.blog[idx]; if(!b) return;
-            let html = `<div class="relative h-72 md:h-96"><img src="${b.anhBia}" class="w-full h-full object-cover" loading="lazy"><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div><div class="absolute bottom-0 left-0 p-6 md:p-8 w-full"><h2 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight drop-shadow-lg">${b.tieuDe}</h2><p class="text-sm text-white/90 font-medium flex items-center gap-2"><i class="fa-regular fa-clock"></i> Ngày đăng: ${b.ngayDang}</p></div></div><div class="p-6 md:p-10 text-dark leading-relaxed space-y-8 text-justify bg-white">`;
-            for(let i=1; i<=10; i++) { if(b[`noiDung${i}`]) html += `<p class="text-base md:text-lg text-gray-700">${String(b[`noiDung${i}`]).replace(/\n/g, '<br>')}</p>`; if(b[`anhMinhHoa${i}`]) html += `<div class="rounded-2xl overflow-hidden shadow-sm my-6"><img src="${b[`anhMinhHoa${i}`]}" class="w-full object-cover" loading="lazy"></div>`; }
+            let slug = customSlug || b.slug;
+
+            // MỚI: Thay đổi thẻ Tiêu đề bài viết thành H1 chuẩn SEO
+            let html = `<div class="relative h-72 md:h-96"><img src="${b.anhBia}" alt="${b.tieuDe}" class="w-full h-full object-cover" loading="lazy"><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div><div class="absolute bottom-0 left-0 p-6 md:p-8 w-full"><h1 class="text-3xl md:text-4xl font-black text-white mb-3 leading-tight drop-shadow-lg">${b.tieuDe}</h1><p class="text-sm text-white/90 font-medium flex items-center gap-2"><i class="fa-regular fa-clock"></i> Ngày đăng: ${b.ngayDang}</p></div></div><div class="p-6 md:p-10 text-dark leading-relaxed space-y-8 text-justify bg-white">`;
+            for(let i=1; i<=10; i++) { if(b[`noiDung${i}`]) html += `<p class="text-base md:text-lg text-gray-700">${String(b[`noiDung${i}`]).replace(/\n/g, '<br>')}</p>`; if(b[`anhMinhHoa${i}`]) html += `<div class="rounded-2xl overflow-hidden shadow-sm my-6"><img src="${b[`anhMinhHoa${i}`]}" alt="Hình ảnh minh họa bài viết" class="w-full object-cover" loading="lazy"></div>`; }
             html += `</div><div class="h-10 bg-white"></div>`; document.getElementById('bm-body').innerHTML = html; 
-            if (pushState) { openModal('blog-modal', false, `?view=${currentView}&post=${idx}`); } else { openModal('blog-modal', false, null, true); }
+
+            // MỚI: Update SEO cho trang bài viết
+            let plainDesc = (b.noiDung1 || "").replace(/<[^>]*>?/gm, '').substring(0, 150) + "...";
+            updateSEO(b.tieuDe, plainDesc, b.anhBia);
+
+            // MỚI: Link gắn biến Slug thay vì ID
+            if (pushState) { openModal('blog-modal', false, `?view=${currentView}&post=${slug}`); } else { openModal('blog-modal', false, null, true); }
         }
 
         function addToCart(qty) {
@@ -898,7 +980,7 @@
         function renderCartItems() {
             const list = document.getElementById('cart-items-list'); list.innerHTML = ''; let total = 0; const items = Object.values(cart);
             if (items.length === 0) { list.innerHTML = `<div class="text-center text-gray-400 py-10 flex flex-col items-center"><i class="fa-solid fa-cart-shopping text-6xl mb-4 text-gray-200"></i><p>Giỏ hàng trống</p></div>`; } 
-            else { items.forEach(i => { total += i.price * i.qty; const div = document.createElement('div'); div.className = 'flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100 relative'; div.innerHTML = `<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-gray-100 p-1 bg-gray-50"><img src="${i.img}" class="w-full h-full object-contain" loading="lazy"></div><div class="flex-1 min-w-0 flex flex-col"><div class="font-bold text-dark truncate pr-6 mb-1 text-sm">${i.name}</div><div class="text-[11px] font-medium text-gray-500 mb-2 bg-gray-100 px-2 py-0.5 rounded-md w-fit">${i.detail || 'Mặc định'}</div><div class="mt-auto flex justify-between items-center"><div class="text-primary font-extrabold product-price-current">${formatMoney(i.price)}</div><div class="flex items-center border border-gray-200 rounded-lg p-0.5 bg-gray-50"><button onclick="cartMod('${i.sku}', -1)" class="w-6 h-6 rounded bg-white shadow-sm hover:bg-gray-100 text-xs transition border-none"><i class="fa-solid fa-minus"></i></button><input type="text" inputmode="numeric" value="${i.qty}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); cartSetQty('${i.sku}', this.value)" class="w-8 h-6 bg-transparent text-center text-sm font-bold focus:outline-none border-none"><button onclick="cartMod('${i.sku}', 1)" class="w-6 h-6 rounded bg-white shadow-sm hover:bg-gray-100 text-xs transition border-none"><i class="fa-solid fa-plus"></i></button></div></div></div><button class="absolute top-2 right-2 text-gray-300 hover:text-red-500 p-2 text-sm transition border-none cursor-pointer" onclick="cartMod('${i.sku}', 0)"><i class="fa-solid fa-trash-can"></i></button>`; list.appendChild(div); }); }
+            else { items.forEach(i => { total += i.price * i.qty; const div = document.createElement('div'); div.className = 'flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100 relative'; div.innerHTML = `<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-gray-100 p-1 bg-gray-50"><img src="${i.img}" class="w-full h-full object-contain" loading="lazy" alt="${i.name}"></div><div class="flex-1 min-w-0 flex flex-col"><div class="font-bold text-dark truncate pr-6 mb-1 text-sm">${i.name}</div><div class="text-[11px] font-medium text-gray-500 mb-2 bg-gray-100 px-2 py-0.5 rounded-md w-fit">${i.detail || 'Mặc định'}</div><div class="mt-auto flex justify-between items-center"><div class="text-primary font-extrabold product-price-current">${formatMoney(i.price)}</div><div class="flex items-center border border-gray-200 rounded-lg p-0.5 bg-gray-50"><button onclick="cartMod('${i.sku}', -1)" class="w-6 h-6 rounded bg-white shadow-sm hover:bg-gray-100 text-xs transition border-none"><i class="fa-solid fa-minus"></i></button><input type="text" inputmode="numeric" value="${i.qty}" oninput="this.value = this.value.replace(/[^0-9]/g, ''); cartSetQty('${i.sku}', this.value)" class="w-8 h-6 bg-transparent text-center text-sm font-bold focus:outline-none border-none"><button onclick="cartMod('${i.sku}', 1)" class="w-6 h-6 rounded bg-white shadow-sm hover:bg-gray-100 text-xs transition border-none"><i class="fa-solid fa-plus"></i></button></div></div></div><button class="absolute top-2 right-2 text-gray-300 hover:text-red-500 p-2 text-sm transition border-none cursor-pointer" onclick="cartMod('${i.sku}', 0)"><i class="fa-solid fa-trash-can"></i></button>`; list.appendChild(div); }); }
             setText('cart-total', formatMoney(total));
         }
 
@@ -994,7 +1076,7 @@
                 localStorage.setItem('saved_customer_info', JSON.stringify(customerInfo));
                 
                 try {
-                    let chiTietDonEmail = window.currentOrderItems.map(i => `${i.name} (x${i.qty})`).join(', ');
+                    let chiTietDonEmail = window.currentOrderItems.map(i => `- ${i.name} [${i.detail || 'Mặc định'}] (SL: ${i.qty})`).join('\n');
                     await emailjs.send('service_u3lvuhn', 'template_p6myfj7', {
                         ma_don: maDonHang,
                         khach_hang: nameEl.value.trim(),
@@ -1078,7 +1160,7 @@
             } catch(e) { showCustomPopup('Lỗi kết nối', 'Vui lòng kiểm tra mạng và thử lại!', true); } 
         }
 
-        function openLightbox(index) { lbIndex = index; const track = document.getElementById('lightbox-track'); const dots = document.getElementById('lightbox-dots'); track.innerHTML = ''; dots.innerHTML = ''; lbImages.forEach((url, i) => { track.innerHTML += `<div class="w-full h-full flex-shrink-0 flex items-center justify-center p-2"><img src="${url}" class="max-w-full max-h-full object-contain cursor-default" loading="lazy"></div>`; dots.innerHTML += `<div class="w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${i === lbIndex ? 'bg-primary scale-125' : 'bg-white/50 hover:bg-white'}" onclick="goToLightbox(${i})"></div>`; }); updateLightboxSlider(); document.getElementById('lightbox').classList.remove('hidden'); modalStack.push('lightbox'); history.pushState({ view: currentView, result: hasTrackingResult, modal: 'lightbox' }, '', window.location.search); track.ontouchstart = (e) => lbTouchStartX = e.touches[0].clientX; track.ontouchend = (e) => { lbTouchEndX = e.changedTouches[0].clientX; handleLbSwipe(); }; }
+        function openLightbox(index) { lbIndex = index; const track = document.getElementById('lightbox-track'); const dots = document.getElementById('lightbox-dots'); track.innerHTML = ''; dots.innerHTML = ''; lbImages.forEach((url, i) => { track.innerHTML += `<div class="w-full h-full flex-shrink-0 flex items-center justify-center p-2"><img src="${url}" alt="Lightbox Image" class="max-w-full max-h-full object-contain cursor-default" loading="lazy"></div>`; dots.innerHTML += `<div class="w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${i === lbIndex ? 'bg-primary scale-125' : 'bg-white/50 hover:bg-white'}" onclick="goToLightbox(${i})"></div>`; }); updateLightboxSlider(); document.getElementById('lightbox').classList.remove('hidden'); modalStack.push('lightbox'); history.pushState({ view: currentView, result: hasTrackingResult, modal: 'lightbox' }, '', window.location.search); track.ontouchstart = (e) => lbTouchStartX = e.touches[0].clientX; track.ontouchend = (e) => { lbTouchEndX = e.changedTouches[0].clientX; handleLbSwipe(); }; }
         function closeLightbox() { if(modalStack[modalStack.length-1] === 'lightbox') { history.back(); } else { document.getElementById('lightbox').classList.add('hidden'); } }
         function updateLightboxSlider() { document.getElementById('lightbox-track').style.transform = `translateX(-${lbIndex * 100}%)`; const dots = document.getElementById('lightbox-dots').children; for(let i=0; i<dots.length; i++) { dots[i].className = `w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${i === lbIndex ? 'bg-primary scale-125' : 'bg-white/50 hover:bg-white'}`; } }
         function nextLightbox() { if(lbImages.length <= 1) return; lbIndex = (lbIndex + 1) % lbImages.length; updateLightboxSlider(); }
@@ -1104,7 +1186,9 @@
                 appData.products = prodRes.map(v => {
                     let p = v.products;
                     return {
-                        maSP: p.id, tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
+                        maSP: p.id, 
+                        slug: p.slug || generateSlug(p.ten_sp), 
+                        tenSP: p.ten_sp, danhMuc: String(p.danh_muc_id),
                         anhDaiDien: p.anh_dai_dien, moTa: p.mo_ta, ghiChu: p.ghi_chu, trangThai: p.trang_thai,
                         thoiGianSP: p.created_at, 
                         anh1: p.anh_1, anh2: p.anh_2, anh3: p.anh_3, anh4: p.anh_4,
